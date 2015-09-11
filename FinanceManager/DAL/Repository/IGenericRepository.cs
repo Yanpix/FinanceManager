@@ -11,7 +11,6 @@ namespace FinanceManager.DAL.Repository
         Task<TEntity> GetByIdAsync(int id);
         Task<int> InsertAsync(TEntity entity);
         Task<int> UpdateAsync(TEntity entity);
-
         Task<int> DeleteAsync(TEntity entity);
     }
 }
