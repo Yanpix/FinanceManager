@@ -24,7 +24,7 @@ namespace FinanceManager
 
         public App()
         {
-            IoCContainter.Initialize();
+            NinjectContainer.Initialize();
 
             if (!CheckFileExists("Finance.sqlite").Result)
             {
@@ -70,10 +70,9 @@ namespace FinanceManager
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+                rootFrame = new Frame {CacheSize = 1};
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

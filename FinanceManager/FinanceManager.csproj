@@ -98,7 +98,7 @@
     <Compile Include="DAL\Repository\IGenericRepository.cs" />
     <Compile Include="DAL\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="DAL\UnitOfWork\UnitOfWork.cs" />
-    <Compile Include="Infrastructure\IoCContainer.cs" />
+    <Compile Include="Infrastructure\NinjectContainer.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
