@@ -10,7 +10,7 @@ namespace FinanceManager.DAL.Models
     public class IncomeCategory
     {
         [PrimaryKey]
-        public int Id { get; set; }
+        public short Id { get; set; }
         public string Name { get; set; }
     }
 }
