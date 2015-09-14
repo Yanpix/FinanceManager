@@ -91,6 +91,7 @@
     <Compile Include="DAL\Models\Currency.cs" />
     <Compile Include="DAL\Models\Expense.cs" />
     <Compile Include="DAL\Models\Income.cs" />
+    <Compile Include="DAL\Models\IncomeCategory.cs" />
     <Compile Include="DAL\Models\MoneyBox.cs" />
     <Compile Include="DAL\Repository\GenericRepository.cs" />
     <Compile Include="DAL\Repository\IGenericRepository.cs" />
