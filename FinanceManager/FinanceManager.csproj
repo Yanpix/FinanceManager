@@ -84,6 +84,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BLL\IService\ICurrencyService.cs" />
     <Compile Include="BLL\Service\CurrencyService.cs" />
     <Compile Include="DAL\Models\BaseModel.cs" />
     <Compile Include="DAL\Models\Category.cs" />
@@ -95,6 +96,9 @@
     <Compile Include="DAL\Models\MoneyBox.cs" />
     <Compile Include="DAL\Repository\GenericRepository.cs" />
     <Compile Include="DAL\Repository\IGenericRepository.cs" />
+    <Compile Include="DAL\UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="DAL\UnitOfWork\UnitOfWork.cs" />
+    <Compile Include="Infrastructure\IoCContainer.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -133,9 +137,14 @@
       <Name>SQLite for Windows Phone 8.1</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Ninject, Version=2.0.1.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.2.0.1.0\lib\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
