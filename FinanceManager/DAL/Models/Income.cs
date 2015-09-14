@@ -3,7 +3,7 @@ using FinanceManager.DAL.SQLite;
 
 namespace FinanceManager.DAL.Models
 {
-    public class Income: BaseModel
+    public class Income : BaseModel
     {
         [PrimaryKey]
         public double Value { get; set; }

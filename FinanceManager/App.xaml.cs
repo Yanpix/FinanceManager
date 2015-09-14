@@ -11,35 +11,31 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
+using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
 
-// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace FinanceManager
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
-    public sealed partial class App : Application
+    public sealed partial class App
     {
-        private TransitionCollection transitions;
+        private TransitionCollection _transitions;
+        public static string ConnectionString = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Finances.sqlite");
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
-        public static string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Finances.sqlite");
         public App()
         {
+            IoCContainter.Initialize();
+
             if (!CheckFileExists("Finance.sqlite").Result)
             {
-                var db = new SQLiteAsyncConnection(DbPath);
+                var db = new SQLiteAsyncConnection(ConnectionString);
                 db.CreateTableAsync<Currency>();
             }
+
             InitializeComponent();
             Suspending += OnSuspending;
         }
-        private async Task<bool> CheckFileExists(string fileName)
+        private static async Task<bool> CheckFileExists(string fileName)
         {
             try
             {
@@ -48,9 +44,8 @@ namespace FinanceManager
             }
             catch
             {
-                // ignored
+                return false;
             }
-            return false;
         }
 
         /// <summary>
@@ -94,10 +89,10 @@ namespace FinanceManager
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {
-                    transitions = new TransitionCollection();
+                    _transitions = new TransitionCollection();
                     foreach (var c in rootFrame.ContentTransitions)
                     {
-                        transitions.Add(c);
+                        _transitions.Add(c);
                     }
                 }
 
@@ -125,7 +120,7 @@ namespace FinanceManager
         private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
         {
             var rootFrame = sender as Frame;
-            rootFrame.ContentTransitions = transitions ?? new TransitionCollection { new NavigationThemeTransition() };
+            rootFrame.ContentTransitions = _transitions ?? new TransitionCollection { new NavigationThemeTransition() };
             rootFrame.Navigated -= RootFrame_FirstNavigated;
         }
 

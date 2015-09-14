@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FinanceManager.BLL.IService;
 using FinanceManager.DAL.Models;
-using FinanceManager.DAL.Repository;
+using FinanceManager.DAL.UnitOfWork;
 
 namespace FinanceManager.BLL.Service
 {
-    public class CurrencyService
+    public class CurrencyService : ICurrencyService
     {
-        private readonly IGenericRepository<Currency> _genericRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CurrencyService()
+        public CurrencyService(IUnitOfWork unitOfWork)
         {
-            _genericRepository = new GenericRepository<Currency>();
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<Currency>> GetAsync()
         {
-            return await _genericRepository.GetAsync();
+            return await _unitOfWork.Repository<Currency>().GetAsync();
         }
     }
 }

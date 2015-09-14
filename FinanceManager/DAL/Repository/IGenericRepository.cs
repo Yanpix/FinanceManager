@@ -9,8 +9,8 @@ namespace FinanceManager.DAL.Repository
     {
         Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> orderBy = null);
         Task<TEntity> GetByIdAsync(int id);
-        Task<int> InsertAsync(TEntity entity);
-        Task<int> UpdateAsync(TEntity entity);
-        Task<int> DeleteAsync(TEntity entity);
+        Task CreateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task DeleteAsync(TEntity entity);
     }
 }
