@@ -24,7 +24,6 @@ namespace FinanceManager
 
         public App()
         {
-            NinjectContainer.Initialize();
 
             if (!CheckFileExists("Finance.sqlite").Result)
             {
@@ -62,7 +61,7 @@ namespace FinanceManager
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
+            NinjectContainer.Initialize();
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

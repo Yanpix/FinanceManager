@@ -1,5 +1,7 @@
 ﻿using Windows.UI.Xaml.Navigation;
 using FinanceManager.BLL.IService;
+using FinanceManager.Infrastructure;
+using FinanceManager.ViewModel;
 
 namespace FinanceManager.Pages
 {
@@ -12,6 +14,7 @@ namespace FinanceManager.Pages
             _currencyService = currencyService;
 
             InitializeComponent();
+            DataContext = NinjectContainer.Get<MainViewModel>();
             NavigationCacheMode = NavigationCacheMode.Required;
         }
 
