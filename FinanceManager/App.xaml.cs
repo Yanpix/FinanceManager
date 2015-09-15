@@ -11,8 +11,9 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
-using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
+using FinanceManager.ViewModel;
+using NinjectContainer = FinanceManager.Infrastructure.NinjectContainer;
 
 
 namespace FinanceManager
@@ -34,6 +35,8 @@ namespace FinanceManager
             InitializeComponent();
             Suspending += OnSuspending;
         }
+        public static ViewModelLocator ViewModelLocator => (ViewModelLocator)Current.Resources["ViewModelLocator"];
+
         private static async Task<bool> CheckFileExists(string fileName)
         {
             try
