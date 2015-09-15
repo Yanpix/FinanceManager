@@ -24,8 +24,6 @@ namespace FinanceManager
 
         public App()
         {
-            NinjectContainer.Initialize();
-
             if (!CheckFileExists("Finance.sqlite").Result)
             {
                 var db = new SQLiteAsyncConnection(ConnectionString);
@@ -42,7 +40,7 @@ namespace FinanceManager
                 await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 return false;
             }
@@ -56,6 +54,7 @@ namespace FinanceManager
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            //NinjectContainer.Initialize();
 #if DEBUG
             if (Debugger.IsAttached)
             {

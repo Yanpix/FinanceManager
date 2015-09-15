@@ -4,7 +4,6 @@ namespace FinanceManager.DAL.Models
 {
     public class Currency : BaseModel
     {
-        [PrimaryKey]
         public short CurrencyId { get; set; }
         public string Name { get; set; }
         public double Value { get; set; }

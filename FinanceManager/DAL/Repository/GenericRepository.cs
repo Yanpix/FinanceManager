@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using FinanceManager.DAL.SQLite;
 
 namespace FinanceManager.DAL.Repository
@@ -15,7 +15,7 @@ namespace FinanceManager.DAL.Repository
             _connection = connection;
         }
 
-        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> orderBy = null)
+        public async Task<ObservableCollection<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> orderBy = null)
         {
             var query = _connection.Table<TEntity>();
 
@@ -25,10 +25,9 @@ namespace FinanceManager.DAL.Repository
             }
             if (orderBy != null)
             {
-                return await query.OrderBy(orderBy).ToListAsync();
+                await query.OrderBy(orderBy).ToListAsync();
             }
-
-            return await query.ToListAsync();
+            return new ObservableCollection<TEntity>(await query.ToListAsync());
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
@@ -38,17 +37,24 @@ namespace FinanceManager.DAL.Repository
 
         public async Task CreateAsync(TEntity entity)
         {
-             await _connection.InsertAsync(entity);
+            await _connection.InsertAsync(entity);
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
-             await _connection.UpdateAsync(entity);
+            await _connection.UpdateAsync(entity);
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(int id)
         {
-             await _connection.DeleteAsync(entity);
+            var entity = await GetByIdAsync(id);
+            await _connection.DeleteAsync(entity);
+        }
+
+        public async Task DeleteAll()
+        {
+            await _connection.DropTableAsync<TEntity>();
+            await _connection.CreateTableAsync<TEntity>();
         }
     }
 }

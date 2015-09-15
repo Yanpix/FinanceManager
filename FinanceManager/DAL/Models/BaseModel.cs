@@ -1,10 +1,8 @@
-﻿using FinanceManager.DAL.SQLite;
-
-namespace FinanceManager.DAL.Models
+﻿namespace FinanceManager.DAL.Models
 {
     public class BaseModel
     {
-        [AutoIncrement]
+        [SQLite.PrimaryKey, SQLite.AutoIncrement]
         public int Id { get; set; }
     }
 }

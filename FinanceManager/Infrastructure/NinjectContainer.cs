@@ -11,8 +11,8 @@ namespace FinanceManager.Infrastructure
 
         public static void Initialize()
         {
-            Kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             Kernel.Bind<ICurrencyService>().To<CurrencyService>();
+            Kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
         }
 
         public static T Get<T>()

@@ -1,5 +1,6 @@
 ﻿using Windows.UI.Xaml.Navigation;
 using FinanceManager.BLL.IService;
+using FinanceManager.BLL.Service;
 
 namespace FinanceManager.Pages
 {
@@ -7,17 +8,22 @@ namespace FinanceManager.Pages
     {
         private readonly ICurrencyService _currencyService;
         
-        public MainPage(ICurrencyService currencyService)
+        public MainPage()
         {
-            _currencyService = currencyService;
+            _currencyService = new CurrencyService();
 
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var s = _currencyService.GetAsync();
+            var s = await _currencyService.GetAsync();
+        }
+
+        private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            _currencyService.CreateAsync(textBox.Text);
         }
     }
 }
