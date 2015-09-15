@@ -64,7 +64,11 @@ namespace FinanceManager.Pages
 
         private void listBoxobj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (listBoxobj.SelectedIndex != -1)
+            {
+                var listitem = listBoxobj.SelectedItem as Currency;//Get slected listbox item contact ID 
+                Frame.Navigate(typeof(UpdateOrDelete), listitem.Id);
+            }
         }
     }
 }

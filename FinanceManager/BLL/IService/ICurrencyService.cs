@@ -9,7 +9,7 @@ namespace FinanceManager.BLL.IService
     {
         Task<ObservableCollection<Currency>> GetAsync();
         Task<Currency> GetByIdAsync(int id);
-        Task CreateAsync(string name);
+        Task CreateAsync(Currency currency);
         Task DeleteAsync(int id);
         Task DeleteAllAsync();
     }

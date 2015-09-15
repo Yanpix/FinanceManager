@@ -25,16 +25,14 @@ namespace FinanceManager.BLL.Service
             return await _unitOfWork.Repository<Currency>().GetByIdAsync(id);
         }
 
-        public async Task CreateAsync(string name)
+        public async Task CreateAsync(Currency currency)
         {
-            
-            var model = new Currency
-            {
-                Name = name,
-                Value = 10
-            };
+            await _unitOfWork.Repository<Currency>().CreateAsync(currency);
+        }
 
-            await _unitOfWork.Repository<Currency>().CreateAsync(model);
+        public async Task UpdateAsync(Currency currency)
+        {
+            await _unitOfWork.Repository<Currency>().UpdateAsync(currency);
         }
 
         public async Task DeleteAsync(int id)

@@ -107,6 +107,9 @@
     <Compile Include="Pages\Show.xaml.cs">
       <DependentUpon>Show.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UpdateOrDelete.xaml.cs">
+      <DependentUpon>UpdateOrDelete.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DAL\SQLite\SQLite.cs" />
     <Compile Include="DAL\SQLite\SQLiteAsync.cs" />
@@ -136,6 +139,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Show.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UpdateOrDelete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

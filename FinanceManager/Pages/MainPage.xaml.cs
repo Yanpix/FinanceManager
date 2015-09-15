@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml.Navigation;
 using FinanceManager.BLL.IService;
 using FinanceManager.BLL.Service;
-using static System.String;
+using FinanceManager.DAL.Models;
 
 namespace FinanceManager.Pages
 {
@@ -23,9 +23,16 @@ namespace FinanceManager.Pages
 
         private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            _currencyService.CreateAsync(textBox.Text);
+            var currency = new Currency
+            {
+                Name = Name.Text,
+                Value = int.Parse(Value.Text)
+            };
+            
+            _currencyService.CreateAsync(currency);
             Frame.Navigate(typeof(Show));
-            textBox.Text = Empty;
+            Name.Text = string.Empty;
+            Value.Text = string.Empty;
         }
     }
 }
