@@ -11,9 +11,8 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
-using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
-
+using FinanceManager.ViewModel;
 
 namespace FinanceManager
 {
@@ -33,6 +32,8 @@ namespace FinanceManager
             InitializeComponent();
             Suspending += OnSuspending;
         }
+        public static ViewModelLocator ViewModelLocator => (ViewModelLocator)Current.Resources["ViewModelLocator"];
+
         private static async Task<bool> CheckFileExists(string fileName)
         {
             try
@@ -61,7 +62,6 @@ namespace FinanceManager
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -100,7 +100,7 @@ namespace FinanceManager
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(Show), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

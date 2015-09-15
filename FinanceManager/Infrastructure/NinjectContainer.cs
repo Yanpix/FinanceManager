@@ -5,7 +5,7 @@ using Ninject;
 
 namespace FinanceManager.Infrastructure
 {
-    public static class NinjectContainer
+    public class NinjectContainer
     {
         private static readonly IKernel Kernel = new StandardKernel();
 
