@@ -14,7 +14,6 @@ namespace FinanceManager.Pages
             _currencyService = currencyService;
 
             InitializeComponent();
-            DataContext = NinjectContainer.Get<MainViewModel>();
             NavigationCacheMode = NavigationCacheMode.Required;
         }
 
