@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
+using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
 using FinanceManager.ViewModel;
 
@@ -32,7 +33,7 @@ namespace FinanceManager
             InitializeComponent();
             Suspending += OnSuspending;
         }
-        public static ViewModelLocator ViewModelLocator => (ViewModelLocator)Current.Resources["ViewModelLocator"];
+        //public static ViewModelLocator ViewModelLocator => (ViewModelLocator)Current.Resources["ViewModelLocator"];
 
         private static async Task<bool> CheckFileExists(string fileName)
         {
@@ -55,8 +56,7 @@ namespace FinanceManager
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            //NinjectContainer.Initialize();
-#if DEBUG
+           #if DEBUG
             if (Debugger.IsAttached)
             {
                 DebugSettings.EnableFrameRateCounter = true;

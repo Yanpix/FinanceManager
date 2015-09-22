@@ -2,6 +2,11 @@
     x:Class="FinanceManager.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:FinanceManager">
+
+    xmlns:viewModel="using:FinanceManager.ViewModel">
+    
+    <Application.Resources>
+        <viewModel:ViewModelLocator x:Key="ViewModelLocator"/>
+    </Application.Resources>
 
 </Application>

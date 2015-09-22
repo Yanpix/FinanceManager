@@ -1,36 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.Linq.Expressions;
 using FinanceManager.BLL.IService;
 using FinanceManager.BLL.Service;
 using FinanceManager.DAL.UnitOfWork;
-using Ninject;
+using FinanceManager.Infrastructure;
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
 
 namespace FinanceManager.ViewModel
 {
     public class ViewModelLocator
     {
-
-        public ICurrencyService NavigationService => NinjectContainer.Get<ICurrencyService>();
-        public MainViewModel MainViewModel => NinjectContainer.Get<MainViewModel>();
-    }
-
-
-    public class NinjectContainer
-    {
-        private static readonly IKernel Kernel = new StandardKernel();
-
-        public static void Initialize()
+       public MainViewModel MainViewModel
         {
-            Kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-            Kernel.Bind<ICurrencyService>().To<CurrencyService>();
-        }
-
-        public static T Get<T>()
-        {
-            return Kernel.Get<T>();
-        }
+            get
+            {
+                var Container = new UnityContainer();
+                Container.RegisterType(typeof(MainViewModel));
+                return Container.Resolve<MainViewModel>();
+            }
+        } 
+        
     }
 }

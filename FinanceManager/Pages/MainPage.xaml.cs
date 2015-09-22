@@ -7,11 +7,10 @@ namespace FinanceManager.Pages
 {
     public sealed partial class MainPage
     {
-        private readonly ICurrencyService _currencyService;
-        
+       
         public MainPage()
         {
-            _currencyService = new CurrencyService();
+
 
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
@@ -29,7 +28,7 @@ namespace FinanceManager.Pages
                 Value = int.Parse(Value.Text)
             };
             
-            _currencyService.CreateAsync(currency);
+            //_currencyService.CreateAsync(currency);
             Frame.Navigate(typeof(Show));
             Name.Text = string.Empty;
             Value.Text = string.Empty;

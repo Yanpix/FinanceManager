@@ -4,11 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="using:FinanceManager.ViewModel"
     mc:Ignorable="d"
-    Background="Teal">
+    Background="Teal"
+    DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
+    <Page.Resources>
+        <viewModel:ViewModelLocator x:Key="ViewModelLocator" x:Name="ViewModelLocator"></viewModel:ViewModelLocator>
+    </Page.Resources>
+
+
 
     <Grid>
-        <TextBox x:Name="Name" Margin="29,48,26,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Currency name"/>
+        <TextBox x:Name="Name" Margin="29,48,26,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="{Binding TEST}"/>
         <TextBox x:Name="Value" Margin="29,108,26,0" InputScope="Number" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Value"/>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="29,168,0,0" VerticalAlignment="Top" Width="345" Click="button_Click"/>
     </Grid>
