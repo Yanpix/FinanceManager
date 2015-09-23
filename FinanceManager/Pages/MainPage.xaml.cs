@@ -10,8 +10,6 @@ namespace FinanceManager.Pages
        
         public MainPage()
         {
-
-
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
         }

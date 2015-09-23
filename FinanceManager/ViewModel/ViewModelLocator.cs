@@ -11,15 +11,23 @@ namespace FinanceManager.ViewModel
 {
     public class ViewModelLocator
     {
-       public MainViewModel MainViewModel
+        private readonly UnityContainer _container;
+
+        public ViewModelLocator()
         {
-            get
-            {
-                var Container = new UnityContainer();
-                Container.RegisterType(typeof(MainViewModel));
-                return Container.Resolve<MainViewModel>();
-            }
-        } 
-        
+            _container = new UnityContainer();
+            Initializate();
+        }
+        public MainViewModel MainViewModel => _container.Resolve<MainViewModel>();
+        public INavigationService NavigationService => _container.Resolve<NavigationService>();
+
+        public void Initializate()
+        {
+            _container.RegisterType<MainViewModel>();
+            _container.RegisterType<ICurrencyService, CurrencyService>();
+            _container.RegisterType<IUnitOfWork, UnitOfWork>();
+            _container.RegisterType<INavigationService, NavigationService>();
+        }
+
     }
 }

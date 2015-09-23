@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,6 +15,7 @@ using FinanceManager.DAL.SQLite;
 using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
 using FinanceManager.ViewModel;
+using Microsoft.Practices.Unity;
 
 namespace FinanceManager
 {
@@ -32,8 +34,10 @@ namespace FinanceManager
 
             InitializeComponent();
             Suspending += OnSuspending;
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
         }
-        //public static ViewModelLocator ViewModelLocator => (ViewModelLocator)Current.Resources["ViewModelLocator"];
+
+        
 
         private static async Task<bool> CheckFileExists(string fileName)
         {
@@ -64,12 +68,17 @@ namespace FinanceManager
 #endif
             Frame rootFrame = Window.Current.Content as Frame;
 
+            IoCContainer container = new IoCContainer(new UnityContainer());
+            container.Initializate();
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame {CacheSize = 1};
+                
+                //container.NavigationService.InitializeFrame(rootFrame);
 
                 // TODO: change this value to a cache size that is appropriate for your application
 
@@ -77,7 +86,6 @@ namespace FinanceManager
                 {
                     // TODO: Load state from previously suspended application
                 }
-
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
@@ -135,6 +143,17 @@ namespace FinanceManager
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            var rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
         }
     }
 }

@@ -87,7 +87,9 @@
     <Compile Include="Base\BindableBase.cs" />
     <Compile Include="Base\RelayCommand.cs" />
     <Compile Include="BLL\IService\ICurrencyService.cs" />
+    <Compile Include="BLL\IService\INavigationService.cs" />
     <Compile Include="BLL\Service\CurrencyService.cs" />
+    <Compile Include="BLL\Service\NavigationService.cs" />
     <Compile Include="DAL\Models\BaseModel.cs" />
     <Compile Include="DAL\Models\Category.cs" />
     <Compile Include="DAL\Models\Currencies.cs" />
