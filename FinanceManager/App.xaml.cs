@@ -46,8 +46,9 @@ namespace FinanceManager
                 await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
                 return true;
             }
-            catch(Exception e)
+            catch(Exception ex)
             {
+                var message = ex.Message;
                 return false;
             }
         }
@@ -68,8 +69,8 @@ namespace FinanceManager
 #endif
             Frame rootFrame = Window.Current.Content as Frame;
 
-            IoCContainer container = new IoCContainer(new UnityContainer());
-            container.Initializate();
+            //IoCContainer container = new IoCContainer(new UnityContainer());
+            //container.Initializate();
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
