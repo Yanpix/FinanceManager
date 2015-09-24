@@ -2,10 +2,10 @@
 
 namespace FinanceManager.DAL.Models
 {
-    public class ExpenseCategory
+    public class ExpenseCategory : BaseModel
     {
         [PrimaryKey]
-        public short Id { get; set; }
+        public short ExpenseCategoryId { get; set; }
         public string Name { get; set; }
     }
 }

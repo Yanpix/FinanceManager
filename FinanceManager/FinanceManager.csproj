@@ -86,12 +86,14 @@
     </Compile>
     <Compile Include="Base\BindableBase.cs" />
     <Compile Include="Base\RelayCommand.cs" />
+    <Compile Include="BLL\IService\ICategoriesService.cs" />
     <Compile Include="BLL\IService\ICurrencyService.cs" />
     <Compile Include="BLL\IService\INavigationService.cs" />
+    <Compile Include="BLL\Service\CategoriesService.cs" />
     <Compile Include="BLL\Service\CurrencyService.cs" />
     <Compile Include="BLL\Service\NavigationService.cs" />
     <Compile Include="DAL\Models\BaseModel.cs" />
-    <Compile Include="DAL\Models\Category.cs" />
+    <Compile Include="DAL\Models\ExpenseCategory.cs" />
     <Compile Include="DAL\Models\Currencies.cs" />
     <Compile Include="DAL\Models\Currency.cs" />
     <Compile Include="DAL\Models\Expense.cs" />
@@ -103,6 +105,15 @@
     <Compile Include="DAL\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="DAL\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Infrastructure\IoCContainer.cs" />
+    <Compile Include="Pages\Categories.xaml.cs">
+      <DependentUpon>Categories.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EditExpenseCategory.xaml.cs">
+      <DependentUpon>EditExpenseCategory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EditIncomeCategory.xaml.cs">
+      <DependentUpon>EditIncomeCategory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -115,6 +126,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DAL\SQLite\SQLite.cs" />
     <Compile Include="DAL\SQLite\SQLiteAsync.cs" />
+    <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
@@ -136,6 +148,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Pages\Categories.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditExpenseCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditIncomeCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

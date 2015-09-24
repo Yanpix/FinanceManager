@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="FinanceManager.Pages.Categories"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=CategoriesViewModel}">
+
+    
+    <Grid>
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="Categories" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <TextBlock x:Name="TxbInfo" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet tempor libero, in aliquam neque. Fusce id libero faucibus, commodo nunc vitae, maximus elit. Nunc nec porta orci. Nulla facilisi. Sed ex nunc, pharetra sed urna quis, condimentum tristique magna. Mauris vulputate porta congue. Etiam a enim dui. Mauris mi dui, placerat et consectetur vel, posuere eu magna. Duis id turpis eget lectus porttitor laoreet. Nulla malesuada elementum nulla ut facilisis."  />
+            
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,100">
+                <Button x:Name="BtnIncomeCategory" Content="Edit income categories" Command="{Binding EditIncomeCategoriesCommand}"></Button>
+                <Button x:Name="BtnExpenseCategory" Content="Edit expense categories" Command="{Binding EditExpenseCategoriesCommand}"></Button>
+            </StackPanel>
+
+
+        </Grid>
+
+    </Grid>
+</Page>

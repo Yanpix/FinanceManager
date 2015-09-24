@@ -7,10 +7,10 @@ using FinanceManager.DAL.SQLite;
 
 namespace FinanceManager.DAL.Models
 {
-    public class IncomeCategory
+    public class IncomeCategory : BaseModel
     {
         [PrimaryKey]
-        public short Id { get; set; }
+        public short IncomeCategoryId { get; set; }
         public string Name { get; set; }
     }
 }

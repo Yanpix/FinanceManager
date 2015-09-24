@@ -30,6 +30,7 @@ namespace FinanceManager
             {
                 var db = new SQLiteAsyncConnection(ConnectionString);
                 db.CreateTableAsync<Currency>();
+                //db.CreateTableAsync<IncomeCategory>();
             }
 
             InitializeComponent();
@@ -109,7 +110,7 @@ namespace FinanceManager
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(Show), e.Arguments))
+                if (!rootFrame.Navigate(typeof(Categories), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
