@@ -36,5 +36,6 @@ namespace FinanceManager.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
     }
 }

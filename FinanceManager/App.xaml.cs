@@ -12,10 +12,8 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
-using FinanceManager.Infrastructure;
 using FinanceManager.Pages;
-using FinanceManager.ViewModel;
-using Microsoft.Practices.Unity;
+
 
 namespace FinanceManager
 {

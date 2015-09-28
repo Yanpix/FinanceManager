@@ -5,15 +5,22 @@
     xmlns:local="using:FinanceManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:FinanceManager.Helpers"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=CategoriesViewModel}">
+    <Page.Resources>
+        <ResourceDictionary>
+            <helpers:BooleanToVisibilityConverter x:Name="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <!--Bottom Application Bar -->
     <Page.BottomAppBar>
         <CommandBar IsSticky="True" x:Name="BtnAppBar">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Add" Label="Add New" Command="{Binding OpenEditPopupCommand, Mode=TwoWay}"></AppBarButton>
+                <AppBarButton Icon="Delete" Label="Delete" Command="{Binding DeleteModeCommand, Mode=TwoWay}"></AppBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -59,7 +66,7 @@
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Name="TxbCategory" HorizontalAlignment="Center" Text="Please enter the category name" FontSize="16"></TextBlock>
                     <TextBox PreventKeyboardDisplayOnProgrammaticFocus="True" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="TbxCategory" Text="{Binding CategoryName, Mode=TwoWay}" VerticalAlignment="Center" Margin="15"></TextBox>
                     <Button Content="Add" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Name="BtnOk" Command="{Binding AddIncomeCategory, Mode=TwoWay}"></Button>
-                    <Button Content="Cancel" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1"  Name="BtnCancel"  Command="{Binding ClosePopup}" ></Button>
+                    <Button Content="Close" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1"  Name="BtnCancel"  Command="{Binding ClosePopup}" ></Button>
 
                 </Grid>
             </StackPanel>
@@ -71,10 +78,22 @@
         </StackPanel>
 
         <Grid Grid.Row="2" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListView x:Name="LsvCategories" ItemsSource="{Binding IncomeCategories}" ScrollViewer.VerticalScrollMode="Enabled">
+            <ListView x:Name="LsvCategories" ItemsSource="{Binding IncomeCategories, Mode=TwoWay}" ScrollViewer.VerticalScrollMode="Enabled">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+
+
+                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="{Binding Path=DataContext.IsDeleteMode, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ContentRoot}" Command="{Binding Path=DataContext.DeleteIncomeCategoryCommand, ElementName=ContentRoot }" CommandParameter="{Binding IncomeCategoryId}"></CheckBox>
+                            <TextBlock Grid.Column="1" Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
+
+                        </Grid>
+
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

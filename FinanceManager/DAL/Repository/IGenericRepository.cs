@@ -15,5 +15,6 @@ namespace FinanceManager.DAL.Repository
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(int id);
         Task DeleteAll();
+        void Delete(int id);
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Input;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using FinanceManager.Base;
 using FinanceManager.BLL.IService;
 using FinanceManager.DAL.Models;
@@ -23,7 +24,7 @@ namespace FinanceManager.ViewModel
         {
             _categoriesService = categoriesService;
             _navigationService = navigationService;
-
+            
             IncomeCategories = _categoriesService.GetAllIncomeCategories();
 
             ExpenseCategories = _categoriesService.GetAllExpenseCategories();
@@ -31,7 +32,20 @@ namespace FinanceManager.ViewModel
 
         #region Fields and Properties
 
-        public string CategoryName { get; set; }
+        private string _categoryName;
+
+        public string CategoryName
+        {
+            get { return _categoryName; }
+            set
+            {
+                if (_categoryName != value)
+                {
+                    _categoryName = value;
+                    OnPropertyChanged("CategoryName");
+                }
+            }
+        }
 
         private bool _isOpen;
 
@@ -64,6 +78,7 @@ namespace FinanceManager.ViewModel
         }
 
         private ObservableCollection<ExpenseCategory> _expenseCategories;
+        public static readonly DependencyProperty TestCommandProperty = DependencyProperty.Register("TestCommand", typeof (RelayCommand<object>), typeof (CategoriesViewModel), new PropertyMetadata(default(RelayCommand<object>)));
 
         public ObservableCollection<ExpenseCategory> ExpenseCategories
         {
@@ -83,19 +98,50 @@ namespace FinanceManager.ViewModel
         #region Navigation
         public RelayCommand EditIncomeCategoriesCommand => new RelayCommand(() => _navigationService.Navigate(typeof(EditIncomeCategory)));
         public RelayCommand EditExpenseCategoriesCommand => new RelayCommand(() => _navigationService.Navigate(typeof(EditExpenseCategory)));
+
+
+
+        #endregion
+
+        #region Methods & Commands
         public RelayCommand OpenEditPopupCommand => new RelayCommand(() => IsOpen = (!IsOpen));
         public RelayCommand ClosePopup => new RelayCommand(() => IsOpen = false);
 
         public RelayCommand AddIncomeCategory => new RelayCommand(CreateNewIncomeCategory);
         public RelayCommand AddExpenseCategory => new RelayCommand(CreateNewExpenseCategory);
+
+        public RelayCommand<short> DeleteExpenseCategoryCommand => new RelayCommand<short>(DeleteExpenseCategory);
+
+        public RelayCommand<short> DeleteIncomeCategoryCommand => new RelayCommand<short>(DeleteIncomeCategory);
+        private bool _isDeleteMode;
+        public bool IsDeleteMode
+        {
+            get
+            {
+                return _isDeleteMode;
+                
+            }
+            set
+            {
+                if (_isDeleteMode != value)
+                {
+                    _isDeleteMode = value;
+                    OnPropertyChanged("IsDeleteMode");
+                }
+            }
+        }
+
+        public RelayCommand DeleteModeCommand => new RelayCommand(() => IsDeleteMode = (!IsDeleteMode));
+
         private void CreateNewExpenseCategory()
         {
-           _categoriesService.CreateExpenseCategory(new ExpenseCategory
+            _categoriesService.CreateExpenseCategory(new ExpenseCategory
             {
                 Name = CategoryName
             });
-            
+
             ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+            CategoryName = string.Empty;
         }
 
         private void CreateNewIncomeCategory()
@@ -105,22 +151,24 @@ namespace FinanceManager.ViewModel
                 Name = CategoryName
             });
             IncomeCategories = _categoriesService.GetAllIncomeCategories();
+            CategoryName = string.Empty;
         }
 
+        private async void DeleteExpenseCategory(short categoryId)
+        {
+            await _categoriesService.DeleteExpenseCategoryAsync(categoryId);
+
+            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+        }
+
+        private async void DeleteIncomeCategory(short categoryId)
+        {
+            await _categoriesService.DeleteIncomeeCategoryAsync(categoryId);
+
+            IncomeCategories = _categoriesService.GetAllIncomeCategories();
+        }
 
         #endregion
-
-        #region Commands
-
-        #endregion
-
-        #region Methods
-
-
-
-
-        #endregion
-
 
     }
 }

@@ -1,10 +1,6 @@
-﻿
-using System.Linq.Expressions;
-using FinanceManager.BLL.IService;
+﻿using FinanceManager.BLL.IService;
 using FinanceManager.BLL.Service;
 using FinanceManager.DAL.UnitOfWork;
-using FinanceManager.Infrastructure;
-using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
 namespace FinanceManager.ViewModel

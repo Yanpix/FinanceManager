@@ -21,7 +21,6 @@ namespace FinanceManager.ViewModel
         public MainViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-            TEST = "TEST!";
         }
 
         public string TEST { get; set; }

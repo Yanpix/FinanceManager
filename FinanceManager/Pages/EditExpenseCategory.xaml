@@ -5,16 +5,23 @@
     xmlns:local="using:FinanceManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:FinanceManager.Helpers"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=CategoriesViewModel}">
+    <Page.Resources>
+        <ResourceDictionary>
+            <helpers:BooleanToVisibilityConverter x:Name="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <!--Bottom Application Bar -->
     <Page.BottomAppBar>
         <CommandBar IsSticky="True" x:Name="BtnAppBar">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Add" Label="Add New" Command="{Binding OpenEditPopupCommand, Mode=TwoWay}"></AppBarButton>
+                <AppBarButton Icon="Delete" Label="Delete" Command="{Binding DeleteModeCommand, Mode=TwoWay}"></AppBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -56,11 +63,13 @@
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
+          
 
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Name="TxbCategory" HorizontalAlignment="Center" Text="Please enter the category name" FontSize="16"></TextBlock>
+                    <TextBlock  Grid.Row="0" Grid.ColumnSpan="2" Name="TxbCategory" HorizontalAlignment="Center" Text="Please enter the category name" FontSize="16">
+                     </TextBlock>
                     <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="TbxCategory" VerticalAlignment="Center" Margin="15" Text="{Binding CategoryName, Mode=TwoWay}"></TextBox>
                     <Button Content="Add" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Name="BtnOk" Command="{Binding AddExpenseCategory, Mode=TwoWay}"></Button>
-                    <Button Content="Cancel" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1"  Name="BtnCancel" Command="{Binding ClosePopup}" ></Button>
+                    <Button Content="Close" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1"  Name="BtnCancel" Command="{Binding ClosePopup}" ></Button>
 
                 </Grid>
             </StackPanel>
@@ -72,19 +81,18 @@
         </StackPanel>
 
         <Grid Grid.Row="2" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListView x:Name="LsvCategories" ItemsSource="{Binding ExpenseCategories}" ScrollViewer.VerticalScrollMode="Enabled">
+            <ListView x:Name="LsvCategories" ItemsSource="{Binding ExpenseCategories, Mode=TwoWay}" ScrollViewer.VerticalScrollMode="Enabled">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"></ColumnDefinition>
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            
-                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="Collapsed"></CheckBox>
-                            <TextBlock Grid.Column="1" Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
-                            
+                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="{Binding Path=DataContext.IsDeleteMode, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ContentRoot}"  Command="{Binding Path=DataContext.DeleteExpenseCategoryCommand, ElementName=ContentRoot }" CommandParameter="{Binding ExpenseCategoryId}"></CheckBox>
+                            <TextBlock Grid.Column="1" Margin="0, 10, 0, 0" Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
+                         
                          </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

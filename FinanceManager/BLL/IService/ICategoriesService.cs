@@ -24,6 +24,8 @@ namespace FinanceManager.BLL.IService
         ObservableCollection<IncomeCategory> GetAllIncomeCategories();
         void CreateExpenseCategory(ExpenseCategory category);
         void CreateIncomeCategory(IncomeCategory category);
+        void DeleteExpenseCategory(int id);
+        void DeleteIncomeCategory(int id);
 
     }
 

@@ -54,6 +54,11 @@ namespace FinanceManager.DAL.Repository
             return await _connection.FindAsync<TEntity>(id);
         }
 
+        public TEntity GetById(int id)
+        {
+            return _connection2.Find<TEntity>(id);
+        }
+
         public async Task CreateAsync(TEntity entity)
         {
             await _connection.InsertAsync(entity);
@@ -79,6 +84,12 @@ namespace FinanceManager.DAL.Repository
         {
             await _connection.DropTableAsync<TEntity>();
             await _connection.CreateTableAsync<TEntity>();
+        }
+
+        public void Delete(int id)
+        {
+            var entity = GetById(id);
+            _connection2.Delete(entity);
         }
     }
 }

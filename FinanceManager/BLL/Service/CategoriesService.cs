@@ -77,5 +77,15 @@ namespace FinanceManager.BLL.Service
         {
             _unitOfWork.Repository<IncomeCategory>().Create(category);
         }
+
+        public void DeleteExpenseCategory(int id)
+        {
+            _unitOfWork.Repository<ExpenseCategory>().DeleteAsync(id);
+        }
+
+        public void DeleteIncomeCategory(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
