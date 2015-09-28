@@ -18,6 +18,13 @@ namespace FinanceManager.BLL.IService
         Task DeleteIncomeeCategoryAsync(int id);
         Task DeleteAllExpenseCategory();
         Task DeleteAllIncomeCategory();
+
+        
+        ObservableCollection<ExpenseCategory> GetAllExpenseCategories();
+        ObservableCollection<IncomeCategory> GetAllIncomeCategories();
+        void CreateExpenseCategory(ExpenseCategory category);
+        void CreateIncomeCategory(IncomeCategory category);
+
     }
 
 }

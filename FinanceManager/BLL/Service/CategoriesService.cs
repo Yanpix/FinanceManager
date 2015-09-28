@@ -57,5 +57,25 @@ namespace FinanceManager.BLL.Service
         {
             await _unitOfWork.Repository<IncomeCategory>().DeleteAll();
         }
+
+        public ObservableCollection<ExpenseCategory> GetAllExpenseCategories()
+        {
+            return _unitOfWork.Repository<ExpenseCategory>().Get();
+        }
+
+        public ObservableCollection<IncomeCategory> GetAllIncomeCategories()
+        {
+            return _unitOfWork.Repository<IncomeCategory>().Get();
+        }
+
+        public void CreateExpenseCategory(ExpenseCategory category)
+        {
+            _unitOfWork.Repository<ExpenseCategory>().Create(category);
+        }
+
+        public void CreateIncomeCategory(IncomeCategory category)
+        {
+            _unitOfWork.Repository<IncomeCategory>().Create(category);
+        }
     }
 }

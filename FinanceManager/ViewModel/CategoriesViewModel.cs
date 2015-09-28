@@ -24,7 +24,9 @@ namespace FinanceManager.ViewModel
             _categoriesService = categoriesService;
             _navigationService = navigationService;
 
-            //EditIncomeCategories = _categoriesService.GetAllIncomeCategoriesAsync();
+            IncomeCategories = _categoriesService.GetAllIncomeCategories();
+
+            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
         }
 
         #region Fields and Properties
@@ -46,9 +48,35 @@ namespace FinanceManager.ViewModel
             }
         }
 
-        public Task<ObservableCollection<IncomeCategory>> EditIncomeCategories { get; set; }
-        //private ObservableCollection<EditIncomeCategory> _editExpenseCategories;
+        private ObservableCollection<IncomeCategory> _incomeCategories;
 
+        public ObservableCollection<IncomeCategory> IncomeCategories
+        {
+            get { return _incomeCategories; }
+            set
+            {
+                if (_incomeCategories != value)
+                {
+                    _incomeCategories = value;
+                    OnPropertyChanged("IncomeCategories");
+                }
+            }
+        }
+
+        private ObservableCollection<ExpenseCategory> _expenseCategories;
+
+        public ObservableCollection<ExpenseCategory> ExpenseCategories
+        {
+            get { return _expenseCategories; }
+            set
+            {
+                if (_expenseCategories != value)
+                {
+                    _expenseCategories = value;
+                    OnPropertyChanged("ExpenseCategories");
+                }
+            }
+        }
 
         #endregion
 
@@ -58,8 +86,27 @@ namespace FinanceManager.ViewModel
         public RelayCommand OpenEditPopupCommand => new RelayCommand(() => IsOpen = (!IsOpen));
         public RelayCommand ClosePopup => new RelayCommand(() => IsOpen = false);
 
-        public RelayCommand AddIncomeCategory => new RelayCommand(() => _categoriesService.CreateIncomeCategoryAsync(new IncomeCategory {Id = 1, Name = CategoryName}));
-        public RelayCommand AddExpenseCategory => new RelayCommand(() => _categoriesService.CreateExpenseCategoryAsync(new ExpenseCategory { Id = 1, Name = CategoryName }) );
+        public RelayCommand AddIncomeCategory => new RelayCommand(CreateNewIncomeCategory);
+        public RelayCommand AddExpenseCategory => new RelayCommand(CreateNewExpenseCategory);
+        private void CreateNewExpenseCategory()
+        {
+           _categoriesService.CreateExpenseCategory(new ExpenseCategory
+            {
+                Name = CategoryName
+            });
+            
+            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+        }
+
+        private void CreateNewIncomeCategory()
+        {
+            _categoriesService.CreateIncomeCategory(new IncomeCategory
+            {
+                Name = CategoryName
+            });
+            IncomeCategories = _categoriesService.GetAllIncomeCategories();
+        }
+
 
         #endregion
 

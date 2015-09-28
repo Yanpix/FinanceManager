@@ -28,6 +28,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -65,17 +66,18 @@
         </Popup>
 
         <!-- Main Content -->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <StackPanel>
-                <TextBlock x:Name="TxbInfo" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet tempor libero, in aliquam neque. Fusce id libero faucibus, commodo nunc vitae, maximus elit. Nunc nec porta orci. Nulla facilisi. Sed ex nunc, pharetra sed urna quis, condimentum tristique magna. Mauris vulputate porta congue. Etiam a enim dui. Mauris mi dui, placerat et consectetur vel, posuere eu magna. Duis id turpis eget lectus porttitor laoreet. Nulla malesuada elementum nulla ut facilisis."  />
-                <ListView x:Name="LsvCategories" ItemsSource="{Binding EditIncomeCategories}"></ListView>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
+            <TextBlock x:Name="TxbInfo" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet tempor libero, in aliquam neque. Fusce id libero faucibus, commodo nunc vitae, maximus elit. Nunc nec porta orci. Nulla facilisi. Sed ex nunc, pharetra sed urna quis, condimentum tristique magna. Mauris vulputate porta congue. Etiam a enim dui. Mauris mi dui, placerat et consectetur vel, posuere eu magna. Duis id turpis eget lectus porttitor laoreet. Nulla malesuada elementum nulla ut facilisis."  />
+        </StackPanel>
 
-            </StackPanel>
-
-
-
-
-
+        <Grid Grid.Row="2" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ListView x:Name="LsvCategories" ItemsSource="{Binding IncomeCategories}" ScrollViewer.VerticalScrollMode="Enabled">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </Page>

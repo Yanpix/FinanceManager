@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=CategoriesViewModel}">
 
@@ -28,6 +29,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -56,8 +58,8 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Name="TxbCategory" HorizontalAlignment="Center" Text="Please enter the category name" FontSize="16"></TextBlock>
-                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="TbxCategory" VerticalAlignment="Center" Margin="15"></TextBox>
-                    <Button Content="Add" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Name="BtnOk"></Button>
+                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="TbxCategory" VerticalAlignment="Center" Margin="15" Text="{Binding CategoryName, Mode=TwoWay}"></TextBox>
+                    <Button Content="Add" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Name="BtnOk" Command="{Binding AddExpenseCategory, Mode=TwoWay}"></Button>
                     <Button Content="Cancel" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1"  Name="BtnCancel" Command="{Binding ClosePopup}" ></Button>
 
                 </Grid>
@@ -65,17 +67,36 @@
         </Popup>
 
         <!-- Main Content -->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <StackPanel>
-                <TextBlock x:Name="TxbInfo" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet tempor libero, in aliquam neque. Fusce id libero faucibus, commodo nunc vitae, maximus elit. Nunc nec porta orci. Nulla facilisi. Sed ex nunc, pharetra sed urna quis, condimentum tristique magna. Mauris vulputate porta congue. Etiam a enim dui. Mauris mi dui, placerat et consectetur vel, posuere eu magna. Duis id turpis eget lectus porttitor laoreet. Nulla malesuada elementum nulla ut facilisis."  />
-                <ListView x:Name="LsvCategories"></ListView>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
+            <TextBlock x:Name="TxbInfo" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet tempor libero, in aliquam neque. Fusce id libero faucibus, commodo nunc vitae, maximus elit. Nunc nec porta orci. Nulla facilisi. Sed ex nunc, pharetra sed urna quis, condimentum tristique magna. Mauris vulputate porta congue. Etiam a enim dui. Mauris mi dui, placerat et consectetur vel, posuere eu magna. Duis id turpis eget lectus porttitor laoreet. Nulla malesuada elementum nulla ut facilisis."  />
+        </StackPanel>
 
-            </StackPanel>
-            
-            
-
-
-
+        <Grid Grid.Row="2" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ListView x:Name="LsvCategories" ItemsSource="{Binding ExpenseCategories}" ScrollViewer.VerticalScrollMode="Enabled">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="Collapsed"></CheckBox>
+                            <TextBlock Grid.Column="1" Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
+                            
+                         </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
+
+
+
+
+
+
+
+
     </Grid>
 </Page>

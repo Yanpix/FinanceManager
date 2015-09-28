@@ -30,7 +30,7 @@ namespace FinanceManager
             {
                 var db = new SQLiteAsyncConnection(ConnectionString);
                 db.CreateTableAsync<Currency>();
-                //db.CreateTableAsync<IncomeCategory>();
+                db.CreateTableAsync<ExpenseCategory>();
             }
 
             InitializeComponent();
