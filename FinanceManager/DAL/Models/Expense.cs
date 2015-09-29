@@ -8,7 +8,7 @@ namespace FinanceManager.DAL.Models
         [PrimaryKey]
         public double Value { get; set; }
         public DateTime Date { get; set; }
-        public ExpenseCategory Category { get; set; }
+        public Category Category { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
     }

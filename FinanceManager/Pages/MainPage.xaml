@@ -8,13 +8,36 @@
     Background="Teal"
     DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
 
-
-
-
     <Grid>
-        <TextBox x:Name="Name" Margin="29,48,26,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="{Binding TEST}"/>
-        <TextBox x:Name="Value" Margin="29,108,26,0" InputScope="Number" TextWrapping="Wrap" Text="" VerticalAlignment="Top" PlaceholderText="Value"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="29,168,0,0" VerticalAlignment="Top" Width="345" Click="button_Click"/>
-        <Button x:Name="button1" Content="Move" HorizontalAlignment="Left" Margin="149,226,0,0" VerticalAlignment="Top" Command="{Binding Move}"/>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+        <TextBlock Text="Finance Manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+        <TextBlock Text="Navigation Page" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+    </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,100">
+                <Button x:Name="BtnCategories" Content="Categories" Click="BtnCategories_Click"></Button>
+                <Button x:Name="BtnExpenseCategory" Content="EditExpenseCategory" Click="BtnExpenseCategory_Click"></Button>
+                <Button x:Name="BtnIncomeCategory" Content="EditIncomeCategory" Click="BtnIncomeCategory_Click"></Button>
+                <Button x:Name="BtnCurrencies" Content="Currencies" Click="BtnCurrencies_Click"></Button>
+                
+            </StackPanel>
+
+
+        </Grid>
+
+
     </Grid>
+
 </Page>

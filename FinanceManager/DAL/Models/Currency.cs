@@ -1,4 +1,5 @@
-﻿using FinanceManager.DAL.SQLite;
+﻿using System.Collections.Generic;
+using FinanceManager.DAL.SQLite;
 
 namespace FinanceManager.DAL.Models
 {
@@ -7,5 +8,7 @@ namespace FinanceManager.DAL.Models
         public short CurrencyId { get; set; }
         public string Name { get; set; }
         public double Value { get; set; }
+        public string Symbol { get; set; }
+       
     }
 }

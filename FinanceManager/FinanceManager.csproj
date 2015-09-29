@@ -93,12 +93,11 @@
     <Compile Include="BLL\Service\CurrencyService.cs" />
     <Compile Include="BLL\Service\NavigationService.cs" />
     <Compile Include="DAL\Models\BaseModel.cs" />
-    <Compile Include="DAL\Models\ExpenseCategory.cs" />
+    <Compile Include="DAL\Models\Category.cs" />
     <Compile Include="DAL\Models\Currencies.cs" />
     <Compile Include="DAL\Models\Currency.cs" />
     <Compile Include="DAL\Models\Expense.cs" />
     <Compile Include="DAL\Models\Income.cs" />
-    <Compile Include="DAL\Models\IncomeCategory.cs" />
     <Compile Include="DAL\Models\MoneyBox.cs" />
     <Compile Include="DAL\Repository\GenericRepository.cs" />
     <Compile Include="DAL\Repository\IGenericRepository.cs" />
@@ -107,6 +106,9 @@
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
     <Compile Include="Pages\Categories.xaml.cs">
       <DependentUpon>Categories.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Currencies.xaml.cs">
+      <DependentUpon>Currencies.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\EditExpenseCategory.xaml.cs">
       <DependentUpon>EditExpenseCategory.xaml</DependentUpon>
@@ -127,6 +129,7 @@
     <Compile Include="DAL\SQLite\SQLite.cs" />
     <Compile Include="DAL\SQLite\SQLiteAsync.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
+    <Compile Include="ViewModel\CurrenciesViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
@@ -149,6 +152,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Pages\Categories.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Currencies.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

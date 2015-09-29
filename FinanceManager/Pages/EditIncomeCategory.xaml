@@ -89,11 +89,10 @@
 
 
 
-                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="{Binding Path=DataContext.IsDeleteMode, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ContentRoot}" Command="{Binding Path=DataContext.DeleteIncomeCategoryCommand, ElementName=ContentRoot }" CommandParameter="{Binding IncomeCategoryId}"></CheckBox>
+                            <CheckBox Grid.Column="0" Name="chbCategoryName" Visibility="{Binding Path=DataContext.IsDeleteMode, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ContentRoot}" Command="{Binding Path=DataContext.DeleteCategoryCommand, ElementName=ContentRoot }" CommandParameter="{Binding CategoryId}"></CheckBox>
                             <TextBlock Grid.Column="1" Name="txbCateoryName" Text="{Binding Name}" FontSize="24" ></TextBlock>
 
                         </Grid>
-
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -12,22 +12,17 @@ namespace FinanceManager.DAL.UnitOfWork
         private readonly SQLiteAsyncConnection _connection;
         private readonly SQLiteConnection _connection2;
         private Dictionary<string, object> _repositories;
-        private const string ExpenseCategory = "ExpenseCategory";
-        private const string IncomeCategory = "IncomeCategory";
+        private const string Category = "Category";
+       
 
         public void InitializateDb()
         {
             using (_connection2)
             {
-                var info = _connection2.GetTableInfo(ExpenseCategory);
+                var info = _connection2.GetTableInfo(Category);
                 if (!info.Any())
                 {
-                    _connection2.CreateTable<ExpenseCategory>();
-                }
-                info = _connection2.GetTableInfo(IncomeCategory);
-                if (!info.Any())
-                {
-                    _connection2.CreateTable<IncomeCategory>();
+                    _connection2.CreateTable<Category>();
                 }
 
             }

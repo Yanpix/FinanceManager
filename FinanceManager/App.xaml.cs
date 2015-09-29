@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Navigation;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.SQLite;
 using FinanceManager.Pages;
+using Currencies = FinanceManager.Pages.Currencies;
 
 
 namespace FinanceManager
@@ -28,7 +29,9 @@ namespace FinanceManager
             {
                 var db = new SQLiteAsyncConnection(ConnectionString);
                 db.CreateTableAsync<Currency>();
-                db.CreateTableAsync<ExpenseCategory>();
+                
+                
+
             }
 
             InitializeComponent();
@@ -108,7 +111,7 @@ namespace FinanceManager
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(Categories), e.Arguments))
+                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

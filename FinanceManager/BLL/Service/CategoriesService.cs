@@ -18,74 +18,44 @@ namespace FinanceManager.BLL.Service
         {
             _unitOfWork = new UnitOfWork();
         }
-        public async Task<ObservableCollection<ExpenseCategory>> GetAllExpenseCategoriesAsync()
+        public async Task<ObservableCollection<Category>> GetAllCategoriesAsync()
         {
-            return await _unitOfWork.Repository<ExpenseCategory>().GetAsync();
+            return await _unitOfWork.Repository<Category>().GetAsync();
         }
 
-        public async Task<ObservableCollection<IncomeCategory>> GetAllIncomeCategoriesAsync()
+        public async Task CreateCategoryAsync(Category category)
         {
-            return await _unitOfWork.Repository<IncomeCategory>().GetAsync();
+            await _unitOfWork.Repository<Category>().CreateAsync(category);
+        }
+        
+        public async Task DeleteCategoryAsync(int id)
+        {
+          await _unitOfWork.Repository<Category>().DeleteAsync(id);
         }
 
-        public async Task CreateExpenseCategoryAsync(ExpenseCategory category)
+
+        public async Task DeleteAllCategories()
         {
-            await _unitOfWork.Repository<ExpenseCategory>().CreateAsync(category);
+            await _unitOfWork.Repository<Category>().DeleteAll();
         }
 
-        public async Task CreateIncomeCategoryAsync(IncomeCategory category)
+        public ObservableCollection<Category> GetAllCategories()
         {
-            await _unitOfWork.Repository<IncomeCategory>().CreateAsync(category);
+            return _unitOfWork.Repository<Category>().Get();
         }
 
-        public async Task DeleteExpenseCategoryAsync(int id)
+ 
+
+        public void CreateCategory(Category category)
         {
-          await _unitOfWork.Repository<ExpenseCategory>().DeleteAsync(id);
+            _unitOfWork.Repository<Category>().Create(category);
         }
 
-        public async Task DeleteIncomeeCategoryAsync(int id)
+        public void DeleteCategory(int id)
         {
-            await _unitOfWork.Repository<IncomeCategory>().DeleteAsync(id);
+            _unitOfWork.Repository<Category>().DeleteAsync(id);
         }
 
-        public async Task DeleteAllExpenseCategory()
-        {
-            await _unitOfWork.Repository<ExpenseCategory>().DeleteAll();
-        }
 
-        public async Task DeleteAllIncomeCategory()
-        {
-            await _unitOfWork.Repository<IncomeCategory>().DeleteAll();
-        }
-
-        public ObservableCollection<ExpenseCategory> GetAllExpenseCategories()
-        {
-            return _unitOfWork.Repository<ExpenseCategory>().Get();
-        }
-
-        public ObservableCollection<IncomeCategory> GetAllIncomeCategories()
-        {
-            return _unitOfWork.Repository<IncomeCategory>().Get();
-        }
-
-        public void CreateExpenseCategory(ExpenseCategory category)
-        {
-            _unitOfWork.Repository<ExpenseCategory>().Create(category);
-        }
-
-        public void CreateIncomeCategory(IncomeCategory category)
-        {
-            _unitOfWork.Repository<IncomeCategory>().Create(category);
-        }
-
-        public void DeleteExpenseCategory(int id)
-        {
-            _unitOfWork.Repository<ExpenseCategory>().DeleteAsync(id);
-        }
-
-        public void DeleteIncomeCategory(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

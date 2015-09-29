@@ -18,18 +18,24 @@ namespace FinanceManager.Pages
         {
         }
 
-        private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void BtnCategories_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var currency = new Currency
-            {
-                Name = Name.Text,
-                Value = int.Parse(Value.Text)
-            };
-            
-            //_currencyService.CreateAsync(currency);
-            Frame.Navigate(typeof(Show));
-            Name.Text = string.Empty;
-            Value.Text = string.Empty;
+            Frame.Navigate(typeof (Categories));
+        }
+
+        private void BtnExpenseCategory_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof (EditExpenseCategory));
+        }
+
+        private void BtnIncomeCategory_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof (EditIncomeCategory));
+        }
+
+        private void BtnCurrencies_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof (Currencies));
         }
     }
 }

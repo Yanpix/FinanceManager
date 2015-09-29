@@ -10,22 +10,15 @@ namespace FinanceManager.BLL.IService
 {
     public interface ICategoriesService
     {
-        Task<ObservableCollection<ExpenseCategory>> GetAllExpenseCategoriesAsync();
-        Task<ObservableCollection<IncomeCategory>> GetAllIncomeCategoriesAsync();
-        Task CreateExpenseCategoryAsync(ExpenseCategory category);
-        Task CreateIncomeCategoryAsync(IncomeCategory category);
-        Task DeleteExpenseCategoryAsync(int id);
-        Task DeleteIncomeeCategoryAsync(int id);
-        Task DeleteAllExpenseCategory();
-        Task DeleteAllIncomeCategory();
+        Task<ObservableCollection<Category>> GetAllCategoriesAsync();
+        Task CreateCategoryAsync(Category category);
+        Task DeleteCategoryAsync(int id);
+        Task DeleteAllCategories();
 
         
-        ObservableCollection<ExpenseCategory> GetAllExpenseCategories();
-        ObservableCollection<IncomeCategory> GetAllIncomeCategories();
-        void CreateExpenseCategory(ExpenseCategory category);
-        void CreateIncomeCategory(IncomeCategory category);
-        void DeleteExpenseCategory(int id);
-        void DeleteIncomeCategory(int id);
+        ObservableCollection<Category> GetAllCategories();
+        void CreateCategory(Category category);
+        void DeleteCategory(int id);
 
     }
 

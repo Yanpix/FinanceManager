@@ -24,10 +24,7 @@ namespace FinanceManager.ViewModel
         {
             _categoriesService = categoriesService;
             _navigationService = navigationService;
-            
-            IncomeCategories = _categoriesService.GetAllIncomeCategories();
-
-            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+            UpdataData();
         }
 
         #region Fields and Properties
@@ -62,38 +59,23 @@ namespace FinanceManager.ViewModel
             }
         }
 
-        private ObservableCollection<IncomeCategory> _incomeCategories;
+        private ObservableCollection<Category> _categories;
 
-        public ObservableCollection<IncomeCategory> IncomeCategories
+        public ObservableCollection<Category> Categories
         {
-            get { return _incomeCategories; }
+            get { return _categories; }
             set
             {
-                if (_incomeCategories != value)
+                if (_categories != value)
                 {
-                    _incomeCategories = value;
-                    OnPropertyChanged("IncomeCategories");
+                    _categories = value;
+                    OnPropertyChanged("Categories");
                 }
             }
         }
 
-        private ObservableCollection<ExpenseCategory> _expenseCategories;
-        public static readonly DependencyProperty TestCommandProperty = DependencyProperty.Register("TestCommand", typeof (RelayCommand<object>), typeof (CategoriesViewModel), new PropertyMetadata(default(RelayCommand<object>)));
-
-        public ObservableCollection<ExpenseCategory> ExpenseCategories
-        {
-            get { return _expenseCategories; }
-            set
-            {
-                if (_expenseCategories != value)
-                {
-                    _expenseCategories = value;
-                    OnPropertyChanged("ExpenseCategories");
-                }
-            }
-        }
-
-        #endregion
+       
+     #endregion
 
         #region Navigation
         public RelayCommand EditIncomeCategoriesCommand => new RelayCommand(() => _navigationService.Navigate(typeof(EditIncomeCategory)));
@@ -106,20 +88,15 @@ namespace FinanceManager.ViewModel
         #region Methods & Commands
         public RelayCommand OpenEditPopupCommand => new RelayCommand(() => IsOpen = (!IsOpen));
         public RelayCommand ClosePopup => new RelayCommand(() => IsOpen = false);
-
         public RelayCommand AddIncomeCategory => new RelayCommand(CreateNewIncomeCategory);
         public RelayCommand AddExpenseCategory => new RelayCommand(CreateNewExpenseCategory);
-
-        public RelayCommand<short> DeleteExpenseCategoryCommand => new RelayCommand<short>(DeleteExpenseCategory);
-
-        public RelayCommand<short> DeleteIncomeCategoryCommand => new RelayCommand<short>(DeleteIncomeCategory);
+        public RelayCommand<short> DeleteCategoryCommand => new RelayCommand<short>(DeleteCategory);
         private bool _isDeleteMode;
         public bool IsDeleteMode
         {
             get
             {
                 return _isDeleteMode;
-                
             }
             set
             {
@@ -135,39 +112,76 @@ namespace FinanceManager.ViewModel
 
         private void CreateNewExpenseCategory()
         {
-            _categoriesService.CreateExpenseCategory(new ExpenseCategory
+            _categoriesService.CreateCategory(new Category
             {
-                Name = CategoryName
+                Name = CategoryName,
+                CategoryType = CategoryTypeEnum.Expense
             });
 
-            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+            UpdataData();
             CategoryName = string.Empty;
         }
 
         private void CreateNewIncomeCategory()
         {
-            _categoriesService.CreateIncomeCategory(new IncomeCategory
+            _categoriesService.CreateCategory(new Category
             {
-                Name = CategoryName
+                Name = CategoryName,
+                CategoryType = CategoryTypeEnum.Income
+                
             });
-            IncomeCategories = _categoriesService.GetAllIncomeCategories();
+            UpdataData();
             CategoryName = string.Empty;
         }
 
-        private async void DeleteExpenseCategory(short categoryId)
+        private ObservableCollection<Category> _incomeCategories;
+        public ObservableCollection<Category> IncomeCategories
         {
-            await _categoriesService.DeleteExpenseCategoryAsync(categoryId);
-
-            ExpenseCategories = _categoriesService.GetAllExpenseCategories();
+            get
+            {
+               return _incomeCategories;
+            }
+            set
+            {
+                if (_incomeCategories != value)
+                {
+                    _incomeCategories = value;
+                    OnPropertyChanged("IncomeCategories");
+                }
+            }
         }
 
-        private async void DeleteIncomeCategory(short categoryId)
-        {
-            await _categoriesService.DeleteIncomeeCategoryAsync(categoryId);
+        private ObservableCollection<Category> _expenseCategories;
 
-            IncomeCategories = _categoriesService.GetAllIncomeCategories();
+        public ObservableCollection<Category> ExpenseCategories
+        {
+            get
+            {
+                return _expenseCategories;
+            }
+            set
+            {
+                if (_expenseCategories != value)
+                {
+                    _expenseCategories = value;
+                    OnPropertyChanged("ExpenseCategories");
+                }
+            }
         }
 
+        private async void DeleteCategory(short categoryId)
+        {
+            await _categoriesService.DeleteCategoryAsync(categoryId);
+
+            UpdataData();
+        }
+
+        private void UpdataData()
+        {
+            Categories = _categoriesService.GetAllCategories();
+            IncomeCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Income));
+            ExpenseCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Expense));
+        }
         #endregion
 
     }
