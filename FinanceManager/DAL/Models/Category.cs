@@ -1,21 +1,19 @@
-﻿using System;
-using FinanceManager.DAL.SQLite;
+﻿using SQLite.Net.Attributes;
+using System.Collections.Generic;
+using SQLiteNetExtensions.Attributes;
 
 namespace FinanceManager.DAL.Models
 {
     public class Category
     {
-        [AutoIncrement]
-        [PrimaryKey]
-        public short CategoryId { get; set; }
-        public CategoryTypeEnum CategoryType { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
-    }
+        public TransactionType Type { get; set; }
 
-    public enum CategoryTypeEnum
-    {
-        Income,
-        Expense
+        [OneToMany]
+        public List<Transaction> Transactions { get; set; }
     }
 }

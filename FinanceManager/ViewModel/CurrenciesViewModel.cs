@@ -20,15 +20,15 @@ namespace FinanceManager.ViewModel
                 test.Add(new Currency
                 {
                     Name = "Grivna",
-                    CurrencyId = 1,
-                    Value = 1,
+                    //CurrencyId = 1,
+                    //Value = 1,
                     Symbol = "₴"
                 });
                 test.Add(new Currency
                 {
                     Name = "Rubas",
-                    CurrencyId = 2,
-                    Value = 100/33,
+                    //CurrencyId = 2,
+                    //Value = 100/33,
                     Symbol = "₴"
                 });
 

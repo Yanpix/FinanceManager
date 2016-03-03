@@ -1,14 +1,22 @@
-﻿using System.Collections.Generic;
-using FinanceManager.DAL.SQLite;
+﻿using SQLite.Net.Attributes;
+using System.Collections.Generic;
+using SQLiteNetExtensions.Attributes;
 
 namespace FinanceManager.DAL.Models
 {
-    public class Currency : BaseModel
+    public class Currency
     {
-        public short CurrencyId { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public short Id { get; set; }
+
         public string Name { get; set; }
-        public double Value { get; set; }
-        public string Symbol { get; set; }
-       
+
+        public string Symbol { get; set; }  
+
+        [OneToMany]
+        public List<MoneyBox> MoneyBoxes { get; set; }
+
+        [OneToMany]
+        public List<Transaction> Transactions { get; set; }
     }
 }

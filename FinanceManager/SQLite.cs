@@ -44,7 +44,7 @@ using Sqlite3DatabaseHandle = System.IntPtr;
 using Sqlite3Statement = System.IntPtr;
 #endif
 
-namespace FinanceManager.DAL.SQLite
+namespace SQLite
 {
 	public class SQLiteException : Exception
 	{

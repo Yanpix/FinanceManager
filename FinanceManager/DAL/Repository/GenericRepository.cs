@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using FinanceManager.DAL.SQLite;
+using SQLite.Net.Async;
+using SQLite.Net;
+using SQLite.Net.Platform.WinRT;
 
 namespace FinanceManager.DAL.Repository
 {
@@ -11,11 +13,11 @@ namespace FinanceManager.DAL.Repository
     {
         private readonly SQLiteAsyncConnection _connection;
         private readonly SQLiteConnection _connection2;
-
+        
         public GenericRepository(SQLiteAsyncConnection connection)
         {
             _connection = connection;
-            _connection2 = new SQLiteConnection(App.ConnectionString);
+            _connection2 = new SQLiteConnection(new SQLitePlatformWinRT(), App.ConnectionString);
         }
 
         public async Task<ObservableCollection<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> orderBy = null)

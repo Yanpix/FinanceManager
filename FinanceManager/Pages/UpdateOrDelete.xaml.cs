@@ -22,16 +22,16 @@ namespace FinanceManager.Pages
             _selectedContactId = int.Parse(e.Parameter.ToString());
             var currency = await _currencyService.GetByIdAsync(_selectedContactId);
             NameTxbx.Text = currency.Name;
-            ValueTxbx.Text = currency.Value.ToString();
+            //ValueTxbx.Text = currency.Value.ToString();
         }
 
         private async void UpdateContact_Click(object sender, RoutedEventArgs e)
         {
             var currency = new Currency
             {
-                Id = _selectedContactId,
+                //Id = _selectedContactId,
                 Name = NameTxbx.Text,
-                Value = int.Parse(ValueTxbx.Text)
+                //Value = int.Parse(ValueTxbx.Text)
             };
 
             await _currencyService.UpdateAsync(currency);

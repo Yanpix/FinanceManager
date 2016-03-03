@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FinanceManager.DAL.Models;
 using FinanceManager.DAL.Repository;
-using FinanceManager.DAL.SQLite;
+using SQLite.Net;
+using SQLite.Net.Async;
+using SQLite.Net.Platform.WinRT;
 
 namespace FinanceManager.DAL.UnitOfWork
 {
@@ -30,8 +32,8 @@ namespace FinanceManager.DAL.UnitOfWork
         }
         public UnitOfWork()
         {
-            _connection = new SQLiteAsyncConnection(App.ConnectionString);
-            _connection2 = new SQLiteConnection(App.ConnectionString);
+            //_connection = new SQLiteAsyncConnection(App.ConnectionString);
+            _connection2 = new SQLiteConnection(new SQLitePlatformWinRT(), App.ConnectionString);
             InitializateDb();
         }
 

@@ -92,13 +92,17 @@
     <Compile Include="BLL\Service\CategoriesService.cs" />
     <Compile Include="BLL\Service\CurrencyService.cs" />
     <Compile Include="BLL\Service\NavigationService.cs" />
-    <Compile Include="DAL\Models\BaseModel.cs" />
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="DAL\FinanceDatabaseHelper.cs" />
     <Compile Include="DAL\Models\Category.cs" />
-    <Compile Include="DAL\Models\Currencies.cs" />
     <Compile Include="DAL\Models\Currency.cs" />
-    <Compile Include="DAL\Models\Expense.cs" />
-    <Compile Include="DAL\Models\Income.cs" />
     <Compile Include="DAL\Models\MoneyBox.cs" />
+    <Compile Include="DAL\Models\Transaction.cs" />
+    <Compile Include="DAL\Models\TransactionType.cs" />
+    <Compile Include="DAL\Models\User.cs" />
     <Compile Include="DAL\Repository\GenericRepository.cs" />
     <Compile Include="DAL\Repository\IGenericRepository.cs" />
     <Compile Include="DAL\UnitOfWork\IUnitOfWork.cs" />
@@ -110,6 +114,9 @@
     <Compile Include="Pages\Currencies.xaml.cs">
       <DependentUpon>Currencies.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\CreateMoneyBoxPage.xaml.cs">
+      <DependentUpon>CreateMoneyBoxPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EditExpenseCategory.xaml.cs">
       <DependentUpon>EditExpenseCategory.xaml</DependentUpon>
     </Compile>
@@ -119,6 +126,12 @@
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\MoneyBoxPage.xaml.cs">
+      <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SelectMoneyBoxPage.xaml.cs">
+      <DependentUpon>SelectMoneyBoxPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Show.xaml.cs">
       <DependentUpon>Show.xaml</DependentUpon>
     </Compile>
@@ -126,8 +139,6 @@
       <DependentUpon>UpdateOrDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DAL\SQLite\SQLite.cs" />
-    <Compile Include="DAL\SQLite\SQLiteAsync.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CurrenciesViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -159,6 +170,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\CreateMoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\EditExpenseCategory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,6 +185,14 @@
     <Page Include="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SelectMoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Show.xaml">
       <SubType>Designer</SubType>
@@ -184,7 +207,7 @@
     <SDKReference Include="Microsoft.VCLibs, Version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.WP81, Version=3.8.11.1">
+    <SDKReference Include="SQLite.WP81, Version=3.11.0">
       <Name>SQLite for Windows Phone 8.1</Name>
     </SDKReference>
   </ItemGroup>
@@ -196,12 +219,38 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=3.5.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.3.5.1405-prerelease\lib\portable-net45+wp80+win8+wpa81+MonoAndroid10+MonoTouch10\Microsoft.Practices.Unity.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\portable-net45+wp80+win8+wpa81+MonoAndroid10+MonoTouch10\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net45+wp80+win8+wpa81+dnxcore50\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLite.Net, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLite.Net.Core-PCL.3.1.1\lib\portable-win8+net45+wp8+wpa81+MonoAndroid1+MonoTouch1\SQLite.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLite.Net.Async, Version=3.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLite.Net.Async-PCL.3.0.5\lib\portable-win8+net45+wp8+wpa81+MonoAndroid1+MonoTouch1\SQLite.Net.Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLite.Net.Platform.WinRT, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLite.Net-PCL.3.1.1\lib\portable-win81+wpa81\SQLite.Net.Platform.WinRT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLiteNetExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLiteNetExtensions.1.3.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\SQLiteNetExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLiteNetExtensionsAsync, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLiteNetExtensions.Async.1.3.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\SQLiteNetExtensionsAsync.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DAL\SQLite\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

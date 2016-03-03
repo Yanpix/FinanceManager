@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="FinanceManager.Pages.CreateMoneyBoxPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FinanceManager.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="Finance Manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="New Money Box" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+
+            <TextBox x:Name="textBox_Name" HorizontalAlignment="Left" Margin="35,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" PlaceholderText="Type a Money Box Name" Header="Money Box Name" Width="300" FontSize="21.333"/>
+            <ComboBox x:Name="comboBox_PrimaryCurrency" HorizontalAlignment="Center" Margin="35,128,27,0" VerticalAlignment="Top" Width="300" PlaceholderText="Choose a Primary Currency" Header="Primary Currency" FontSize="21.333"/>
+            <Button x:Name="button_Create" Content="Create Money Box" HorizontalAlignment="Center" Margin="35,0,27,140" VerticalAlignment="Bottom" FontSize="21.333" Width="300" Click="button_Create_Click"/>
+        </Grid>
+    </Grid>
+</Page>

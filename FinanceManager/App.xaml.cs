@@ -10,49 +10,27 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using FinanceManager.DAL.Models;
-using FinanceManager.DAL.SQLite;
+using FinanceManager.DAL;
+using SQLite;
 using FinanceManager.Pages;
 using Currencies = FinanceManager.Pages.Currencies;
-
+using System.Collections.Generic;
+using FinanceManager.DAL.Models;
 
 namespace FinanceManager
 {
-    public sealed partial class App
+    public sealed partial class App : Application
     {
         private TransitionCollection _transitions;
-        public static string ConnectionString = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Finances.sqlite");
+        public static string ConnectionString = "";
+        public static string databaseName = "FinanceDatabase.sqlite";
+        public static string databasePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, databaseName);
 
         public App()
-        {
-            if (!CheckFileExists("Finance.sqlite").Result)
-            {
-                var db = new SQLiteAsyncConnection(ConnectionString);
-                db.CreateTableAsync<Currency>();
-                
-                
-
-            }
-
+        {          
             InitializeComponent();
             Suspending += OnSuspending;
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-        }
-
-        
-
-        private static async Task<bool> CheckFileExists(string fileName)
-        {
-            try
-            {
-                await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-                return true;
-            }
-            catch(Exception ex)
-            {
-                var message = ex.Message;
-                return false;
-            }
         }
 
         /// <summary>
@@ -108,13 +86,26 @@ namespace FinanceManager
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += RootFrame_FirstNavigated;
 
+                FinanceDatabaseHelper.CreateDatabase();
+
+                List<MoneyBox> moneyBoxes = FinanceDatabaseHelper.GetMoneyBoxes();
+
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                /*if ((moneyBoxes.Count == 0 && !rootFrame.Navigate(typeof(CreateMoneyBoxPage), e.Arguments)) 
+                    || (moneyBoxes.Count > 0 && !rootFrame.Navigate(typeof(SelectMoneyBoxPage), e.Arguments)))
                 {
                     throw new Exception("Failed to create initial page");
+                }*/
+
+                if (moneyBoxes.Count == 0)
+                {
+                    rootFrame.Navigate(typeof(CreateMoneyBoxPage), e.Arguments);
                 }
+                else
+                    rootFrame.Navigate(typeof(SelectMoneyBoxPage), e.Arguments);
+
             }
 
             // Ensure the current window is active

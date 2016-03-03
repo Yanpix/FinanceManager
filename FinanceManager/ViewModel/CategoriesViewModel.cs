@@ -115,7 +115,7 @@ namespace FinanceManager.ViewModel
             _categoriesService.CreateCategory(new Category
             {
                 Name = CategoryName,
-                CategoryType = CategoryTypeEnum.Expense
+                //CategoryType = CategoryTypeEnum.Expense
             });
 
             UpdataData();
@@ -127,7 +127,7 @@ namespace FinanceManager.ViewModel
             _categoriesService.CreateCategory(new Category
             {
                 Name = CategoryName,
-                CategoryType = CategoryTypeEnum.Income
+                //CategoryType = CategoryTypeEnum.Income
                 
             });
             UpdataData();
@@ -179,8 +179,8 @@ namespace FinanceManager.ViewModel
         private void UpdataData()
         {
             Categories = _categoriesService.GetAllCategories();
-            IncomeCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Income));
-            ExpenseCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Expense));
+            //IncomeCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Income));
+            //ExpenseCategories = new ObservableCollection<Category>(Categories.Select(x => x).Where(x => x.CategoryType == CategoryTypeEnum.Expense));
         }
         #endregion
 
