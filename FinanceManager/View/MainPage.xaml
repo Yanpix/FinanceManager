@@ -1,0 +1,80 @@
+﻿<Page 
+    x:Class="FinanceManager.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FinanceManager.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="MainView">
+
+    
+    <!-- Application bottom command bar -->
+    <Page.BottomAppBar>
+        <CommandBar >
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="users" Command="{Binding EditUsersCommand}"/>
+                <AppBarButton Label="currencies" Command="{Binding EditCurrenciesCommand}"/>
+                <AppBarButton Label="categories" Command="{Binding EditCategoriesCommand}"/>
+                <AppBarButton Label="delete all money boxes" Command="{Binding DeleteAllMoneyBoxesCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="finance manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="my money boxes" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ListBox ItemsSource="{Binding MoneyBoxes}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,0,10">
+                                <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="created :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding CreationDate}" FontSize="18.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="modified :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                                    <TextBlock  FontSize="18.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="balance :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding Balance}" FontSize="18.667"/>
+                                    <TextBlock Text=" $" FontSize="18.667" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <AppBarButton Icon="Delete" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Page>
