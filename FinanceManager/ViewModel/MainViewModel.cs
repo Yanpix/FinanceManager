@@ -1,35 +1,113 @@
-﻿using System;
+﻿using FinanceManager.Common;
+using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Services;
+using FinanceManager.Model.Entities;
+using FinanceManager.View;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using FinanceManager.Base;
-using FinanceManager.BLL.IService;
-using FinanceManager.BLL.Service;
-using FinanceManager.DAL.UnitOfWork;
-using FinanceManager.Pages;
-using Microsoft.Practices.Unity;
-
+using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class MainViewModel : BindableBase
+    /// <summary>
+    /// View model for MainPage, implements BaseViewModel
+    /// </summary>
+    public class MainViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
-
-        public MainViewModel(INavigationService navigationService)
+        // View model constructor
+        public MainViewModel()
         {
-            _navigationService = navigationService;
+            // Initialize properties
+            _moneyBoxes = new List<MoneyBox>();
+
+            // Initialize commands
+            CreateMoneyBoxCommand = new RelayCommand(CreateMoneyBox);
+            EditUsersCommand = new RelayCommand(EditUsers);
+            EditCurrenciesCommand = new RelayCommand(EditCurrencies);
+            EditCategoriesCommand = new RelayCommand(EditCategories);
+            DeleteAllMoneyBoxesCommand = new RelayCommand(DeleteAllMoneyBoxes);
         }
 
-        public string TEST { get; set; }
+        #region Services
 
-        public RelayCommand Move => new RelayCommand(GoToShow);
+        // Data service for money boxes
+        public IDataService<MoneyBox> MoneyBoxesDataService { get; set; }
 
-        public void GoToShow()
+        // Service for navigation
+        public INavigationService NavigationService { get; set; }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand CreateMoneyBoxCommand { get; private set; }
+
+        public ICommand EditUsersCommand { get; private set; }
+
+        public ICommand EditCurrenciesCommand { get; private set; }
+
+        public ICommand EditCategoriesCommand { get; private set; }
+
+        public ICommand DeleteAllMoneyBoxesCommand { get; private set; }
+
+        #endregion
+
+        #region Commands implementation
+
+        public void CreateMoneyBox()
         {
-            _navigationService.Navigate(typeof (Show));
+            NavigationService.Navigate(typeof(CreateMoneyBoxPage)); 
         }
+
+        private void EditUsers()
+        {
+            ;
+        }       
+
+        private void EditCurrencies()
+        {
+            ;
+        }        
+
+        private void EditCategories()
+        {
+            ;
+        }       
+
+        private void DeleteAllMoneyBoxes()
+        {
+            MoneyBoxesDataService.DeleteAll();
+            LoadData();
+        }
+
+        #endregion
+
+        #region Properties
+
+        private List<MoneyBox> _moneyBoxes;
+
+        public List<MoneyBox> MoneyBoxes
+        {
+            get
+            {
+                LoadData();
+                return _moneyBoxes;
+            }
+            set
+            {
+                _moneyBoxes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Helping methods
+
+        private void LoadData()
+        {
+            MoneyBoxes = MoneyBoxesDataService.GetAll();
+        }
+
+        #endregion
     }
 }

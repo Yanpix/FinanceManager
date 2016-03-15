@@ -1,36 +1,59 @@
-﻿using System;
-using System.Diagnostics;
+﻿using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Repository;
+using FinanceManager.Model.DataAccess.Services;
+using FinanceManager.Model.DataAccess.UnitOfWork;
+using FinanceManager.Model.Entities;
+using FinanceManager.View;
+using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Phone.UI.Input;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using FinanceManager.DAL;
-using SQLite;
-using FinanceManager.Pages;
-using Currencies = FinanceManager.Pages.Currencies;
-using System.Collections.Generic;
-using FinanceManager.DAL.Models;
+
+// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace FinanceManager
 {
+    /// <summary>
+    /// Provides application-specific behavior to supplement the default Application class.
+    /// </summary>
     public sealed partial class App : Application
     {
-        private TransitionCollection _transitions;
-        public static string ConnectionString = "";
-        public static string databaseName = "FinanceDatabase.sqlite";
+        public static string databaseName = "FinanceManager.sqlite";
         public static string databasePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, databaseName);
 
+        public static IUnityContainer iocContainer;
+
+        private TransitionCollection transitions;
+
+        /// <summary>
+        /// Initializes the singleton application object.  This is the first line of authored code
+        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// </summary>
         public App()
-        {          
-            InitializeComponent();
-            Suspending += OnSuspending;
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+        {
+            this.InitializeComponent();
+
+            iocContainer = new UnityContainer();
+
+            DependencyResolver.RegisterTypes(iocContainer);
+
+            this.Suspending += this.OnSuspending;
         }
 
         /// <summary>
@@ -41,32 +64,33 @@ namespace FinanceManager
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-           #if DEBUG
-            if (Debugger.IsAttached)
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
             {
-                DebugSettings.EnableFrameRateCounter = true;
+                this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            Frame rootFrame = Window.Current.Content as Frame;
 
-            //IoCContainer container = new IoCContainer(new UnityContainer());
-            //container.Initializate();
+            Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame {CacheSize = 1};
-                
-                //container.NavigationService.InitializeFrame(rootFrame);
+                rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
+                rootFrame.CacheSize = 1;
+
+                // Set the default language
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // TODO: Load state from previously suspended application
                 }
+
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
@@ -76,36 +100,23 @@ namespace FinanceManager
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {
-                    _transitions = new TransitionCollection();
+                    this.transitions = new TransitionCollection();
                     foreach (var c in rootFrame.ContentTransitions)
                     {
-                        _transitions.Add(c);
+                        this.transitions.Add(c);
                     }
                 }
 
                 rootFrame.ContentTransitions = null;
-                rootFrame.Navigated += RootFrame_FirstNavigated;
-
-                FinanceDatabaseHelper.CreateDatabase();
-
-                List<MoneyBox> moneyBoxes = FinanceDatabaseHelper.GetMoneyBoxes();
+                rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                /*if ((moneyBoxes.Count == 0 && !rootFrame.Navigate(typeof(CreateMoneyBoxPage), e.Arguments)) 
-                    || (moneyBoxes.Count > 0 && !rootFrame.Navigate(typeof(SelectMoneyBoxPage), e.Arguments)))
+                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
-                }*/
-
-                if (moneyBoxes.Count == 0)
-                {
-                    rootFrame.Navigate(typeof(CreateMoneyBoxPage), e.Arguments);
                 }
-                else
-                    rootFrame.Navigate(typeof(SelectMoneyBoxPage), e.Arguments);
-
             }
 
             // Ensure the current window is active
@@ -120,8 +131,8 @@ namespace FinanceManager
         private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
         {
             var rootFrame = sender as Frame;
-            rootFrame.ContentTransitions = _transitions ?? new TransitionCollection { new NavigationThemeTransition() };
-            rootFrame.Navigated -= RootFrame_FirstNavigated;
+            rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
+            rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
 
         /// <summary>
@@ -137,17 +148,6 @@ namespace FinanceManager
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            var rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
         }
     }
 }

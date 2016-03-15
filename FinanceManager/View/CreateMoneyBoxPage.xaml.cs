@@ -1,5 +1,10 @@
 ﻿using FinanceManager.Common;
-using FinanceManager.DAL.Models;
+using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Services;
+using FinanceManager.Model.DataAccess.UnitOfWork;
+using FinanceManager.Model.Entities;
+using FinanceManager.ViewModel;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +13,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
-using Windows.Phone.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,19 +24,21 @@ using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace FinanceManager.Pages
+namespace FinanceManager.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MoneyBoxPage : Page
+    public sealed partial class CreateMoneyBoxPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public MoneyBoxPage()
+        public CreateMoneyBoxPage()
         {
             this.InitializeComponent();
+
+            this.DataContext = App.iocContainer.Resolve<CreateMoneyBoxViewModel>();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
@@ -69,12 +75,6 @@ namespace FinanceManager.Pages
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            MoneyBox moneybox = e.NavigationParameter as MoneyBox;
-
-            textBlock_Title.Text = moneybox.Name;
-            textBlock_CreationDate.Text = moneybox.CreationDate.ToString();
-            textBlock_Balance.Text = moneybox.Balance.ToString();
-            textBlock_Currency.Text = moneybox.PrimaryCurrency.Name;
         }
 
         /// <summary>
@@ -115,10 +115,5 @@ namespace FinanceManager.Pages
         }
 
         #endregion
-
-        private void button_SelectAnother_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(SelectMoneyBoxPage));
-        }
     }
 }

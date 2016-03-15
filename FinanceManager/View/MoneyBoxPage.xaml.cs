@@ -1,6 +1,4 @@
 ﻿using FinanceManager.Common;
-using FinanceManager.DAL;
-using FinanceManager.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,17 +18,17 @@ using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace FinanceManager.Pages
+namespace FinanceManager.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SelectMoneyBoxPage : Page
+    public sealed partial class MoneyBoxPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public SelectMoneyBoxPage()
+        public MoneyBoxPage()
         {
             this.InitializeComponent();
 
@@ -69,15 +67,6 @@ namespace FinanceManager.Pages
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            List<MoneyBox> moneyBoxes = FinanceDatabaseHelper.GetMoneyBoxes();
-
-            if (moneyBoxes != null)
-            {
-                foreach (MoneyBox moneyBox in moneyBoxes)
-                {
-                    listView_MoneyBoxes.Items.Add(moneyBox.Name);
-                }
-            }
         }
 
         /// <summary>
@@ -119,9 +108,9 @@ namespace FinanceManager.Pages
 
         #endregion
 
-        private void button_Create_Click(object sender, RoutedEventArgs e)
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CreateMoneyBoxPage));
+
         }
     }
 }

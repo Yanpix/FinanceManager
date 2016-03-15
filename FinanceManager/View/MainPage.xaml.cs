@@ -1,11 +1,19 @@
 ﻿using FinanceManager.Common;
-using FinanceManager.DAL.Models;
-using FinanceManager.DAL;
+using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Repository;
+using FinanceManager.Model.DataAccess.Services;
+using FinanceManager.Model.DataAccess.UnitOfWork;
+using FinanceManager.Model.Entities;
+using FinanceManager.ViewModel;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -17,23 +25,24 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using FinanceManager.BLL.Service;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace FinanceManager.Pages
+namespace FinanceManager.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CreateMoneyBoxPage : Page
+    public sealed partial class MainPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public CreateMoneyBoxPage()
+        public MainPage()
         {
             this.InitializeComponent();
+
+            this.DataContext = App.iocContainer.Resolve<MainViewModel>();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
@@ -70,16 +79,6 @@ namespace FinanceManager.Pages
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            List<Currency> currencies = FinanceDatabaseHelper.GetCurrencies();
-
-            if (currencies != null)
-            {
-                comboBox_PrimaryCurrency.Items.Clear();
-                foreach (var currency in currencies)
-                {
-                    comboBox_PrimaryCurrency.Items.Add(currency.Name);
-                }
-            }
         }
 
         /// <summary>
@@ -120,21 +119,5 @@ namespace FinanceManager.Pages
         }
 
         #endregion
-
-        private void button_Create_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(textBox_Name.Text) && !string.IsNullOrEmpty(comboBox_PrimaryCurrency.SelectedItem.ToString()))
-            {
-
-                MoneyBox moneybox =  FinanceDatabaseHelper.CreateMoneyBox(
-                    textBox_Name.Text, 
-                    comboBox_PrimaryCurrency.SelectedItem.ToString());
-
-                if (moneybox != null)
-                {
-                    Frame.Navigate(typeof(MoneyBoxPage), moneybox);
-                }
-            }
-        }
     }
 }
