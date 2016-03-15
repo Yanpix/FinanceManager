@@ -44,8 +44,8 @@
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
-                <TextBox Text="{Binding Path=Title, Mode=TwoWay}" PlaceholderText="type money box title" Header="money box title"/>
-                <ComboBox Header="money box primary currancy" PlaceholderText="choose money box primary currancy"/>
+                <TextBox Text="{Binding MoneyBox.Title, Mode=TwoWay}" PlaceholderText="type money box title" Header="money box title"/>
+                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding MoneyBox.PrimaryCurrency, Mode=TwoWay}" DisplayMemberPath="Title" Header="money box primary currancy" PlaceholderText="choose money box primary currancy"/>
             </StackPanel>
         </Grid>
     </Grid>

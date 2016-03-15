@@ -18,12 +18,14 @@ namespace FinanceManager.ViewModel
         {
             // Initialize properties
             _moneyBoxes = new List<MoneyBox>();
+            _selectedMoneyBox = new MoneyBox();
 
             // Initialize commands
             CreateMoneyBoxCommand = new RelayCommand(CreateMoneyBox);
             EditUsersCommand = new RelayCommand(EditUsers);
             EditCurrenciesCommand = new RelayCommand(EditCurrencies);
             EditCategoriesCommand = new RelayCommand(EditCategories);
+            DeleteMoneyBoxCommand = new RelayCommand(DeleteMoneyBox);
             DeleteAllMoneyBoxesCommand = new RelayCommand(DeleteAllMoneyBoxes);
         }
 
@@ -46,6 +48,8 @@ namespace FinanceManager.ViewModel
         public ICommand EditCurrenciesCommand { get; private set; }
 
         public ICommand EditCategoriesCommand { get; private set; }
+
+        public ICommand DeleteMoneyBoxCommand { get; private set; }
 
         public ICommand DeleteAllMoneyBoxesCommand { get; private set; }
 
@@ -71,12 +75,18 @@ namespace FinanceManager.ViewModel
         private void EditCategories()
         {
             ;
-        }       
+        }   
+        
+        private void DeleteMoneyBox()
+        {
+            //MoneyBoxesDataService.Delete();
+            LoadMoneyBoxes();
+        }    
 
         private void DeleteAllMoneyBoxes()
         {
             MoneyBoxesDataService.DeleteAll();
-            LoadData();
+            LoadMoneyBoxes();
         }
 
         #endregion
@@ -89,7 +99,7 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadData();
+                LoadMoneyBoxes();
                 return _moneyBoxes;
             }
             set
@@ -99,13 +109,34 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private MoneyBox _selectedMoneyBox;
+
+        public MoneyBox SelectedMoneyBox
+        {
+            get
+            {
+                return _selectedMoneyBox;
+            }
+            set
+            {
+                _selectedMoneyBox = value;
+                OnPropertyChanged();
+                GoToSelectedMoneyBox();
+            }
+        }
+
         #endregion
 
         #region Helping methods
 
-        private void LoadData()
+        private void LoadMoneyBoxes()
         {
             MoneyBoxes = MoneyBoxesDataService.GetAll();
+        }
+
+        private void GoToSelectedMoneyBox()
+        {
+            NavigationService.Navigate(typeof(MoneyBoxPage), SelectedMoneyBox);
         }
 
         #endregion

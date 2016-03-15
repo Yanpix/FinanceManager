@@ -1,4 +1,6 @@
-﻿using FinanceManager.Dependencies;
+﻿using SQLite.Net.Attributes;
+using SQLiteNetExtensions.Attributes;
+using System.Collections.Generic;
 
 namespace FinanceManager.Model.Entities
 {
@@ -16,5 +18,9 @@ namespace FinanceManager.Model.Entities
 
         // The symbol of the currency
         public string Symbol { get; set; }
+
+        // List of money boxes, where this currency is primary
+        [OneToMany]
+        public List<MoneyBox> MoneyBoxes { get; set; }
     }
 }

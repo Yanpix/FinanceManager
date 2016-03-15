@@ -46,7 +46,7 @@
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListBox ItemsSource="{Binding MoneyBoxes}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+            <ListBox x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -62,15 +62,16 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="modified :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                    <TextBlock  FontSize="18.667"/>
+                                    <TextBlock Text="{Binding LastModifiedDate}" FontSize="18.667"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="balance :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding Balance}" FontSize="18.667"/>
-                                    <TextBlock Text=" $" FontSize="18.667" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="&#160;" FontSize="18.667"/>
+                                    <TextBlock Text="{Binding PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
                             </StackPanel>
-                            <AppBarButton Icon="Delete" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                            <AppBarButton Grid.Column="1" Icon="Delete" Command="{Binding DeleteMoneyBox}" CommandParameter="{Binding ElementName=listMoneyBoxes, Path=SelectedItem.Id}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

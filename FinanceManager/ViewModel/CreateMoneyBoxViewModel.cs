@@ -25,11 +25,12 @@ namespace FinanceManager.ViewModel
         public CreateMoneyBoxViewModel()
         {
             // Initialize properties
-            _title = "";
+            _moneyBox = new MoneyBox();
+            _currencies = new List<Currency>();
 
             // Initialize commands
-            SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBoxAction);
-            CancelMoneyBoxCommand = new RelayCommand(CancelMoneyBoxAction);
+            SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBox);
+            CancelMoneyBoxCommand = new RelayCommand(CancelMoneyBox);
         }
 
         #region Services
@@ -55,12 +56,18 @@ namespace FinanceManager.ViewModel
 
         #region Commands implementation
 
-        public void SaveMoneyBoxAction()
+        public void SaveMoneyBox()
         {
+            MoneyBox.CreationDate = DateTime.Now;
+            MoneyBox.LastModifiedDate = DateTime.Now;
+            MoneyBox.Balance = 0.0M;
+
+            MoneyBoxesDataService.Create(MoneyBox);
+
             NavigationService.Navigate(typeof(MoneyBoxPage));
         }       
 
-        public void CancelMoneyBoxAction()
+        public void CancelMoneyBox()
         {
             NavigationService.Navigate(typeof(MainPage));
         }
@@ -69,19 +76,44 @@ namespace FinanceManager.ViewModel
 
         #region Properties
 
-        private string _title;
+        private MoneyBox _moneyBox;
 
-        public string Title
+        public MoneyBox MoneyBox
         {
             get
             {
-                return _title;
+                return _moneyBox;
             }
             set
             {
-                _title = value;
+                _moneyBox = value;
                 OnPropertyChanged();
             }
+        }
+
+        private List<Currency> _currencies;
+
+        public List<Currency> Currencies
+        {
+            get
+            {
+                LoadCurrencies();
+                return _currencies;
+            }
+            set
+            {
+                _currencies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Helping methods
+
+        private void LoadCurrencies()
+        {
+            Currencies = CurrenciesDataService.GetAll();
         }
 
         #endregion

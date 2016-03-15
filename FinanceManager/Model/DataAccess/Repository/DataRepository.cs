@@ -1,5 +1,8 @@
-﻿using FinanceManager.Dependencies;
-using FinanceManager.Model.Entities;
+﻿using FinanceManager.Model.Entities;
+using SQLite.Net;
+using SQLiteNetExtensions.Extensions;
+using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Async;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,29 +25,72 @@ namespace FinanceManager.Model.DataAccess.Repository
         // Repository constructor: initializing connections
         public DataRepository()
         {
-            _connection = new SQLiteConnection(App.databasePath);
+            _connection = new SQLiteConnection(new SQLitePlatformWinRT(), App.databasePath);
 
-            _connectionAsync = new SQLiteAsyncConnection(App.databasePath);
+            _connectionAsync = null; //new SQLiteAsyncConnection(App.databasePath);
 
-            _connection.CreateTable<MoneyBox>();
-
-            _connection.CreateTable<Currency>();
+            InitializeDatabase();
         }
 
-        private async Task<bool> DoesDbExist(string DatabaseName)
+        // Creates databse tables with initial content
+        private void InitializeDatabase()
         {
-            bool dbexist = true;
-            try
-            {
-                StorageFile storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(DatabaseName);
+            List<Currency> initialCurrencys;
 
-            }
-            catch
+            MoneyBox initialMoneyBox;
+
+            if (_connection.GetTableInfo("Currency").Count == 0)
             {
-                dbexist = false;
+                _connection.CreateTable<Currency>();
+
+                initialCurrencys = new List<Currency>
+                {
+                    new Currency
+                    {
+                        Title = "US Dollar",
+                        Symbol = "$"
+                    },
+                    new Currency
+                    {
+                        Title = "GB Pound",
+                        Symbol = "₤"
+                    },
+                    new Currency
+                    {
+                        Title = "Euro",
+                        Symbol = "€"
+                    },
+                    new Currency
+                    {
+                        Title = "FR Frank",
+                        Symbol = "₣"
+                    }
+                };
+
+                foreach (Currency currency in initialCurrencys)
+                {
+                    _connection.Insert(currency);
+                }
             }
 
-            return dbexist;
+            if (_connection.GetTableInfo("MoneyBox").Count == 0)
+            {
+                _connection.CreateTable<MoneyBox>();
+
+                initialMoneyBox = new MoneyBox
+                {
+                    Balance = 0.0M,
+                    CreationDate = DateTime.Now,
+                    LastModifiedDate = DateTime.Now,
+                    Title = "test money box"
+                };
+
+                _connection.Insert(initialMoneyBox);
+
+                initialMoneyBox.PrimaryCurrency = _connection.Get<Currency>(2);
+
+                _connection.UpdateWithChildren(initialMoneyBox);
+            }
         }
 
         // Create an item of type T
@@ -52,7 +98,7 @@ namespace FinanceManager.Model.DataAccess.Repository
         {
             if (_connection != null)
             {
-                _connection.Insert(item);
+                _connection.InsertWithChildren(item);
             }
         }
 
@@ -132,7 +178,7 @@ namespace FinanceManager.Model.DataAccess.Repository
         {
             if (_connection != null)
             {
-                return _connection.Table<T>().ToList();
+                return _connection.GetAllWithChildren<T>().ToList();
             }
             else
                 return null;

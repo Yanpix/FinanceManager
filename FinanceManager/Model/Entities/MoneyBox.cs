@@ -1,4 +1,5 @@
-﻿using FinanceManager.Dependencies;
+﻿using SQLite.Net.Attributes;
+using SQLiteNetExtensions.Attributes;
 using System;
 
 namespace FinanceManager.Model.Entities
@@ -18,7 +19,18 @@ namespace FinanceManager.Model.Entities
         // The creation date and time of the money box
         public DateTime CreationDate { get; set; }
 
+        // The date and time of last modification
+        public DateTime LastModifiedDate { get; set; }
+
         // The balance of the money box
         public decimal Balance { get; set; }
+
+        // The primary currency id of the money box
+        [ForeignKey(typeof(Currency))]
+        public int PrimaryCurrencyId { get; set; }
+
+        // The primary currency of the money box
+        [ManyToOne]
+        public Currency PrimaryCurrency { get; set; }
     }
 }
