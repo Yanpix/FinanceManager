@@ -17,7 +17,9 @@ namespace FinanceManager.Infrastructure
 
             container.RegisterType<IUnitOfWork, UnitOfWork>(
                 new InjectionProperty("MoneyBoxesRepository", typeof(IDataRepository<MoneyBox>)),
-                new InjectionProperty("CurrenciesRepository", typeof(IDataRepository<Currency>)));
+                new InjectionProperty("CategoriesRepository", typeof(IDataRepository<Category>)),
+                new InjectionProperty("CurrenciesRepository", typeof(IDataRepository<Currency>)),
+                new InjectionProperty("TransactionsRepository", typeof(IDataRepository<Transaction>)));
 
             container.RegisterType(typeof(IDataService<>), typeof(DataService<>), 
                 new InjectionProperty("UnitOfWork", typeof(IUnitOfWork)));
@@ -30,6 +32,23 @@ namespace FinanceManager.Infrastructure
                 new InjectionProperty("MoneyBoxesDataService", typeof(IDataService<MoneyBox>)),
                 new InjectionProperty("NavigationService", typeof(INavigationService)),
                 new InjectionProperty("CurrenciesDataService", typeof(IDataService<Currency>)));
+
+            container.RegisterType<MoneyBoxViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)));
+
+            container.RegisterType<CurrenciesViewModel>(
+                new InjectionProperty("CurrenciesDataService", typeof(IDataService<Currency>)),
+                new InjectionProperty("NavigationService", typeof(INavigationService)));
+
+            container.RegisterType<CategoriesViewModel>(
+                new InjectionProperty("CategoriesDataService", typeof(IDataService<Category>)),
+                new InjectionProperty("NavigationService", typeof(INavigationService)));
+
+            container.RegisterType<CreateTransactionViewModel>(
+                new InjectionProperty("TransactionsDataService", typeof(IDataService<Transaction>)),
+                new InjectionProperty("CurrenciesDataService", typeof(IDataService<Currency>)),
+                new InjectionProperty("CategoriesDataService", typeof(IDataService<Category>)),
+                new InjectionProperty("NavigationService", typeof(INavigationService)));
         }
     }
 }

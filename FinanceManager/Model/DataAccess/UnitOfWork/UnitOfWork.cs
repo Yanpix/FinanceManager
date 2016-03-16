@@ -18,9 +18,9 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
 
         public IDataRepository<Currency> CurrenciesRepository { get; set; }
 
+        public IDataRepository<Category> CategoriesRepository { get; set; }
 
-
-
+        public IDataRepository<Transaction> TransactionsRepository { get; set; }
 
         // Get repository of items of type T
         public IDataRepository<T> Repository<T>() where T : class, new()
@@ -33,6 +33,10 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
                     return MoneyBoxesRepository as IDataRepository<T>;
                 case "Currency":
                     return CurrenciesRepository as IDataRepository<T>;
+                case "Category":
+                    return CategoriesRepository as IDataRepository<T>;
+                case "Transaction":
+                    return TransactionsRepository as IDataRepository<T>;
                 default:
                     return null;
             }

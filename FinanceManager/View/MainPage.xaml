@@ -71,7 +71,6 @@
                                     <TextBlock Text="{Binding PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
                             </StackPanel>
-                            <AppBarButton Grid.Column="1" Icon="Delete" Command="{Binding DeleteMoneyBox}" CommandParameter="{Binding ElementName=listMoneyBoxes, Path=SelectedItem.Id}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

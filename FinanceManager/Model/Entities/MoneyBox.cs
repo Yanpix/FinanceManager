@@ -1,6 +1,7 @@
 ﻿using SQLite.Net.Attributes;
 using SQLiteNetExtensions.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace FinanceManager.Model.Entities
 {
@@ -32,5 +33,9 @@ namespace FinanceManager.Model.Entities
         // The primary currency of the money box
         [ManyToOne]
         public Currency PrimaryCurrency { get; set; }
+
+        // Transactions of the money box
+        [OneToMany]
+        public List<Transaction> Transactions { get; set; }
     }
 }

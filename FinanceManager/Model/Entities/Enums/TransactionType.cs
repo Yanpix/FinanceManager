@@ -6,6 +6,6 @@
     public enum TransactionType
     {
         Income,
-        Expence
+        Expence,
     }
 }

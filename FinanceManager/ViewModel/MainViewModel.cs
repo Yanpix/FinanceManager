@@ -25,7 +25,6 @@ namespace FinanceManager.ViewModel
             EditUsersCommand = new RelayCommand(EditUsers);
             EditCurrenciesCommand = new RelayCommand(EditCurrencies);
             EditCategoriesCommand = new RelayCommand(EditCategories);
-            DeleteMoneyBoxCommand = new RelayCommand(DeleteMoneyBox);
             DeleteAllMoneyBoxesCommand = new RelayCommand(DeleteAllMoneyBoxes);
         }
 
@@ -49,8 +48,6 @@ namespace FinanceManager.ViewModel
 
         public ICommand EditCategoriesCommand { get; private set; }
 
-        public ICommand DeleteMoneyBoxCommand { get; private set; }
-
         public ICommand DeleteAllMoneyBoxesCommand { get; private set; }
 
         #endregion
@@ -69,19 +66,13 @@ namespace FinanceManager.ViewModel
 
         private void EditCurrencies()
         {
-            ;
+            NavigationService.Navigate(typeof(CurrenciesPage));
         }        
 
         private void EditCategories()
         {
-            ;
-        }   
-        
-        private void DeleteMoneyBox()
-        {
-            //MoneyBoxesDataService.Delete();
-            LoadMoneyBoxes();
-        }    
+            NavigationService.Navigate(typeof(CategoriesPage));
+        }     
 
         private void DeleteAllMoneyBoxes()
         {
@@ -136,7 +127,7 @@ namespace FinanceManager.ViewModel
 
         private void GoToSelectedMoneyBox()
         {
-            NavigationService.Navigate(typeof(MoneyBoxPage), SelectedMoneyBox);
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { SelectedMoneyBox });
         }
 
         #endregion

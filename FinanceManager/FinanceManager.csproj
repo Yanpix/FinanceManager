@@ -109,10 +109,24 @@
     <Compile Include="Dependencies\SQLite.cs" />
     <Compile Include="Dependencies\SQLiteAsync.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CreateMoneyBoxViewModel.cs" />
+    <Compile Include="ViewModel\CreateTransactionViewModel.cs" />
+    <Compile Include="ViewModel\CurrenciesViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MoneyBoxViewModel.cs" />
+    <Compile Include="View\CategoriesPage.xaml.cs">
+      <DependentUpon>CategoriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Converters\DecimalConverter.cs" />
     <Compile Include="View\CreateMoneyBoxPage.xaml.cs">
       <DependentUpon>CreateMoneyBoxPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateTransactionPage.xaml.cs">
+      <DependentUpon>CreateTransactionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CurrenciesPage.xaml.cs">
+      <DependentUpon>CurrenciesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -141,7 +155,19 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\CategoriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CreateMoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CreateTransactionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CurrenciesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

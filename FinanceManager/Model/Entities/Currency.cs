@@ -22,5 +22,9 @@ namespace FinanceManager.Model.Entities
         // List of money boxes, where this currency is primary
         [OneToMany]
         public List<MoneyBox> MoneyBoxes { get; set; }
+
+        // List of transactions with this currency
+        [OneToMany]
+        public List<Transaction> Transactions { get; set; }
     }
 }

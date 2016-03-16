@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using FinanceManager.Model.Entities.Enums;
 
 namespace FinanceManager.Model.DataAccess.Repository
 {
@@ -38,6 +39,8 @@ namespace FinanceManager.Model.DataAccess.Repository
             List<Currency> initialCurrencys;
 
             MoneyBox initialMoneyBox;
+
+            List<Category> initialCategories;
 
             if (_connection.GetTableInfo("Currency").Count == 0)
             {
@@ -73,6 +76,34 @@ namespace FinanceManager.Model.DataAccess.Repository
                 }
             }
 
+            if (_connection.GetTableInfo("Category").Count == 0)
+            {
+                _connection.CreateTable<Category>();
+
+                initialCategories = new List<Category>
+                {
+                    new Category { Title = "Food", Type = TransactionType.Expence },
+                    new Category { Title = "Salary", Type = TransactionType.Income },
+                    new Category { Title = "Gift", Type = TransactionType.Income },
+                    new Category { Title = "Gift", Type = TransactionType.Expence },
+                    new Category { Title = "Rent", Type = TransactionType.Income },
+                    new Category { Title = "Rent", Type = TransactionType.Expence },
+                    new Category { Title = "Entertainment", Type = TransactionType.Expence },
+                    new Category { Title = "Dividends", Type = TransactionType.Income },
+                    new Category { Title = "Compensation", Type = TransactionType.Income },
+                };
+
+                foreach (Category category in initialCategories)
+                {
+                    _connection.Insert(category);
+                }
+            }
+
+            if (_connection.GetTableInfo("Transaction").Count == 0)
+            {
+                _connection.CreateTable<Transaction>();
+            }
+
             if (_connection.GetTableInfo("MoneyBox").Count == 0)
             {
                 _connection.CreateTable<MoneyBox>();
@@ -98,7 +129,8 @@ namespace FinanceManager.Model.DataAccess.Repository
         {
             if (_connection != null)
             {
-                _connection.InsertWithChildren(item);
+                _connection.Insert(item);
+                _connection.UpdateWithChildren(item);
             }
         }
 

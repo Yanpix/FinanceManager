@@ -1,5 +1,7 @@
 ﻿using FinanceManager.Model.Entities.Enums;
-using FinanceManager.Dependencies;
+using System.Collections.Generic;
+using SQLiteNetExtensions.Attributes;
+using SQLite.Net.Attributes;
 
 namespace FinanceManager.Model.Entities
 {
@@ -17,5 +19,9 @@ namespace FinanceManager.Model.Entities
 
         // The transaction type of the category, can be income or expence
         public TransactionType Type { get; set; }
+
+        // Transactions of the category
+        [OneToMany]
+        public List<Transaction> Transactions { get; set; }
     }
 }

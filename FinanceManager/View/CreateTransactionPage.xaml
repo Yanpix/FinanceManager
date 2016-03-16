@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="FinanceManager.View.CreateTransactionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FinanceManager.View"
+    xmlns:conv="using:FinanceManager.View.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <conv:DecimalConverter x:Key="DecimalConverter"/>
+    </Page.Resources>
+
+    <!-- Application bottom command bar -->
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveTransactionCommand}"/>
+                <AppBarButton Icon="Clear" Label="cancel" Command="{Binding CancelTransactionCommand}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="finance manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="new&#160;" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
+                <TextBlock Text="{Binding Type}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <StackPanel>
+                <TextBox Text="{Binding Transaction.Value, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" InputScope="Number" PlaceholderText="type transaction value" Header="transaction value"/>
+                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding Transaction.Currency, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction currancy" PlaceholderText="choose transaction currancy"/>
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Transaction.Category, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction category" PlaceholderText="choose transaction category"/>
+                <TextBox Text="{Binding Transaction.Note, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="150" Height="150" PlaceholderText="type your notes" Header="transaction notes"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

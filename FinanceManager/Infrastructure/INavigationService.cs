@@ -10,7 +10,9 @@ namespace FinanceManager.Infrastructure
     public interface INavigationService
     {
         bool Navigate(Type type);
-        bool Navigate(Type type, object parameter);
+        bool Navigate(Type type, object[] parameter);
+        object[] GetNavigationData();
+        object GetNavigationData(int i);
         void GoBack();
     }
 }

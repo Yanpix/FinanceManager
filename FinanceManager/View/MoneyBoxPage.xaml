@@ -12,8 +12,8 @@
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="income"/>
-                <AppBarButton Icon="Remove" Label="expence"/>
+                <AppBarButton Icon="Add" Label="income" Command="{Binding CreateIncomeCommand}"/>
+                <AppBarButton Icon="Remove" Label="expence" Command="{Binding CreateExpenceCommand}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="view transactions"/>
@@ -47,54 +47,54 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="title :&#160;" FontSize="32" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                    <TextBlock Text="{Binding MoneyBox.Title}" FontSize="32"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="created :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding CreationDate}" FontSize="18.667"/>
+                    <TextBlock Text="{Binding MoneyBox.CreationDate}" FontSize="18.667"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="last modified :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding LastModified}" FontSize="18.667"/>
+                    <TextBlock Text="{Binding MoneyBox.LastModifiedDate}" FontSize="18.667"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                     <TextBlock Text="balance :&#160;" FontSize="32" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding Balance}" FontSize="32"/>
+                    <TextBlock Text="{Binding MoneyBox.Balance}" FontSize="32"/>
                     <TextBlock Text="&#160;" FontSize="32"/>
-                    <TextBlock Text="{Binding PrimaryCurrencySymbol}" FontSize="32" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="total income :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding TotalIncome}" FontSize="18.667"/>
+                    <TextBlock Text="{Binding MoneyBox.TotalIncome}" FontSize="18.667"/>
                     <TextBlock Text="&#160;" FontSize="18.667"/>
-                    <TextBlock Text="{Binding PrimaryCurrencySymbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="total expence :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                    <TextBlock Text="{Binding TotalExpence}" FontSize="18.667"/>
+                    <TextBlock Text="{Binding MoneyBox.TotalExpence}" FontSize="18.667"/>
                     <TextBlock Text="&#160;" FontSize="18.667"/>
-                    <TextBlock Text="{Binding PrimaryCurrencySymbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 </StackPanel>
                 <TextBlock Text="last transaction :" Margin="0,20,0,0" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 <StackPanel Orientation="Vertical" Margin="40,5,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding LastTransactionType}" FontSize="21.333" />
+                        <TextBlock Text="{Binding LastTransaction.Type}" FontSize="21.333" />
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding LastTransactionValue}"/>
+                        <TextBlock Text="{Binding LastTransaction.Value}" FontSize="21.333"/>
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding LastTransactionCurrencySymbol}" FontSize="21.333" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding LastTransaction.Currency.Symbol}" FontSize="21.333" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="category :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding LastTransactionCategory}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding LastTransaction.Category.Title}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="user :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding LastTransactionUser}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding LastTransaction.User}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="date :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding LastTransactionCreationDate}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding LastTransaction.CreationDate}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Text="{Binding PreviousTransactionType}" FontSize="21.333" />

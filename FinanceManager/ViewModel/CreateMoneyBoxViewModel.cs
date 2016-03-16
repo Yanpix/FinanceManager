@@ -64,7 +64,7 @@ namespace FinanceManager.ViewModel
 
             MoneyBoxesDataService.Create(MoneyBox);
 
-            NavigationService.Navigate(typeof(MoneyBoxPage));
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox });
         }       
 
         public void CancelMoneyBox()

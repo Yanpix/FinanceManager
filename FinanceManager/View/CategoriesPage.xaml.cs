@@ -1,5 +1,4 @@
 ﻿using FinanceManager.Common;
-using FinanceManager.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Practices.Unity;
+using FinanceManager.ViewModel;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -25,16 +25,16 @@ namespace FinanceManager.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MoneyBoxPage : Page
+    public sealed partial class CategoriesPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public MoneyBoxPage()
+        public CategoriesPage()
         {
             this.InitializeComponent();
 
-            this.DataContext = App.iocContainer.Resolve<MoneyBoxViewModel>();
+            this.DataContext = App.iocContainer.Resolve<CategoriesViewModel>();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
@@ -111,10 +111,5 @@ namespace FinanceManager.View
         }
 
         #endregion
-
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
