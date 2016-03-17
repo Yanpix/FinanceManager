@@ -25,23 +25,5 @@ namespace FinanceManager.Model.DataAccess.Services
 
         // Delete all items of type T
         void DeleteAll();
-
-        // Asynchronously get all items of type T
-        Task<List<T>> GetAllAsync();
-
-        // Asynchronously get an item of type T by id
-        Task<T> GetAsync(int id);
-
-        // Asynchronously create an item of type T
-        Task CreateAsync(T item);
-
-        // Asynchronously update an item of type T
-        Task UpdateAsync(T item);
-
-        // Asynchronously delete an item of type T by id
-        Task DeleteAsync(int id);
-
-        // Asynchronously delete all items of type T
-        Task DeleteAllAsync();
     }
 }

@@ -17,18 +17,18 @@ namespace FinanceManager.Model.DataAccess.Repository
     /// </summary>
     public class DataRepository<T> : IDataRepository<T> where T : class, new()
     {
-        // Connection to SQLite database
-        private SQLiteConnection _connection;
+        // Database path
+        private string _path;
 
-        // Asynchronous connection to SQLite database
-        private SQLiteAsyncConnection _connectionAsync;
+        // SQLite platform
+        private SQLitePlatformWinRT _platform;
 
         // Repository constructor: initializing connections
         public DataRepository()
         {
-            _connection = new SQLiteConnection(new SQLitePlatformWinRT(), App.databasePath);
+            _path = App.databasePath;
 
-            _connectionAsync = null; //new SQLiteAsyncConnection(App.databasePath);
+            _platform = new SQLitePlatformWinRT();
 
             InitializeDatabase();
         }
@@ -36,79 +36,31 @@ namespace FinanceManager.Model.DataAccess.Repository
         // Creates databse tables with initial content
         private void InitializeDatabase()
         {
-            List<Currency> initialCurrencys;
-
-            MoneyBox initialMoneyBox;
-
-            List<Category> initialCategories;
-
-            if (_connection.GetTableInfo("Currency").Count == 0)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                _connection.CreateTable<Currency>();
-
-                initialCurrencys = new List<Currency>
+                // Setting initial data
+                List<Currency> initialCurrencys = new List<Currency>
                 {
-                    new Currency
-                    {
-                        Title = "US Dollar",
-                        Symbol = "$"
-                    },
-                    new Currency
-                    {
-                        Title = "GB Pound",
-                        Symbol = "₤"
-                    },
-                    new Currency
-                    {
-                        Title = "Euro",
-                        Symbol = "€"
-                    },
-                    new Currency
-                    {
-                        Title = "FR Frank",
-                        Symbol = "₣"
-                    }
+                    new Currency { Title = "US Dollar", Symbol = "$" },
+                    new Currency { Title = "GB Pound",  Symbol = "₤" },
+                    new Currency { Title = "Euro",      Symbol = "€" },
+                    new Currency { Title = "FR Frank",  Symbol = "₣" }
                 };
 
-                foreach (Currency currency in initialCurrencys)
+                List<Category> initialCategories = new List<Category>
                 {
-                    _connection.Insert(currency);
-                }
-            }
-
-            if (_connection.GetTableInfo("Category").Count == 0)
-            {
-                _connection.CreateTable<Category>();
-
-                initialCategories = new List<Category>
-                {
-                    new Category { Title = "Food", Type = TransactionType.Expence },
-                    new Category { Title = "Salary", Type = TransactionType.Income },
-                    new Category { Title = "Gift", Type = TransactionType.Income },
-                    new Category { Title = "Gift", Type = TransactionType.Expence },
-                    new Category { Title = "Rent", Type = TransactionType.Income },
-                    new Category { Title = "Rent", Type = TransactionType.Expence },
+                    new Category { Title = "Food",          Type = TransactionType.Expence },
+                    new Category { Title = "Salary",        Type = TransactionType.Income  },
+                    new Category { Title = "Gift",          Type = TransactionType.Income  },
+                    new Category { Title = "Gift",          Type = TransactionType.Expence },
+                    new Category { Title = "Rent",          Type = TransactionType.Income  },
+                    new Category { Title = "Rent",          Type = TransactionType.Expence },
                     new Category { Title = "Entertainment", Type = TransactionType.Expence },
-                    new Category { Title = "Dividends", Type = TransactionType.Income },
-                    new Category { Title = "Compensation", Type = TransactionType.Income },
+                    new Category { Title = "Dividends",     Type = TransactionType.Income  },
+                    new Category { Title = "Compensation",  Type = TransactionType.Income  },
                 };
 
-                foreach (Category category in initialCategories)
-                {
-                    _connection.Insert(category);
-                }
-            }
-
-            if (_connection.GetTableInfo("Transaction").Count == 0)
-            {
-                _connection.CreateTable<Transaction>();
-            }
-
-            if (_connection.GetTableInfo("MoneyBox").Count == 0)
-            {
-                _connection.CreateTable<MoneyBox>();
-
-                initialMoneyBox = new MoneyBox
+                MoneyBox initialMoneyBox = new MoneyBox
                 {
                     Balance = 0.0M,
                     CreationDate = DateTime.Now,
@@ -116,43 +68,69 @@ namespace FinanceManager.Model.DataAccess.Repository
                     Title = "test money box"
                 };
 
-                _connection.Insert(initialMoneyBox);
+                // Creating tables if not exist
+                if (db.GetTableInfo("Currency").Count == 0)
+                {
+                    db.CreateTable<Currency>();
 
-                initialMoneyBox.PrimaryCurrency = _connection.Get<Currency>(2);
+                    foreach (Currency currency in initialCurrencys)
+                    {
+                        db.Insert(currency);
+                    }
+                }
 
-                _connection.UpdateWithChildren(initialMoneyBox);
+                if (db.GetTableInfo("Category").Count == 0)
+                {
+                    db.CreateTable<Category>();
+
+                    foreach (Category category in initialCategories)
+                    {
+                        db.Insert(category);
+                    }
+                }
+
+                if (db.GetTableInfo("MoneyBox").Count == 0)
+                {
+                    db.CreateTable<MoneyBox>();
+
+                    db.Insert(initialMoneyBox);
+
+                    initialMoneyBox.PrimaryCurrency = db.Get<Currency>(4);
+
+                    db.UpdateWithChildren(initialMoneyBox);
+                }
+
+                if (db.GetTableInfo("Transaction").Count == 0)
+                {
+                    db.CreateTable<Transaction>();
+                }
+
+                if (db.GetTableInfo("User").Count == 0)
+                {
+                    db.CreateTable<User>();
+                }               
             }
         }
 
         // Create an item of type T
         public void Create(T item)
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                _connection.Insert(item);
-                _connection.UpdateWithChildren(item);
-            }
-        }
-
-        // Asynchronously create an item of type T
-        public async Task CreateAsync(T item)
-        {
-            if (_connectionAsync != null)
-            {
-                await _connectionAsync.InsertAsync(item);
+                db.Insert(item);
             }
         }
 
         // Delete an item of type T by id, if item exists
         public void Delete(int id)
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                T i = _connection.Get<T>(id);
+                T i = db.Get<T>(id);
 
                 if (i != null)
                 {
-                    _connection.Delete(id);
+                    db.Delete(id);
                 }
             }
         }
@@ -160,99 +138,36 @@ namespace FinanceManager.Model.DataAccess.Repository
         // Delete all items of type T
         public void DeleteAll()
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                _connection.DeleteAll<T>();
-            }
-        }
-
-        // Asynchronously delete all items of type T
-        public async Task DeleteAllAsync()
-        {
-            if (_connectionAsync != null)
-            {
-                List<T> items = await _connectionAsync.Table<T>().ToListAsync();
-
-                foreach (T item in items)
-                {
-                    await _connectionAsync.DeleteAsync(item);
-                }
-            }
-        }
-
-        // Asynchronously delete an item of type T by id, if item exists
-        public async Task DeleteAsync(int id)
-        {
-            if (_connectionAsync != null)
-            {
-                T i = await _connectionAsync.GetAsync<T>(id);
-
-                if (i != null)
-                {
-                    await _connectionAsync.DeleteAsync(id);
-                }
+                db.DeleteAll<T>();
             }
         }
 
         // Get an item of type T by id
         public T Get(int id)
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                return _connection.Get<T>(id);
+                return db.GetWithChildren<T>(id);
             }
-            else
-                return null;
         }
 
         // Get all items of type T
         public List<T> GetAll()
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                return _connection.GetAllWithChildren<T>().ToList();
+                return db.GetAllWithChildren<T>().ToList();
             }
-            else
-                return null;
-        }
-
-        // Asynchronously get all items of type T
-        public async Task<List<T>> GetAllAsync()
-        {
-            if (_connectionAsync != null)
-            {
-                return await _connectionAsync.Table<T>().ToListAsync();
-            }
-            else
-                return null;
-        }
-
-        // Asynchronously get an item of type T by id
-        public async Task<T> GetAsync(int id)
-        {
-            if (_connectionAsync != null)
-            {
-                return await _connectionAsync.GetAsync<T>(id);
-            }
-            else
-                return null;
         }
 
         // Update an item of type T
         public void Update(T item)
         {
-            if (_connection != null)
+            using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                _connection.Update(item);
-            }
-        }
-
-        // Asynchronously update an item of type T
-        public async Task UpdateAsync(T item)
-        {
-            if (_connectionAsync != null)
-            {
-                await _connectionAsync.UpdateAsync(item);
+                db.InsertOrReplace(item);
             }
         }
     }

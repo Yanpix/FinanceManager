@@ -11,21 +11,21 @@ namespace FinanceManager.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal number = (decimal)value;
-
-            if (number == 0)
-            {
-                return null;
-            }
-            else
-            {
-                return number;
-            }
+            return value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return value;
+            decimal number;
+
+            if (decimal.TryParse(value.ToString(), out number))
+            {
+                return number;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -21,12 +21,6 @@ namespace FinanceManager.Model.DataAccess.Services
             UnitOfWork.Repository<T>().Create(item);
         }
 
-        // Asynchronously create an item of type T
-        public async Task CreateAsync(T item)
-        {
-            await UnitOfWork.Repository<T>().CreateAsync(item);
-        }
-
         // Delete an item of type T by id
         public void Delete(int id)
         {
@@ -37,18 +31,6 @@ namespace FinanceManager.Model.DataAccess.Services
         public void DeleteAll()
         {
             UnitOfWork.Repository<T>().DeleteAll();
-        }
-
-        // Asynchronously delete all items of type T
-        public async Task DeleteAllAsync()
-        {
-            await UnitOfWork.Repository<T>().DeleteAllAsync();
-        }
-
-        // Asynchronously delete an item of type T by id
-        public async Task DeleteAsync(int id)
-        {
-            await UnitOfWork.Repository<T>().DeleteAsync(id);
         }
 
         // Get an item of type T by id
@@ -63,28 +45,10 @@ namespace FinanceManager.Model.DataAccess.Services
             return UnitOfWork.Repository<T>().GetAll();
         }
 
-        // Asynchronously get all items of type T
-        public async Task<List<T>> GetAllAsync()
-        {
-            return await UnitOfWork.Repository<T>().GetAllAsync();
-        }
-
-        // Asynchronously get an item of type T by id
-        public async Task<T> GetAsync(int id)
-        {
-            return await UnitOfWork.Repository<T>().GetAsync(id);
-        }
-
         // Update an item of type T
         public void Update(T item)
         {
             UnitOfWork.Repository<T>().Update(item);
-        }
-
-        // Asynchronously update an item of type T
-        public async Task UpdateAsync(T item)
-        {
-            await UnitOfWork.Repository<T>().UpdateAsync(item);
         }
     }
 }

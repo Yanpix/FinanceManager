@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.Model.Entities.Enums;
@@ -16,20 +17,15 @@ namespace FinanceManager.ViewModel
     {
         public CategoriesViewModel()
         {
-            _incomeCategories = new List<Category>();
-            _expenceCategories = new List<Category>();
-
             CreateCategoryCommand = new RelayCommand(CreateCategory);
             DeleteAllCategoriesCommand = new RelayCommand(DeleteAllCategories);
         }
 
         #region Services
 
-        // Data service for money boxes
-        public IDataService<Category> CategoriesDataService { get; set; }
-
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -50,7 +46,7 @@ namespace FinanceManager.ViewModel
 
         private void DeleteAllCategories()
         {
-            CategoriesDataService.DeleteAll();
+            DataService.Get<Category>().DeleteAll();
             LoadCategories();
         }
 
@@ -96,12 +92,12 @@ namespace FinanceManager.ViewModel
 
         private void LoadCategories()
         {
-            IncomeCategories = CategoriesDataService.GetAll()
+            _incomeCategories = DataService.Get<Category>().GetAll()
                 .Where(c => c.Type == TransactionType.Income)
                 .OrderBy(c => c.Title)
                 .ToList();
 
-            ExpenceCategories = CategoriesDataService.GetAll()
+            _expenceCategories = DataService.Get<Category>().GetAll()
                 .Where(c => c.Type == TransactionType.Expence)
                 .OrderBy(c => c.Title)
                 .ToList();

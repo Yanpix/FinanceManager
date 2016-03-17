@@ -14,6 +14,7 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
+        // Repositories as injection properties
         public IDataRepository<MoneyBox> MoneyBoxesRepository { get; set; }
 
         public IDataRepository<Currency> CurrenciesRepository { get; set; }
@@ -21,6 +22,8 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
         public IDataRepository<Category> CategoriesRepository { get; set; }
 
         public IDataRepository<Transaction> TransactionsRepository { get; set; }
+
+        public IDataRepository<User> UsersRepository { get; set; }
 
         // Get repository of items of type T
         public IDataRepository<T> Repository<T>() where T : class, new()
@@ -37,6 +40,8 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
                     return CategoriesRepository as IDataRepository<T>;
                 case "Transaction":
                     return TransactionsRepository as IDataRepository<T>;
+                case "User":
+                    return UsersRepository as IDataRepository<T>;
                 default:
                     return null;
             }

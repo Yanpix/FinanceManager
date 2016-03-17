@@ -1,5 +1,7 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
+using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.Model.Entities.Enums;
 using FinanceManager.View;
@@ -16,16 +18,15 @@ namespace FinanceManager.ViewModel
     {
         public MoneyBoxViewModel()
         {
-
-
             CreateIncomeCommand = new RelayCommand(CreateIncome);
             CreateExpenceCommand = new RelayCommand(CreateExpence);
         }
 
         #region Services
 
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -42,13 +43,13 @@ namespace FinanceManager.ViewModel
         private void CreateIncome()
         {
             NavigationService.Navigate(typeof(CreateTransactionPage), 
-                new object[] { MoneyBox, TransactionType.Income });
+                new object[] { MoneyBox.Id, TransactionType.Income });
         }
 
         private void CreateExpence()
         {
             NavigationService.Navigate(typeof(CreateTransactionPage), 
-                new object[] { MoneyBox, TransactionType.Expence });
+                new object[] { MoneyBox.Id, TransactionType.Expence });
         }
 
         #endregion
@@ -61,7 +62,7 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                _moneyBox = (MoneyBox)NavigationService.GetNavigationData(0);
+                LoadMoneyBox();
                 return _moneyBox;
             }
             set
@@ -93,10 +94,16 @@ namespace FinanceManager.ViewModel
 
         private void LoadLastTransaction()
         {
-            if (MoneyBox.Transactions.Count != 0)
-            {
-                _lastTransaction = MoneyBox.Transactions.Last();
-            }            
+            _lastTransaction = DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id)
+                .OrderBy(t => t.CreationDate)
+                .LastOrDefault();              
+        }
+
+        private void LoadMoneyBox()
+        {
+            _moneyBox = DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.Model.Entities.Enums;
@@ -26,17 +27,9 @@ namespace FinanceManager.ViewModel
 
         #region Services
 
-        // Data service for transactions
-        public IDataService<Transaction> TransactionsDataService { get; set; }
-
-        // Data service for currencies
-        public IDataService<Currency> CurrenciesDataService { get; set; }
-
-        // Data service for categories
-        public IDataService<Category> CategoriesDataService { get; set; }
-
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -54,16 +47,32 @@ namespace FinanceManager.ViewModel
         {
             Transaction.CreationDate = DateTime.Now;
             Transaction.Type = Type;
+
+            DataService.Get<Transaction>().Create(Transaction);
+
             Transaction.MoneyBox = MoneyBox;
+            DataService.Get<Transaction>().Update(Transaction);
 
-            TransactionsDataService.Create(Transaction);
+            MoneyBox moneyBox = MoneyBox;
 
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox });
+            if (Type == TransactionType.Income)
+            {
+                moneyBox.Balance =+ Transaction.Value;
+            }
+            else
+            {
+                moneyBox.Balance =- Transaction.Value;
+            }
+
+            moneyBox.LastModifiedDate = DateTime.Now;
+            DataService.Get<MoneyBox>().Update(moneyBox);
+
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
         }
 
         public void CancelTransaction()
         {
-            //NavigationService.Navigate(typeof(MainPage));
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
         }
 
         #endregion
@@ -139,7 +148,7 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                _moneyBox = (MoneyBox)NavigationService.GetNavigationData(0);
+                LoadMoneyBox();
                 return _moneyBox;
             }
             set
@@ -155,15 +164,20 @@ namespace FinanceManager.ViewModel
 
         private void LoadCurrencies()
         {
-            Currencies = CurrenciesDataService.GetAll();
+            _currencies = DataService.Get<Currency>().GetAll();
         }
 
         private void LoadCategories()
         {
-            Categories = CategoriesDataService.GetAll()
-                .Where(c => c.Type == Type)
+            _categories = DataService.Get<Category>().GetAll()
+                .Where(c => c.Type == _type)
                 .OrderBy(c => c.Title)
                 .ToList();
+        }
+
+        private void LoadMoneyBox()
+        {
+            _moneyBox = DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
         }
 
         #endregion

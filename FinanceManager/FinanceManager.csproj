@@ -91,6 +91,8 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Infrastructure\DependencyResolver.cs" />
+    <Compile Include="Model\DataAccess\Providers\DataServicesProvider.cs" />
+    <Compile Include="Model\DataAccess\Providers\IDataServicesProvider.cs" />
     <Compile Include="Infrastructure\INavigationService.cs" />
     <Compile Include="Infrastructure\NavigationService.cs" />
     <Compile Include="Model\DataAccess\Repository\DataRepository.cs" />

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Services;
+using FinanceManager.Model.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

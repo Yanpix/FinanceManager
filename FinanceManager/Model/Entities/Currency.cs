@@ -18,13 +18,5 @@ namespace FinanceManager.Model.Entities
 
         // The symbol of the currency
         public string Symbol { get; set; }
-
-        // List of money boxes, where this currency is primary
-        [OneToMany]
-        public List<MoneyBox> MoneyBoxes { get; set; }
-
-        // List of transactions with this currency
-        [OneToMany]
-        public List<Transaction> Transactions { get; set; }
     }
 }

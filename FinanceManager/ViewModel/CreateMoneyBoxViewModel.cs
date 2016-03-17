@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.View;
@@ -35,14 +36,9 @@ namespace FinanceManager.ViewModel
 
         #region Services
 
-        // Data service for money boxes
-        public IDataService<MoneyBox> MoneyBoxesDataService { get; set; }
-
-        // Data service for currencies
-        public IDataService<Currency> CurrenciesDataService { get; set; }
-
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -62,9 +58,9 @@ namespace FinanceManager.ViewModel
             MoneyBox.LastModifiedDate = DateTime.Now;
             MoneyBox.Balance = 0.0M;
 
-            MoneyBoxesDataService.Create(MoneyBox);
+            DataService.Get<MoneyBox>().Create(MoneyBox);
 
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox });
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
         }       
 
         public void CancelMoneyBox()
@@ -113,7 +109,7 @@ namespace FinanceManager.ViewModel
 
         private void LoadCurrencies()
         {
-            Currencies = CurrenciesDataService.GetAll();
+            Currencies = DataService.Get<Currency>().GetAll();
         }
 
         #endregion

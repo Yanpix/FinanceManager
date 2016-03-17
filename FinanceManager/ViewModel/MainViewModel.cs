@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.View;
@@ -17,7 +18,6 @@ namespace FinanceManager.ViewModel
         public MainViewModel()
         {
             // Initialize properties
-            _moneyBoxes = new List<MoneyBox>();
             _selectedMoneyBox = new MoneyBox();
 
             // Initialize commands
@@ -30,11 +30,9 @@ namespace FinanceManager.ViewModel
 
         #region Services
 
-        // Data service for money boxes
-        public IDataService<MoneyBox> MoneyBoxesDataService { get; set; }
-
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -76,7 +74,7 @@ namespace FinanceManager.ViewModel
 
         private void DeleteAllMoneyBoxes()
         {
-            MoneyBoxesDataService.DeleteAll();
+            DataService.Get<MoneyBox>().DeleteAll();
             LoadMoneyBoxes();
         }
 
@@ -122,12 +120,12 @@ namespace FinanceManager.ViewModel
 
         private void LoadMoneyBoxes()
         {
-            MoneyBoxes = MoneyBoxesDataService.GetAll();
+            MoneyBoxes = DataService.Get<MoneyBox>().GetAll();
         }
 
         private void GoToSelectedMoneyBox()
         {
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { SelectedMoneyBox });
+            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { SelectedMoneyBox.Id });
         }
 
         #endregion

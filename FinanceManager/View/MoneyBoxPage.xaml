@@ -82,7 +82,7 @@
                         <TextBlock Text="&#160;" FontSize="21.333"/>
                         <TextBlock Text="{Binding LastTransaction.Value}" FontSize="21.333"/>
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding LastTransaction.Currency.Symbol}" FontSize="21.333" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding LastTransaction.Currency.Symbol}" FontSize="21.333"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="category :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
@@ -101,7 +101,7 @@
                         <TextBlock Text="&#160;" FontSize="21.333"/>
                         <TextBlock Text="{Binding PreviousTransactionValue}"/>
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding PreviousTransactionCurrencySymbol}" FontSize="21.333" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding PreviousTransactionCurrencySymbol}" FontSize="21.333"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="category :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>

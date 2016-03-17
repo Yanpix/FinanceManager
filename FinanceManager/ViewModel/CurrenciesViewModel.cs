@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
+using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using System;
@@ -15,19 +16,15 @@ namespace FinanceManager.ViewModel
     {
         public CurrenciesViewModel()
         {
-            _currencies = new List<Currency>();
-
             CreateCurrencyCommand = new RelayCommand(CreateCurrency);
             DeleteAllCurrenciesCommand = new RelayCommand(DeleteAllCurrencies);
         }
 
         #region Services
 
-        // Data service for currencies
-        public IDataService<Currency> CurrenciesDataService { get; set; }
-
-        // Service for navigation
         public INavigationService NavigationService { get; set; }
+
+        public IDataServicesProvider DataService { get; set; }
 
         #endregion
 
@@ -77,7 +74,7 @@ namespace FinanceManager.ViewModel
 
         private void LoadCurrencies()
         {
-            Currencies = CurrenciesDataService.GetAll();
+            _currencies = DataService.Get<Currency>().GetAll();
         }
 
         #endregion
