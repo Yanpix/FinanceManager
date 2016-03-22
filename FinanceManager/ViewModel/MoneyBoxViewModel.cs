@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace FinanceManager.ViewModel
 {
@@ -62,7 +63,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadMoneyBox();
+                if (_moneyBox == null)
+                    _moneyBox = LoadMoneyBox();
                 return _moneyBox;
             }
             set
@@ -78,7 +80,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadLastTransaction();
+                if (_lastTransaction == null)
+                    _lastTransaction = LoadLastTransaction();
                 return _lastTransaction;
             }
             set
@@ -88,22 +91,49 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private Transaction _previousTransaction;
+
+        public Transaction PreviousTransaction
+        {
+            get
+            {
+                if (_previousTransaction == null)
+                    _previousTransaction = LoadPreviousTransaction();
+                return _previousTransaction;
+            }
+            set
+            {
+                _previousTransaction = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
 
-        private void LoadLastTransaction()
+        private Transaction LoadLastTransaction()
         {
-            _lastTransaction = DataService.Get<Transaction>()
+            return DataService.Get<Transaction>()
                 .GetAll()
                 .Where(t => t.MoneyBoxId == MoneyBox.Id)
-                .OrderBy(t => t.CreationDate)
-                .LastOrDefault();              
+                .OrderByDescending(o => o.CreationDate)
+                .FirstOrDefault();
         }
 
-        private void LoadMoneyBox()
+        private Transaction LoadPreviousTransaction()
         {
-            _moneyBox = DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
+            return DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id)
+                .OrderByDescending(o => o.CreationDate)
+                .Skip(1)
+                .FirstOrDefault();
+        }
+
+        private MoneyBox LoadMoneyBox()
+        {
+            return DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
         }
 
         #endregion

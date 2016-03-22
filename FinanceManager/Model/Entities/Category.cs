@@ -1,6 +1,4 @@
 ﻿using FinanceManager.Model.Entities.Enums;
-using System.Collections.Generic;
-using SQLiteNetExtensions.Attributes;
 using SQLite.Net.Attributes;
 
 namespace FinanceManager.Model.Entities

@@ -75,7 +75,7 @@
                     <TextBlock Text="&#160;" FontSize="18.667"/>
                     <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 </StackPanel>
-                <TextBlock Text="last transaction :" Margin="0,20,0,0" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                <TextBlock Text="last transactions :" Margin="0,20,0,0" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
                 <StackPanel Orientation="Vertical" Margin="40,5,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding LastTransaction.Type}" FontSize="21.333" />
@@ -97,23 +97,23 @@
                         <TextBlock Text="{Binding LastTransaction.CreationDate}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="{Binding PreviousTransactionType}" FontSize="21.333" />
+                        <TextBlock Text="{Binding PreviousTransaction.Type}" FontSize="21.333" />
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding PreviousTransactionValue}"/>
+                        <TextBlock Text="{Binding PreviousTransaction.Value}" FontSize="21.333"/>
                         <TextBlock Text="&#160;" FontSize="21.333"/>
-                        <TextBlock Text="{Binding PreviousTransactionCurrencySymbol}" FontSize="21.333"/>
+                        <TextBlock Text="{Binding PreviousTransaction.Currency.Symbol}" FontSize="21.333"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="category :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding PreviousTransactionCategory}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding PreviousTransaction.Category.Title}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="user :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding PreviousTransactionUser}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding PreviousTransaction.User}" FontSize="18.667"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="date :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                        <TextBlock Text="{Binding PreviousTransactionCreationDate}" FontSize="18.667"/>
+                        <TextBlock Text="{Binding PreviousTransaction.CreationDate}" FontSize="18.667"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

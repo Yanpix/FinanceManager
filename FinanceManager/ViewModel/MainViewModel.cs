@@ -17,9 +17,6 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public MainViewModel()
         {
-            // Initialize properties
-            _selectedMoneyBox = new MoneyBox();
-
             // Initialize commands
             CreateMoneyBoxCommand = new RelayCommand(CreateMoneyBox);
             EditUsersCommand = new RelayCommand(EditUsers);
@@ -75,7 +72,7 @@ namespace FinanceManager.ViewModel
         private void DeleteAllMoneyBoxes()
         {
             DataService.Get<MoneyBox>().DeleteAll();
-            LoadMoneyBoxes();
+            MoneyBoxes = LoadMoneyBoxes();
         }
 
         #endregion
@@ -88,7 +85,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadMoneyBoxes();
+                if (_moneyBoxes == null)
+                    _moneyBoxes = LoadMoneyBoxes();
                 return _moneyBoxes;
             }
             set
@@ -118,9 +116,9 @@ namespace FinanceManager.ViewModel
 
         #region Helping methods
 
-        private void LoadMoneyBoxes()
+        private List<MoneyBox> LoadMoneyBoxes()
         {
-            MoneyBoxes = DataService.Get<MoneyBox>().GetAll();
+            return DataService.Get<MoneyBox>().GetAll();
         }
 
         private void GoToSelectedMoneyBox()

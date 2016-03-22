@@ -15,7 +15,7 @@ namespace FinanceManager.Model.DataAccess.Services
         T Get(int id);
 
         // Create an item of type T
-        void Create(T item);
+        void Save(T item);
 
         // Update an item of type T
         void Update(T item);

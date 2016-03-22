@@ -2,6 +2,8 @@
 using SQLite.Net.Attributes;
 using SQLiteNetExtensions.Attributes;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace FinanceManager.Model.Entities
 {

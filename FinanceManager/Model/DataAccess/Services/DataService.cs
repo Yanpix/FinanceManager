@@ -16,9 +16,9 @@ namespace FinanceManager.Model.DataAccess.Services
         public IUnitOfWork UnitOfWork { get; set; }
 
         // Create an item of type T
-        public void Create(T item)
+        public void Save(T item)
         {
-            UnitOfWork.Repository<T>().Create(item);
+            UnitOfWork.Repository<T>().Save(item);
         }
 
         // Delete an item of type T by id

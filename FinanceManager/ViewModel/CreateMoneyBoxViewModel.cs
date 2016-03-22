@@ -25,10 +25,6 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public CreateMoneyBoxViewModel()
         {
-            // Initialize properties
-            _moneyBox = new MoneyBox();
-            _currencies = new List<Currency>();
-
             // Initialize commands
             SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBox);
             CancelMoneyBoxCommand = new RelayCommand(CancelMoneyBox);
@@ -58,7 +54,7 @@ namespace FinanceManager.ViewModel
             MoneyBox.LastModifiedDate = DateTime.Now;
             MoneyBox.Balance = 0.0M;
 
-            DataService.Get<MoneyBox>().Create(MoneyBox);
+            DataService.Get<MoneyBox>().Save(MoneyBox);
 
             NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
         }       
@@ -78,6 +74,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
+                if (_moneyBox == null)
+                    _moneyBox = new MoneyBox();
                 return _moneyBox;
             }
             set
@@ -93,7 +91,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadCurrencies();
+                if (_currencies == null)
+                    _currencies = LoadCurrencies();
                 return _currencies;
             }
             set
@@ -107,9 +106,9 @@ namespace FinanceManager.ViewModel
 
         #region Helping methods
 
-        private void LoadCurrencies()
+        private List<Currency> LoadCurrencies()
         {
-            Currencies = DataService.Get<Currency>().GetAll();
+            return DataService.Get<Currency>().GetAll();
         }
 
         #endregion

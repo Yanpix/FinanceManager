@@ -113,11 +113,11 @@ namespace FinanceManager.Model.DataAccess.Repository
         }
 
         // Create an item of type T
-        public void Create(T item)
+        public void Save(T item)
         {
             using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                db.Insert(item);
+                db.InsertOrReplaceWithChildren(item);
             }
         }
 
@@ -167,7 +167,7 @@ namespace FinanceManager.Model.DataAccess.Repository
         {
             using (SQLiteConnection db = new SQLiteConnection(_platform, _path))
             {
-                db.InsertOrReplace(item);
+                db.UpdateWithChildren(item);
             }
         }
     }

@@ -18,8 +18,6 @@ namespace FinanceManager.ViewModel
     {
         public CreateTransactionViewModel()
         {
-            _transaction = new Transaction();
-
             // Initialize commands
             SaveTransactionCommand = new RelayCommand(SaveTransaction);
             CancelTransactionCommand = new RelayCommand(CancelTransaction);
@@ -48,24 +46,22 @@ namespace FinanceManager.ViewModel
             Transaction.CreationDate = DateTime.Now;
             Transaction.Type = Type;
 
-            DataService.Get<Transaction>().Create(Transaction);
-
-            Transaction.MoneyBox = MoneyBox;
-            DataService.Get<Transaction>().Update(Transaction);
-
-            MoneyBox moneyBox = MoneyBox;
+            DataService.Get<Transaction>().Save(Transaction);
 
             if (Type == TransactionType.Income)
             {
-                moneyBox.Balance =+ Transaction.Value;
+                MoneyBox.Balance += Transaction.Value;
             }
             else
             {
-                moneyBox.Balance =- Transaction.Value;
+                MoneyBox.Balance -= Transaction.Value;
             }
 
-            moneyBox.LastModifiedDate = DateTime.Now;
-            DataService.Get<MoneyBox>().Update(moneyBox);
+            MoneyBox.LastModifiedDate = DateTime.Now;
+            DataService.Get<MoneyBox>().Save(MoneyBox);
+
+            Transaction.MoneyBox = MoneyBox;
+            DataService.Get<Transaction>().Update(Transaction);
 
             NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
         }
@@ -85,7 +81,7 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                _type = (TransactionType)NavigationService.GetNavigationData(1);
+                _type = LoadType();
                 return _type;
             }
             set
@@ -101,6 +97,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
+                if (_transaction == null)
+                    _transaction = new Transaction();
                 return _transaction;
             }
             set
@@ -116,7 +114,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadCurrencies();
+                if (_currencies == null)
+                    _currencies = LoadCurrencies();
                 return _currencies;
             }
             set
@@ -132,7 +131,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadCategories();
+                if (_categories == null)
+                    _categories = LoadCategories();
                 return _categories;
             }
             set
@@ -148,7 +148,8 @@ namespace FinanceManager.ViewModel
         {
             get
             {
-                LoadMoneyBox();
+                if (_moneyBox == null)
+                    _moneyBox = LoadMoneyBox();
                 return _moneyBox;
             }
             set
@@ -162,22 +163,27 @@ namespace FinanceManager.ViewModel
 
         #region Helping methods
 
-        private void LoadCurrencies()
+        private List<Currency> LoadCurrencies()
         {
-            _currencies = DataService.Get<Currency>().GetAll();
+            return DataService.Get<Currency>().GetAll();
         }
 
-        private void LoadCategories()
+        private List<Category> LoadCategories()
         {
-            _categories = DataService.Get<Category>().GetAll()
+            return DataService.Get<Category>().GetAll()
                 .Where(c => c.Type == _type)
                 .OrderBy(c => c.Title)
                 .ToList();
         }
 
-        private void LoadMoneyBox()
+        private MoneyBox LoadMoneyBox()
         {
-            _moneyBox = DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
+            return DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
+        }
+
+        private TransactionType LoadType()
+        {
+            return (TransactionType)NavigationService.GetNavigationData(1);
         }
 
         #endregion
