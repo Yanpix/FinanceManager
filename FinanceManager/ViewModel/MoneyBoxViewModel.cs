@@ -19,8 +19,10 @@ namespace FinanceManager.ViewModel
     {
         public MoneyBoxViewModel()
         {
-            CreateIncomeCommand = new RelayCommand(CreateIncome);
-            CreateExpenceCommand = new RelayCommand(CreateExpence);
+            EditMoneyBoxCommand = new RelayCommand(EditMoneyBox);
+            AddIncomeCommand = new RelayCommand(AddIncome);
+            AddExpenceCommand = new RelayCommand(AddExpence);
+            DeleteAllTransactionsCommand = new RelayCommand(DeleteAllTransactions);
         }
 
         #region Services
@@ -33,24 +35,38 @@ namespace FinanceManager.ViewModel
 
         #region Commands
 
-        public ICommand CreateIncomeCommand { get; private set; }
+        public ICommand EditMoneyBoxCommand { get; private set; }
 
-        public ICommand CreateExpenceCommand { get; private set; }
+        public ICommand AddIncomeCommand { get; private set; }
+
+        public ICommand AddExpenceCommand { get; private set; }
+
+        public ICommand DeleteAllTransactionsCommand { get; private set; }
 
         #endregion
 
         #region Commands implementation
 
-        private void CreateIncome()
+        private void EditMoneyBox()
+        {
+            ;
+        }
+
+        private void AddIncome()
         {
             NavigationService.Navigate(typeof(CreateTransactionPage), 
                 new object[] { MoneyBox.Id, TransactionType.Income });
         }
 
-        private void CreateExpence()
+        private void AddExpence()
         {
             NavigationService.Navigate(typeof(CreateTransactionPage), 
                 new object[] { MoneyBox.Id, TransactionType.Expence });
+        }
+
+        private void DeleteAllTransactions()
+        {
+            ;
         }
 
         #endregion
@@ -74,36 +90,118 @@ namespace FinanceManager.ViewModel
             }
         }
 
-        private Transaction _lastTransaction;
+        private decimal _totalIncome;
 
-        public Transaction LastTransaction
+        public decimal TotalIncome
         {
             get
             {
-                if (_lastTransaction == null)
-                    _lastTransaction = LoadLastTransaction();
-                return _lastTransaction;
+                _totalIncome = CalculateTotalIncome();
+                return _totalIncome;
             }
             set
             {
-                _lastTransaction = value;
+                _totalIncome = value;
                 OnPropertyChanged();
             }
         }
 
-        private Transaction _previousTransaction;
+        private decimal _totalExpence;
 
-        public Transaction PreviousTransaction
+        public decimal TotalExpence
         {
             get
             {
-                if (_previousTransaction == null)
-                    _previousTransaction = LoadPreviousTransaction();
-                return _previousTransaction;
+                _totalExpence = CalculateTotalExpence();
+                return _totalIncome;
             }
             set
             {
-                _previousTransaction = value;
+                _totalExpence = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Transaction> _incomeTransactions;
+
+        public List<Transaction> IncomeTransactions
+        {
+            get
+            {
+                if (_incomeTransactions == null)
+                    _incomeTransactions = LoadIncomeTransactions();
+                return _incomeTransactions;
+            }
+            set
+            {
+                _incomeTransactions = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Transaction> _expenceTransactions;
+
+        public List<Transaction> ExpenceTransactions
+        {
+            get
+            {
+                if (_expenceTransactions == null)
+                    _expenceTransactions = LoadExpenceTransactions();
+                return _expenceTransactions;
+            }
+            set
+            {
+                _expenceTransactions = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Transaction _selectedTransaction;
+
+        public Transaction SelectedTransaction
+        {
+            get
+            {
+                return _selectedTransaction;
+            }
+            set
+            {
+                _selectedTransaction = value;
+                OnPropertyChanged();
+                GoToSelectedTransaction();
+            }
+        }
+
+        private List<TransactionByCategory> _incomesByCategory;
+
+        public List<TransactionByCategory> IncomesByCategory
+        {
+            get
+            {
+                if (_incomesByCategory == null)
+                    _incomesByCategory = LoadIncomesByCategory();
+                return _incomesByCategory;
+            }
+            set
+            {
+                _incomesByCategory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<TransactionByCategory> _expencesByCategory;
+
+        public List<TransactionByCategory> ExpencesByCategory
+        {
+            get
+            {
+                if (_expencesByCategory == null)
+                    _expencesByCategory = LoadExpencesByCategory();
+                return _expencesByCategory;
+            }
+            set
+            {
+                _expencesByCategory = value;
                 OnPropertyChanged();
             }
         }
@@ -112,23 +210,22 @@ namespace FinanceManager.ViewModel
 
         #region Helping methods
 
-        private Transaction LoadLastTransaction()
+        private List<Transaction> LoadIncomeTransactions()
         {
             return DataService.Get<Transaction>()
                 .GetAll()
-                .Where(t => t.MoneyBoxId == MoneyBox.Id)
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Income)
                 .OrderByDescending(o => o.CreationDate)
-                .FirstOrDefault();
+                .ToList();
         }
 
-        private Transaction LoadPreviousTransaction()
+        private List<Transaction> LoadExpenceTransactions()
         {
             return DataService.Get<Transaction>()
                 .GetAll()
-                .Where(t => t.MoneyBoxId == MoneyBox.Id)
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Expence)
                 .OrderByDescending(o => o.CreationDate)
-                .Skip(1)
-                .FirstOrDefault();
+                .ToList();
         }
 
         private MoneyBox LoadMoneyBox()
@@ -136,6 +233,65 @@ namespace FinanceManager.ViewModel
             return DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
         }
 
+        private decimal CalculateTotalIncome()
+        {
+            return DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Income)
+                .Select(t => t.Value)
+                .Sum();
+        }
+
+        private decimal CalculateTotalExpence()
+        {
+            return DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Expence)
+                .Select(t => t.Value)
+                .Sum();
+        }
+
+        private void GoToSelectedTransaction()
+        {
+            ;
+        }
+
+        private List<TransactionByCategory> LoadIncomesByCategory()
+        {
+            return DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Income)
+                .GroupBy(g => g.Category)
+                .Select(s => new TransactionByCategory
+                {
+                    CategoryTitle = s.Key.Title,
+                    TransactionValue = (double)s.Sum(c => c.Value)
+                })
+                .OrderBy(o => o.TransactionValue)
+                .ToList();
+        }
+
+        private List<TransactionByCategory> LoadExpencesByCategory()
+        {
+            return DataService.Get<Transaction>()
+                .GetAll()
+                .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Expence)
+                .GroupBy(g => g.Category)
+                .Select(s => new TransactionByCategory
+                {
+                    CategoryTitle = s.Key.Title,
+                    TransactionValue = (double)s.Sum(c => c.Value)
+                })
+                .OrderBy(o => o.TransactionValue)
+                .ToList();
+        }
+
         #endregion
+    }
+
+    public class TransactionByCategory
+    {
+        public string CategoryTitle { get; set; }
+        public double TransactionValue { get; set; }
     }
 }

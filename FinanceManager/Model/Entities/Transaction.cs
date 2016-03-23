@@ -51,5 +51,13 @@ namespace FinanceManager.Model.Entities
         // The category of the transaction
         [ManyToOne]
         public Category Category { get; set; }
+
+        // The id of the user performed transaction
+        [ForeignKey(typeof(User))]
+        public int UserId { get; set; }
+
+        // The user performed transaction
+        [ManyToOne]
+        public User User { get; set; }
     }
 }

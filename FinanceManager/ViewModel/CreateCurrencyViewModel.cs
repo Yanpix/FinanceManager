@@ -1,8 +1,8 @@
 ﻿using FinanceManager.Common;
 using FinanceManager.Infrastructure;
 using FinanceManager.Model.DataAccess.Providers;
-using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
+using FinanceManager.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +12,12 @@ using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class CurrenciesViewModel : BaseViewModel
+    public class CreateCurrencyViewModel : BaseViewModel
     {
-        public CurrenciesViewModel()
+        public CreateCurrencyViewModel()
         {
-            CreateCurrencyCommand = new RelayCommand(CreateCurrency);
-            DeleteAllCurrenciesCommand = new RelayCommand(DeleteAllCurrencies);
+            SaveCurrencyCommand = new RelayCommand(SaveCurrency);
+            CancelCurrencyCommand = new RelayCommand(CancelCurrency);
         }
 
         #region Services
@@ -30,51 +30,45 @@ namespace FinanceManager.ViewModel
 
         #region Commands
 
-        public ICommand CreateCurrencyCommand { get; private set; }
+        public ICommand SaveCurrencyCommand { get; private set; }
 
-        public ICommand DeleteAllCurrenciesCommand { get; private set; }
+        public ICommand CancelCurrencyCommand { get; private set; }
 
         #endregion
 
         #region Commands implementation
 
-        public void CreateCurrency()
+        public void SaveCurrency()
         {
-            ;
+            DataService.Get<Currency>().Save(Currency);
+
+            NavigationService.Navigate(typeof(MainPage));
         }
 
-        public void DeleteAllCurrencies()
+        public void CancelCurrency()
         {
-            ;
+            NavigationService.Navigate(typeof(MainPage));
         }
 
         #endregion
 
         #region Properties
 
-        private List<Currency> _currencies;
+        private Currency _currency;
 
-        public List<Currency> Currencies
+        public Currency Currency
         {
             get
             {
-                LoadCurrencies();
-                return _currencies;
+                if (_currency == null)
+                    _currency = new Currency();
+                return _currency;
             }
             set
             {
-                _currencies = value;
+                _currency = value;
                 OnPropertyChanged();
             }
-        }
-
-        #endregion
-
-        #region Helping methods
-
-        private void LoadCurrencies()
-        {
-            _currencies = DataService.Get<Currency>().GetAll();
         }
 
         #endregion

@@ -46,15 +46,19 @@ namespace FinanceManager.Infrastructure
                 new InjectionProperty("NavigationService", typeof(INavigationService)),
                 new InjectionProperty("DataService", typeof(IDataServicesProvider)));
 
-            container.RegisterType<CurrenciesViewModel>(
-                new InjectionProperty("NavigationService", typeof(INavigationService)),
-                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
-
-            container.RegisterType<CategoriesViewModel>(
-                new InjectionProperty("NavigationService", typeof(INavigationService)),
-                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
-
             container.RegisterType<CreateTransactionViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)),
+                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
+
+            container.RegisterType<CreateCategoryViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)),
+                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
+
+            container.RegisterType<CreateCurrencyViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)),
+                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
+
+            container.RegisterType<CreateUserViewModel>(
                 new InjectionProperty("NavigationService", typeof(INavigationService)),
                 new InjectionProperty("DataService", typeof(IDataServicesProvider)));
         }

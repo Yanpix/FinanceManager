@@ -41,23 +41,23 @@ namespace FinanceManager.Model.DataAccess.Repository
                 // Setting initial data
                 List<Currency> initialCurrencys = new List<Currency>
                 {
-                    new Currency { Title = "US Dollar", Symbol = "$" },
-                    new Currency { Title = "GB Pound",  Symbol = "₤" },
-                    new Currency { Title = "Euro",      Symbol = "€" },
-                    new Currency { Title = "FR Frank",  Symbol = "₣" }
+                    new Currency { Title = "us dollar", Symbol = "$" },
+                    new Currency { Title = "gb pound",  Symbol = "₤" },
+                    new Currency { Title = "euro",      Symbol = "€" },
+                    new Currency { Title = "fr frank",  Symbol = "₣" }
                 };
 
                 List<Category> initialCategories = new List<Category>
                 {
-                    new Category { Title = "Food",          Type = TransactionType.Expence },
-                    new Category { Title = "Salary",        Type = TransactionType.Income  },
-                    new Category { Title = "Gift",          Type = TransactionType.Income  },
-                    new Category { Title = "Gift",          Type = TransactionType.Expence },
-                    new Category { Title = "Rent",          Type = TransactionType.Income  },
-                    new Category { Title = "Rent",          Type = TransactionType.Expence },
-                    new Category { Title = "Entertainment", Type = TransactionType.Expence },
-                    new Category { Title = "Dividends",     Type = TransactionType.Income  },
-                    new Category { Title = "Compensation",  Type = TransactionType.Income  },
+                    new Category { Title = "food",          Type = TransactionType.Expence },
+                    new Category { Title = "salary",        Type = TransactionType.Income  },
+                    new Category { Title = "gift",          Type = TransactionType.Income  },
+                    new Category { Title = "gift",          Type = TransactionType.Expence },
+                    new Category { Title = "rent",          Type = TransactionType.Income  },
+                    new Category { Title = "rent",          Type = TransactionType.Expence },
+                    new Category { Title = "entertainment", Type = TransactionType.Expence },
+                    new Category { Title = "dividends",     Type = TransactionType.Income  },
+                    new Category { Title = "compensation",  Type = TransactionType.Income  },
                 };
 
                 MoneyBox initialMoneyBox = new MoneyBox
@@ -66,6 +66,18 @@ namespace FinanceManager.Model.DataAccess.Repository
                     CreationDate = DateTime.Now,
                     LastModifiedDate = DateTime.Now,
                     Title = "test money box"
+                };
+
+                List<User> initialUsers = new List<User>
+                {
+                    new User { Title = "me" },
+                    new User { Title = "my wife" },
+                    new User { Title = "my son" }
+                };
+
+                MoneyBoxToUser initialMoneyBoxToUser = new MoneyBoxToUser
+                {
+                    MoneyBoxId = 1, UserId = 1
                 };
 
                 // Creating tables if not exist
@@ -89,6 +101,23 @@ namespace FinanceManager.Model.DataAccess.Repository
                     }
                 }
 
+                if (db.GetTableInfo("MoneyBoxToUser").Count == 0)
+                {
+                    db.CreateTable<MoneyBoxToUser>();
+
+                    db.Insert(initialMoneyBoxToUser);
+                }
+
+                if (db.GetTableInfo("User").Count == 0)
+                {
+                    db.CreateTable<User>();
+
+                    foreach (User user in initialUsers)
+                    {
+                        db.Insert(user);
+                    }
+                }
+
                 if (db.GetTableInfo("MoneyBox").Count == 0)
                 {
                     db.CreateTable<MoneyBox>();
@@ -97,18 +126,15 @@ namespace FinanceManager.Model.DataAccess.Repository
 
                     initialMoneyBox.PrimaryCurrency = db.Get<Currency>(4);
 
+                    //initialMoneyBox.Users.Add(db.Get<User>(1));
+
                     db.UpdateWithChildren(initialMoneyBox);
                 }
 
                 if (db.GetTableInfo("Transaction").Count == 0)
                 {
                     db.CreateTable<Transaction>();
-                }
-
-                if (db.GetTableInfo("User").Count == 0)
-                {
-                    db.CreateTable<User>();
-                }               
+                }              
             }
         }
 

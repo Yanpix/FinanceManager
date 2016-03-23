@@ -104,6 +104,7 @@
     <Compile Include="Model\Entities\Category.cs" />
     <Compile Include="Model\Entities\Currency.cs" />
     <Compile Include="Model\Entities\MoneyBox.cs" />
+    <Compile Include="Model\Entities\MoneyBoxToUser.cs" />
     <Compile Include="Model\Entities\Transaction.cs" />
     <Compile Include="Model\Entities\Enums\TransactionType.cs" />
     <Compile Include="Model\Entities\User.cs" />
@@ -111,24 +112,28 @@
     <Compile Include="Dependencies\SQLite.cs" />
     <Compile Include="Dependencies\SQLiteAsync.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
-    <Compile Include="ViewModel\CategoriesViewModel.cs" />
+    <Compile Include="ViewModel\CreateCategoryViewModel.cs" />
+    <Compile Include="ViewModel\CreateUserViewModel.cs" />
+    <Compile Include="ViewModel\CreateCurrencyViewModel.cs" />
+    <Compile Include="View\CreateCategoryPage.xaml.cs">
+      <DependentUpon>CreateCategoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\CreateMoneyBoxViewModel.cs" />
     <Compile Include="ViewModel\CreateTransactionViewModel.cs" />
-    <Compile Include="ViewModel\CurrenciesViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MoneyBoxViewModel.cs" />
-    <Compile Include="View\CategoriesPage.xaml.cs">
-      <DependentUpon>CategoriesPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Converters\DecimalConverter.cs" />
+    <Compile Include="View\CreateCurrencyPage.xaml.cs">
+      <DependentUpon>CreateCurrencyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CreateMoneyBoxPage.xaml.cs">
       <DependentUpon>CreateMoneyBoxPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CreateTransactionPage.xaml.cs">
       <DependentUpon>CreateTransactionPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\CurrenciesPage.xaml.cs">
-      <DependentUpon>CurrenciesPage.xaml</DependentUpon>
+    <Compile Include="View\CreateUserPage.xaml.cs">
+      <DependentUpon>CreateUserPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -157,7 +162,11 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\CategoriesPage.xaml">
+    <Page Include="View\CreateCategoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CreateCurrencyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -169,7 +178,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CurrenciesPage.xaml">
+    <Page Include="View\CreateUserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,6 +226,14 @@
     </Reference>
     <Reference Include="SQLiteNetExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLiteNetExtensions.1.3.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\SQLiteNetExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WinRTXamlToolkit, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinRTXamlToolkit.WindowsPhone.1.8.1.0\lib\wpa\WinRTXamlToolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WinRTXamlToolkit.Controls.DataVisualization, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinRTXamlToolkit.Controls.DataVisualization.WindowsPhone.1.8.1.0\lib\wpa\WinRTXamlToolkit.Controls.DataVisualization.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

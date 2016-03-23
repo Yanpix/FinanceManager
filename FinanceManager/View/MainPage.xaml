@@ -9,72 +9,105 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainView">
 
-    
-    <!-- Application bottom command bar -->
-    <Page.BottomAppBar>
-        <CommandBar >
-            <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}"/>
-            </CommandBar.PrimaryCommands>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="users" Command="{Binding EditUsersCommand}"/>
-                <AppBarButton Label="currencies" Command="{Binding EditCurrenciesCommand}"/>
-                <AppBarButton Label="categories" Command="{Binding EditCategoriesCommand}"/>
-                <AppBarButton Label="delete all money boxes" Command="{Binding DeleteAllMoneyBoxesCommand}"/>
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-    </Page.BottomAppBar>
-
     <Grid x:Name="LayoutRoot">
-
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Title Panel -->
-        <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="finance manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="my money boxes" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
-        </StackPanel>
-
-        <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ListBox x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,0,10">
-                                <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="created :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding CreationDate}" FontSize="18.667"/>
+        <Pivot Title="finance manager">
+            <PivotItem Header="money boxes">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox Grid.Row="0" x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="modified :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding LastModifiedDate}" FontSize="18.667"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}" />
+                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllMoneyBoxesCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="users">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox Grid.Row="0" x:Name="listUsers" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
                                 </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateUserCommand}"/>
+                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllUsersCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="categories">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Pivot Grid.Row="0">
+                        <PivotItem Header="income" FontSize="48">
+                            <ListBox ItemsSource="{Binding IncomeCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </PivotItem>
+                        <PivotItem Header="expence" FontSize="48">
+                            <ListBox ItemsSource="{Binding ExpenceCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </PivotItem>
+                    </Pivot>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCategoryCommand}"/>
+                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllCategoriesCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="currencies">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox x:Name="listCurrencies" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="balance :&#160;" FontSize="18.667" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding Balance}" FontSize="18.667"/>
-                                    <TextBlock Text="&#160;" FontSize="18.667"/>
-                                    <TextBlock Text="{Binding PrimaryCurrency.Symbol}" FontSize="18.667" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                    <TextBlock Text="&#160;" FontSize="32"/>
+                                    <TextBlock Text="{Binding Symbol}" FontSize="32"/>
                                 </StackPanel>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCurrencyCommand}"/>
+                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllCurrenciesCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

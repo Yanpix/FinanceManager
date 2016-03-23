@@ -159,6 +159,23 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private List<User> _users;
+
+        public List<User> Users
+        {
+            get
+            {
+                if (_users == null)
+                    _users = LoadUsers();
+                return _users;
+            }
+            set
+            {
+                _users = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
@@ -184,6 +201,11 @@ namespace FinanceManager.ViewModel
         private TransactionType LoadType()
         {
             return (TransactionType)NavigationService.GetNavigationData(1);
+        }
+
+        private List<User> LoadUsers()
+        {
+            return DataService.Get<User>().GetAll();
         }
 
         #endregion

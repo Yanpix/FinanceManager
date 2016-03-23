@@ -33,5 +33,9 @@ namespace FinanceManager.Model.Entities
         // The primary currency of the money box
         [ManyToOne]
         public Currency PrimaryCurrency { get; set; }
+
+        // Users of the money box
+        [ManyToMany(typeof(MoneyBoxToUser))]
+        public List<User> Users { get; set; } 
     }
 }

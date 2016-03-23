@@ -1,4 +1,6 @@
-﻿using FinanceManager.Dependencies;
+﻿using SQLite.Net.Attributes;
+using SQLiteNetExtensions.Attributes;
+using System.Collections.Generic;
 
 namespace FinanceManager.Model.Entities
 {
@@ -19,5 +21,9 @@ namespace FinanceManager.Model.Entities
 
         // The last name of the user
         public string LastName { get; set; }
+
+        // Money boxes of the user
+        [ManyToMany(typeof(MoneyBoxToUser))]
+        public List<MoneyBox> MoneyBoxes { get; set; }
     }
 }

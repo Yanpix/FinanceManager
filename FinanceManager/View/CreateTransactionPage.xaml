@@ -13,19 +13,6 @@
         <conv:DecimalConverter x:Key="DecimalConverter"/>
     </Page.Resources>
 
-    <!-- Application bottom command bar -->
-    <Page.BottomAppBar>
-        <CommandBar>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveTransactionCommand}"/>
-                <AppBarButton Icon="Clear" Label="cancel" Command="{Binding CancelTransactionCommand}"/>
-            </CommandBar.PrimaryCommands>
-            <CommandBar.SecondaryCommands>
-                
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-    </Page.BottomAppBar>
-    
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -37,6 +24,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -54,8 +42,14 @@
                 <TextBox Text="{Binding Transaction.Value, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" InputScope="Number" PlaceholderText="type transaction value" Header="transaction value"/>
                 <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding Transaction.Currency, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction currancy" PlaceholderText="choose transaction currancy"/>
                 <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Transaction.Category, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction category" PlaceholderText="choose transaction category"/>
-                <TextBox Text="{Binding Transaction.Note, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="150" Height="150" PlaceholderText="type your notes" Header="transaction notes"/>
+                <ComboBox ItemsSource="{Binding Users}" SelectedItem="{Binding Transaction.User, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction user" PlaceholderText="choose transaction user"/>
+                <TextBox Text="{Binding Transaction.Note, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="100" Height="100" PlaceholderText="type your notes" Header="transaction notes"/>
             </StackPanel>
         </Grid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+            <AppBarButton Icon="Save" Label="save" Command="{Binding SaveTransactionCommand}"/>
+            <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelTransactionCommand}"/>
+        </StackPanel>
     </Grid>
 </Page>
