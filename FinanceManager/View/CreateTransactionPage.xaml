@@ -9,6 +9,17 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveTransactionCommand}"/>
+                <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelTransactionCommand}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Page.Resources>
         <conv:DecimalConverter x:Key="DecimalConverter"/>
     </Page.Resources>
@@ -24,7 +35,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -39,17 +49,19 @@
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
-                <TextBox Text="{Binding Transaction.Value, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" InputScope="Number" PlaceholderText="type transaction value" Header="transaction value"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Transaction.Value, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" InputScope="Number" PlaceholderText="type transaction value" Header="transaction value"/>
+                    <AppBarButton Grid.Column="1" Icon="Calculator" Command="{Binding CalculatorCommand, Mode=TwoWay}" IsCompact="True" VerticalAlignment="Bottom" Margin="10,0,0,7"/>
+                </Grid>
                 <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding Transaction.Currency, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction currancy" PlaceholderText="choose transaction currancy"/>
                 <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Transaction.Category, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction category" PlaceholderText="choose transaction category"/>
                 <ComboBox ItemsSource="{Binding Users}" SelectedItem="{Binding Transaction.User, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction user" PlaceholderText="choose transaction user"/>
                 <TextBox Text="{Binding Transaction.Note, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="100" Height="100" PlaceholderText="type your notes" Header="transaction notes"/>
             </StackPanel>
         </Grid>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-            <AppBarButton Icon="Save" Label="save" Command="{Binding SaveTransactionCommand}"/>
-            <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelTransactionCommand}"/>
-        </StackPanel>
     </Grid>
 </Page>

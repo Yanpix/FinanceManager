@@ -8,6 +8,17 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveCurrencyCommand}"/>
+                <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelCurrencyCommand}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -19,7 +30,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -35,9 +45,5 @@
                 <TextBox Text="{Binding Currency.Symbol, Mode=TwoWay}" PlaceholderText="type currency symbol" Header="currency symbol" InputScope="CurrencyAmountAndSymbol"/>
             </StackPanel>
         </Grid>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-            <AppBarButton Icon="Save" Label="save" Command="{Binding SaveCurrencyCommand}"/>
-            <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelCurrencyCommand}"/>
-        </StackPanel>
     </Grid>
 </Page>

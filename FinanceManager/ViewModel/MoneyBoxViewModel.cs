@@ -19,6 +19,9 @@ namespace FinanceManager.ViewModel
     {
         public MoneyBoxViewModel()
         {
+            CommandBarVisible = true;
+            MoneyBoxCommandBarVisible = true;
+
             EditMoneyBoxCommand = new RelayCommand(EditMoneyBox);
             AddIncomeCommand = new RelayCommand(AddIncome);
             AddExpenceCommand = new RelayCommand(AddExpence);
@@ -113,7 +116,7 @@ namespace FinanceManager.ViewModel
             get
             {
                 _totalExpence = CalculateTotalExpence();
-                return _totalIncome;
+                return _totalExpence;
             }
             set
             {
@@ -206,6 +209,128 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private int _selectedPivotItem;
+
+        public int SelectedPivotItem
+        {
+            get { return _selectedPivotItem; }
+            set
+            {
+                _selectedPivotItem = value;
+                OnPropertyChanged();
+                SwitchCommandBarsVisibility();
+            }
+        }
+
+        private bool _moneyBoxCommandBarVisible;
+
+        public bool MoneyBoxCommandBarVisible
+        {
+            get
+            {
+                return _moneyBoxCommandBarVisible;
+            }
+            set
+            {
+                _moneyBoxCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _transactionsCommandBarVisible;
+
+        public bool TransactionsCommandBarVisible
+        {
+            get
+            {
+                return _transactionsCommandBarVisible;
+            }
+            set
+            {
+                _transactionsCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _commandBarVisible;
+
+        public bool CommandBarVisible
+        {
+            get
+            {
+                return _commandBarVisible;
+            }
+            set
+            {
+                _commandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _mostProfitableCategory;
+
+        public string MostProfitableCategory
+        {
+            get
+            {
+                _mostProfitableCategory = GetMostProfitableCategory();
+                return _mostProfitableCategory;
+            }
+            set
+            {
+                _mostProfitableCategory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _mostUnprofitableCategory;
+
+        public string MostUnprofitableCategory
+        {
+            get
+            {
+                _mostUnprofitableCategory = GetMostUnprofitableCategory();
+                return _mostUnprofitableCategory;
+            }
+            set
+            {
+                _mostUnprofitableCategory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _averageIncomePerDay;
+
+        public double AverageIncomePerDay
+        {
+            get
+            {
+                _averageIncomePerDay = CalculateAverageIncomePerDay();
+                return _averageIncomePerDay;
+            }
+            set
+            {
+                _averageIncomePerDay = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _averageExpencePerDay;
+
+        public double AverageExpencePerDay
+        {
+            get
+            {
+                _averageExpencePerDay = CalculateAverageExpencePerDay();
+                return _averageExpencePerDay;
+            }
+            set
+            {
+                _averageExpencePerDay = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
@@ -261,13 +386,13 @@ namespace FinanceManager.ViewModel
             return DataService.Get<Transaction>()
                 .GetAll()
                 .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Income)
-                .GroupBy(g => g.Category)
+                .GroupBy(g => g.Category.Title)
                 .Select(s => new TransactionByCategory
                 {
-                    CategoryTitle = s.Key.Title,
-                    TransactionValue = (double)s.Sum(c => c.Value)
+                    CategoryTitle = s.Key,
+                    TransactionValue = (double)s.Select(x => x.Value).Sum()
                 })
-                .OrderBy(o => o.TransactionValue)
+                .OrderByDescending(o => o.TransactionValue)
                 .ToList();
         }
 
@@ -276,14 +401,86 @@ namespace FinanceManager.ViewModel
             return DataService.Get<Transaction>()
                 .GetAll()
                 .Where(t => t.MoneyBoxId == MoneyBox.Id && t.Type == TransactionType.Expence)
-                .GroupBy(g => g.Category)
+                .GroupBy(g => g.Category.Title)
                 .Select(s => new TransactionByCategory
                 {
-                    CategoryTitle = s.Key.Title,
-                    TransactionValue = (double)s.Sum(c => c.Value)
+                    CategoryTitle = s.Key,
+                    TransactionValue = (double)s.Select(x => x.Value).Sum()
                 })
-                .OrderBy(o => o.TransactionValue)
+                .OrderByDescending(o => o.TransactionValue)
                 .ToList();
+        }
+
+        private void SwitchCommandBarsVisibility()
+        {
+            switch (SelectedPivotItem)
+            {
+                case 0:
+                    CommandBarVisible = true;
+                    MoneyBoxCommandBarVisible = true;
+                    TransactionsCommandBarVisible = false;
+                    break;
+                case 1:
+                    CommandBarVisible = true;
+                    MoneyBoxCommandBarVisible = false;
+                    TransactionsCommandBarVisible = true;
+                    break;
+                case 2:
+                    CommandBarVisible = false;
+                    MoneyBoxCommandBarVisible = false;
+                    TransactionsCommandBarVisible = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private string GetMostProfitableCategory()
+        {
+            return IncomesByCategory
+                .OrderBy(o => o.TransactionValue)
+                .LastOrDefault()
+                .CategoryTitle;
+        }
+
+        private string GetMostUnprofitableCategory()
+        {
+            return ExpencesByCategory
+                .OrderBy(o => o.TransactionValue)
+                .LastOrDefault()
+                .CategoryTitle;
+        }
+
+        private double CalculateAverageIncomePerDay()
+        {
+            double total = IncomesByCategory.Sum(s => s.TransactionValue);
+            int days = DataService.Get<Transaction>()
+                .GetAll()
+                .Select(s => s.CreationDate.Date)
+                .Distinct()
+                .Count();
+            if (days > 0)
+            {
+                return total / days;
+            }
+            else
+                return 0;
+        }
+
+        private double CalculateAverageExpencePerDay()
+        {
+            double total = ExpencesByCategory.Sum(s => s.TransactionValue);
+            int days = DataService.Get<Transaction>()
+                .GetAll()
+                .Select(s => s.CreationDate.Date)
+                .Distinct()
+                .Count();
+            if (days > 0)
+            {
+                return total / days;
+            }
+            else
+                return 0;
         }
 
         #endregion

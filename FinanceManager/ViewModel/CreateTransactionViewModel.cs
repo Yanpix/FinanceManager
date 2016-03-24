@@ -21,6 +21,7 @@ namespace FinanceManager.ViewModel
             // Initialize commands
             SaveTransactionCommand = new RelayCommand(SaveTransaction);
             CancelTransactionCommand = new RelayCommand(CancelTransaction);
+            CalculatorCommand = new RelayCommand(Calculator);
         }
 
         #region Services
@@ -36,6 +37,8 @@ namespace FinanceManager.ViewModel
         public ICommand SaveTransactionCommand { get; private set; }
 
         public ICommand CancelTransactionCommand { get; private set; }
+
+        public ICommand CalculatorCommand { get; private set; }
 
         #endregion
 
@@ -69,6 +72,11 @@ namespace FinanceManager.ViewModel
         public void CancelTransaction()
         {
             NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
+        }
+
+        public void Calculator()
+        {
+            NavigationService.Navigate(typeof(CalculatorPage));
         }
 
         #endregion

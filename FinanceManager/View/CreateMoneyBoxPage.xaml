@@ -9,6 +9,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="CreateMoneyBoxView">
 
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveMoneyBoxCommand}"/>
+                <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelMoneyBoxCommand}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid x:Name="LayoutRoot">
 
         <Grid.ChildrenTransitions>
@@ -20,7 +31,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
@@ -36,10 +46,5 @@
                 <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding MoneyBox.PrimaryCurrency, Mode=TwoWay}" DisplayMemberPath="Title" Header="money box primary currancy" PlaceholderText="choose money box primary currancy"/>
             </StackPanel>
         </Grid>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-            <AppBarButton Icon="Save" Label="save" Command="{Binding SaveMoneyBoxCommand}"/>
-            <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelMoneyBoxCommand}"/>
-        </StackPanel>
     </Grid>
 </Page>

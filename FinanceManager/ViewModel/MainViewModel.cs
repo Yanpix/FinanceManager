@@ -20,6 +20,8 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public MainViewModel()
         {
+            MoneyBoxesCommandBarVisible = true;
+
             // Initialize commands
             CreateMoneyBoxCommand = new RelayCommand(CreateMoneyBox);
             DeleteAllMoneyBoxesCommand = new RelayCommand(DeleteAllMoneyBoxes);
@@ -262,6 +264,79 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private int _selectedPivotItem;
+
+        public int SelectedPivotItem
+        {
+            get { return _selectedPivotItem; }
+            set
+            {
+                _selectedPivotItem = value;
+                OnPropertyChanged();
+                SwitchCommandBarsVisibility();
+            }
+        }
+
+        private bool _moneyBoxesCommandBarVisible;
+
+        public bool MoneyBoxesCommandBarVisible
+        {
+            get
+            {
+                return _moneyBoxesCommandBarVisible;
+            }
+            set
+            {
+                _moneyBoxesCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _usersCommandBarVisible;
+
+        public bool UsersCommandBarVisible
+        {
+            get
+            {
+                return _usersCommandBarVisible;
+            }
+            set
+            {
+                _usersCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _currenciesCommandBarVisible;
+
+        public bool CurrenciesCommandBarVisible
+        {
+            get
+            {
+                return _currenciesCommandBarVisible;
+            }
+            set
+            {
+                _currenciesCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _categoriesCommandBarVisible;
+
+        public bool CategoriesCommandBarVisible
+        {
+            get
+            {
+                return _categoriesCommandBarVisible;
+            }
+            set
+            {
+                _categoriesCommandBarVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
@@ -315,6 +390,39 @@ namespace FinanceManager.ViewModel
         private List<Currency> LoadCurrencies()
         {
             return DataService.Get<Currency>().GetAll();
+        }
+
+        private void SwitchCommandBarsVisibility()
+        {
+            switch (SelectedPivotItem)
+            {
+                case 0:
+                    MoneyBoxesCommandBarVisible = true;
+                    UsersCommandBarVisible = false;
+                    CategoriesCommandBarVisible = false;
+                    CurrenciesCommandBarVisible = false;
+                    break;
+                case 1:
+                    MoneyBoxesCommandBarVisible = false;
+                    UsersCommandBarVisible = true;
+                    CategoriesCommandBarVisible = false;
+                    CurrenciesCommandBarVisible = false;
+                    break;
+                case 2:
+                    MoneyBoxesCommandBarVisible = false;
+                    UsersCommandBarVisible = false;
+                    CategoriesCommandBarVisible = true;
+                    CurrenciesCommandBarVisible = false;
+                    break;
+                case 3:
+                    MoneyBoxesCommandBarVisible = false;
+                    UsersCommandBarVisible = false;
+                    CategoriesCommandBarVisible = false;
+                    CurrenciesCommandBarVisible = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

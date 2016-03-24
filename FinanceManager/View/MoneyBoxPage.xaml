@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FinanceManager.View"
+    xmlns:conv="using:FinanceManager.View.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:datavischart="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
@@ -10,140 +11,156 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar Visibility="{Binding CommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Edit" Label="edit" Command="{Binding EditMoneyBoxCommand}" Visibility="{Binding MoneyBoxCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="income" Command="{Binding AddIncomeCommand}" Visibility="{Binding TransactionsCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Remove" Label="expence" Command="{Binding AddExpenceCommand}" Visibility="{Binding TransactionsCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllTransactionsCommand}" Visibility="{Binding TransactionsCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid x:Name="LayoutRoot">
-        <Pivot Title="finance manager">
+        <Pivot Title="finance manager" SelectedIndex="{Binding SelectedPivotItem, Mode=TwoWay}">
             <PivotItem Header="money box">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Vertical">
+
                     <StackPanel Orientation="Vertical">
-                        
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="title" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <TextBlock Text="{Binding MoneyBox.Title}" FontSize="32"/>
-                        </StackPanel>
+                        <TextBlock Text="title" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding MoneyBox.Title}" FontSize="32"/>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="created" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <TextBlock Text="{Binding MoneyBox.CreationDate}" FontSize="32"/>
-                        </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="created" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding MoneyBox.CreationDate}" FontSize="32"/>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="last modified" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <TextBlock Text="{Binding MoneyBox.LastModifiedDate}" FontSize="32"/>
-                        </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="last modified" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <TextBlock Text="{Binding MoneyBox.LastModifiedDate}" FontSize="32"/>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="balance" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding MoneyBox.Balance}" FontSize="32"/>
-                                <TextBlock Text="&#160;" FontSize="32"/>
-                                <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="total income" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding TotalIncome}" FontSize="32"/>
-                                <TextBlock Text="&#160;" FontSize="32"/>
-                                <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="total expence" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding TotalExpence}" FontSize="32"/>
-                                <TextBlock Text="&#160;" FontSize="32"/>
-                                <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
-                            </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="balance" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding MoneyBox.Balance}" FontSize="32"/>
+                            <TextBlock Text="&#160;" FontSize="32"/>
+                            <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" >
-                        <AppBarButton Icon="Edit" Label="edit" Command="{Binding EditMoneyBoxCommand}"/>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="total income" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding TotalIncome}" FontSize="32"/>
+                            <TextBlock Text="&#160;" FontSize="32"/>
+                            <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
+                        </StackPanel>
                     </StackPanel>
-                </Grid>
+
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="total expence" FontSize="18" Margin="0,5,0,0" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding TotalExpence}" FontSize="32"/>
+                            <TextBlock Text="&#160;" FontSize="32"/>
+                            <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
             </PivotItem>
             <PivotItem Header="transactions">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Pivot Grid.Row="0">
-                        <PivotItem Header="income" FontSize="48">
-                            <ListBox ItemsSource="{Binding IncomeTransactions}" SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical" Margin="0,0,0,5">
-                                            <TextBlock Text="{Binding CreationDate}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Category.Title}" FontSize="32"/>
-                                                <TextBlock Text="&#160;" FontSize="32"/>
-                                                <TextBlock Text="{Binding Value}" FontSize="32"/>
-                                                <TextBlock Text="&#160;" FontSize="32"/>
-                                                <TextBlock Text="{Binding Currency.Symbol}" FontSize="32"/>
-                                            </StackPanel>
+                <Pivot>
+                    <PivotItem Header="income">
+                        <ListBox ItemsSource="{Binding IncomeTransactions}" SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical" Margin="0,0,0,5">
+                                        <TextBlock Text="{Binding CreationDate}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Category.Title}" FontSize="32"/>
+                                            <TextBlock Text="&#160;" FontSize="32"/>
+                                            <TextBlock Text="{Binding Value}" FontSize="32"/>
+                                            <TextBlock Text="&#160;" FontSize="32"/>
+                                            <TextBlock Text="{Binding Currency.Symbol}" FontSize="32"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </PivotItem>
-                        <PivotItem Header="expence" FontSize="48">
-                            <ListBox ItemsSource="{Binding ExpenceTransactions}" SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical" Margin="0,0,0,5">
-                                            <TextBlock Text="{Binding CreationDate}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Category.Title}" FontSize="32"/>
-                                                <TextBlock Text="&#160;" FontSize="32"/>
-                                                <TextBlock Text="{Binding Value}" FontSize="32"/>
-                                                <TextBlock Text="&#160;" FontSize="32"/>
-                                                <TextBlock Text="{Binding Currency.Symbol}" FontSize="32"/>
-                                            </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </PivotItem>
+                    <PivotItem Header="expence">
+                        <ListBox ItemsSource="{Binding ExpenceTransactions}" SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical" Margin="0,0,0,5">
+                                        <TextBlock Text="{Binding CreationDate}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Category.Title}" FontSize="32"/>
+                                            <TextBlock Text="&#160;" FontSize="32"/>
+                                            <TextBlock Text="{Binding Value}" FontSize="32"/>
+                                            <TextBlock Text="&#160;" FontSize="32"/>
+                                            <TextBlock Text="{Binding Currency.Symbol}" FontSize="32"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </PivotItem>
-                    </Pivot>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <AppBarButton Icon="Add" Label="income" Command="{Binding AddIncomeCommand}"/>
-                        <AppBarButton Icon="Remove" Label="expence" Command="{Binding AddExpenceCommand}"/>
-                        <AppBarButton Icon="Clear" Label="delete all" Command="{Binding DeleteAllTransactionsCommand}"/>
-                    </StackPanel>
-                </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </PivotItem>
+                </Pivot>
             </PivotItem>
             <PivotItem Header="statistics">
                 <Pivot>
                     <PivotItem Header="income">
-                        <Charting:Chart HorizontalAlignment="Center" VerticalAlignment="Center" Height="400" Width="350">
-                            <Charting:Chart.LegendStyle>
-                                <Style TargetType="datavis:Legend">
-                                    <Setter Property="Width" Value="0"/>
-                                </Style>
-                            </Charting:Chart.LegendStyle>
-                            <Charting:BarSeries ItemsSource="{Binding IncomesByCategory}" IndependentValuePath="CategoryTitle" DependentValuePath="TransactionValue"/>
-                        </Charting:Chart>
+                        <StackPanel Orientation="Vertical">
+                            <Charting:Chart HorizontalAlignment="Center" VerticalAlignment="Top" Width="340" Height="250">
+                                <Charting:Chart.LegendStyle>
+                                    <Style TargetType="datavis:Legend">
+                                        <Setter Property="Width" Value="0"/>
+                                    </Style>
+                                </Charting:Chart.LegendStyle>
+                                <Charting:ColumnSeries ItemsSource="{Binding IncomesByCategory}" IndependentValuePath="CategoryTitle" DependentValuePath="TransactionValue"/>
+                            </Charting:Chart>
+                            <TextBlock Text="the most profitable category" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding MostProfitableCategory}" FontSize="32"/>
+                            <TextBlock Text="average income per day" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}" Margin="0,5,0,0"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding AverageIncomePerDay}" FontSize="32"/>
+                                <TextBlock Text="&#160;" FontSize="32"/>
+                                <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
+                            </StackPanel>
+                        </StackPanel>
                     </PivotItem>
                     <PivotItem Header="expence">
-                        <Charting:Chart HorizontalAlignment="Center" VerticalAlignment="Center" Height="400" Width="350">
-                            <Charting:PieSeries ItemsSource="{Binding ExpencesByCategory}" IndependentValuePath="CategoryTitle" DependentValuePath="TransactionValue"/>
-                        </Charting:Chart>
+                        <StackPanel Orientation="Vertical">
+                            <Charting:Chart HorizontalAlignment="Center" VerticalAlignment="Top" Width="340" Height="250">
+                                <Charting:Chart.LegendStyle>
+                                    <Style TargetType="datavis:Legend">
+                                        <Setter Property="Width" Value="0"/>
+                                    </Style>
+                                </Charting:Chart.LegendStyle>
+                                <Charting:ColumnSeries ItemsSource="{Binding ExpencesByCategory}" IndependentValuePath="CategoryTitle" DependentValuePath="TransactionValue"/>
+                            </Charting:Chart>
+                            <TextBlock Text="the most unprofitable category" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding MostUnprofitableCategory}" FontSize="32"/>
+                            <TextBlock Text="average expence per day" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}" Margin="0,5,0,0"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding AverageExpencePerDay}" FontSize="32"/>
+                                <TextBlock Text="&#160;" FontSize="32"/>
+                                <TextBlock Text="{Binding MoneyBox.PrimaryCurrency.Symbol}" FontSize="32"/>
+                            </StackPanel>
+                        </StackPanel>
                     </PivotItem>
                 </Pivot>
             </PivotItem>
         </Pivot>
-        
-
-        <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            
-        </Grid>
     </Grid>
 </Page>

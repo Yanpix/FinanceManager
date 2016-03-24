@@ -5,108 +5,90 @@
     xmlns:local="using:FinanceManager.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conv="using:FinanceManager.View.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainView">
 
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}" Visibility="{Binding MoneyBoxesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateUserCommand}" Visibility="{Binding UsersCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCurrencyCommand}" Visibility="{Binding CurrenciesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCategoryCommand}" Visibility="{Binding CategoriesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllMoneyBoxesCommand}" Visibility="{Binding MoneyBoxesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllUsersCommand}" Visibility="{Binding UsersCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllCurrenciesCommand}" Visibility="{Binding CurrenciesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllCategoriesCommand}" Visibility="{Binding CategoriesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
     <Grid x:Name="LayoutRoot">
-        <Pivot Title="finance manager">
+        <Pivot Title="finance manager" SelectedIndex="{Binding SelectedPivotItem, Mode=TwoWay}">
             <PivotItem Header="money boxes">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <ListBox Grid.Row="0" x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}" />
-                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllMoneyBoxesCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <ListBox x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Title}" FontSize="32"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </PivotItem>
             <PivotItem Header="users">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <ListBox Grid.Row="0" x:Name="listUsers" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateUserCommand}"/>
-                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllUsersCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <ListBox x:Name="listUsers" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Title}" FontSize="32"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </PivotItem>
             <PivotItem Header="categories">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Pivot Grid.Row="0">
-                        <PivotItem Header="income" FontSize="48">
-                            <ListBox ItemsSource="{Binding IncomeCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </PivotItem>
-                        <PivotItem Header="expence" FontSize="48">
-                            <ListBox ItemsSource="{Binding ExpenceCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </PivotItem>
-                    </Pivot>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCategoryCommand}"/>
-                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllCategoriesCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <Pivot>
+                    <PivotItem Header="income" FontSize="48">
+                        <ListBox ItemsSource="{Binding IncomeCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </PivotItem>
+                    <PivotItem Header="expence" FontSize="48">
+                        <ListBox ItemsSource="{Binding ExpenceCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </PivotItem>
+                </Pivot>
             </PivotItem>
             <PivotItem Header="currencies">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <ListBox x:Name="listCurrencies" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                    <TextBlock Text="&#160;" FontSize="32"/>
-                                    <TextBlock Text="{Binding Symbol}" FontSize="32"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCurrencyCommand}"/>
-                        <AppBarButton Icon="Delete" Label="delete all" Command="{Binding DeleteAllCurrenciesCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <ListBox x:Name="listCurrencies" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                <TextBlock Text="&#160;" FontSize="32"/>
+                                <TextBlock Text="{Binding Symbol}" FontSize="32"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </PivotItem>
         </Pivot>
     </Grid>
