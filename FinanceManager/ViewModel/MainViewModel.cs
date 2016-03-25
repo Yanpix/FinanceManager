@@ -20,11 +20,16 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public MainViewModel()
         {
-            MoneyBoxesCommandBarVisible = true;
+            _navigationData = new Dictionary<string, object>();
+            _selectedMoneyBoxes = new List<MoneyBox>();
+            _selectedPivotItemInit = false;
 
             // Initialize commands
             CreateMoneyBoxCommand = new RelayCommand(CreateMoneyBox);
+            DeleteMoneyBoxCommand = new DelegateCommand((e) => DeleteMoneyBox(e));
+            SelectMoneyBoxCommand = new DelegateCommand((e) => SelectMoneyBox(e));
             DeleteAllMoneyBoxesCommand = new RelayCommand(DeleteAllMoneyBoxes);
+            DeleteSelectedMoneyBoxesCommand = new RelayCommand(DeleteSelectedMoneyBoxes);
 
             CreateUserCommand = new RelayCommand(CreateUser);
             DeleteAllUsersCommand = new RelayCommand(DeleteAllUsers);
@@ -35,6 +40,10 @@ namespace FinanceManager.ViewModel
             CreateCurrencyCommand = new RelayCommand(CreateCurrency);
             DeleteAllCurrenciesCommand = new RelayCommand(DeleteAllCurrencies);           
         }
+
+        private static Dictionary<string, object> _navigationData;
+
+        private static List<MoneyBox> _selectedMoneyBoxes;
 
         #region Services
 
@@ -48,7 +57,13 @@ namespace FinanceManager.ViewModel
 
         public ICommand CreateMoneyBoxCommand { get; private set; }
 
+        public ICommand DeleteMoneyBoxCommand { get; private set; }
+
+        public ICommand SelectMoneyBoxCommand { get; private set; }
+
         public ICommand DeleteAllMoneyBoxesCommand { get; private set; }
+
+        public ICommand DeleteSelectedMoneyBoxesCommand { get; private set; }
 
         public ICommand CreateUserCommand { get; private set; }
 
@@ -68,8 +83,27 @@ namespace FinanceManager.ViewModel
 
         public void CreateMoneyBox()
         {
-            NavigationService.Navigate(typeof(CreateMoneyBoxPage)); 
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+            NavigationService.Navigate(typeof(CreateMoneyBoxPage), _navigationData); 
         }   
+
+        public void DeleteMoneyBox(object e)
+        {
+            MoneyBox moneyBox = e as MoneyBox;
+            DataService.Get<MoneyBox>().Delete(moneyBox.Id);
+            MoneyBoxes = LoadMoneyBoxes();
+        }
+
+        private void SelectMoneyBox(object e)
+        {
+            MoneyBox moneyBox = e as MoneyBox;
+            if (_selectedMoneyBoxes.Contains(moneyBox))
+            {
+                _selectedMoneyBoxes.Remove(moneyBox);
+            }
+            else
+                _selectedMoneyBoxes.Add(moneyBox);
+        }
 
         private void DeleteAllMoneyBoxes()
         {
@@ -77,9 +111,23 @@ namespace FinanceManager.ViewModel
             MoneyBoxes = LoadMoneyBoxes();
         }
 
+        private void DeleteSelectedMoneyBoxes()
+        {
+            if (_selectedMoneyBoxes.Count > 0)
+            {
+                foreach (MoneyBox moneyBox in _selectedMoneyBoxes)
+                {
+                    DataService.Get<MoneyBox>().Delete(moneyBox.Id);
+                }
+
+                MoneyBoxes = LoadMoneyBoxes();
+            }
+        }
+
         public void CreateUser()
         {
-            NavigationService.Navigate(typeof(CreateUserPage));
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+            NavigationService.Navigate(typeof(CreateUserPage), _navigationData);
         }
 
         private void DeleteAllUsers()
@@ -90,7 +138,8 @@ namespace FinanceManager.ViewModel
 
         public void CreateCategory()
         {
-            NavigationService.Navigate(typeof(CreateCategoryPage));
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+            NavigationService.Navigate(typeof(CreateCategoryPage), _navigationData);
         }
 
         private void DeleteAllCategories()
@@ -102,7 +151,8 @@ namespace FinanceManager.ViewModel
 
         public void CreateCurrency()
         {
-            NavigationService.Navigate(typeof(CreateCurrencyPage));
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+            NavigationService.Navigate(typeof(CreateCurrencyPage), _navigationData);
         }
 
         private void DeleteAllCurrencies()
@@ -264,11 +314,22 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private bool _selectedPivotItemInit;
+
         private int _selectedPivotItem;
 
         public int SelectedPivotItem
         {
-            get { return _selectedPivotItem; }
+            get
+            {
+                if (!_selectedPivotItemInit)
+                {
+                    _selectedPivotItem = LoadSelectedPivotItem(_selectedPivotItem);
+                    _selectedPivotItemInit = true;
+                    SwitchCommandBarsVisibility();
+                }
+                return _selectedPivotItem;
+            }
             set
             {
                 _selectedPivotItem = value;
@@ -348,7 +409,10 @@ namespace FinanceManager.ViewModel
 
         private void GoToSelectedMoneyBox()
         {
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { SelectedMoneyBox.Id });
+            _navigationData.Add("MoneyBoxId", SelectedMoneyBox.Id);
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+
+            NavigationService.Navigate(typeof(MoneyBoxPage), _navigationData);
         }
 
         private void GoToSelectedUser()
@@ -358,7 +422,10 @@ namespace FinanceManager.ViewModel
 
         private void GoToSelectedCategory()
         {
-            ;
+            _navigationData.Add("CategoryId", SelectedCategory.Id);
+            _navigationData.Add("SelectedPivotItemOnMainPage", SelectedPivotItem);
+
+            NavigationService.Navigate(typeof(CategoryPage), _navigationData);
         }
 
         private void GoToSelectedCurrency()
@@ -394,7 +461,7 @@ namespace FinanceManager.ViewModel
 
         private void SwitchCommandBarsVisibility()
         {
-            switch (SelectedPivotItem)
+            switch (_selectedPivotItem)
             {
                 case 0:
                     MoneyBoxesCommandBarVisible = true;
@@ -423,6 +490,16 @@ namespace FinanceManager.ViewModel
                 default:
                     break;
             }
+        }
+
+        private int LoadSelectedPivotItem(int currentPivotItem)
+        {
+            object selectedPivotItem = NavigationService.GetNavigationData("SelectedPivotItemOnMainPage");
+
+            if (selectedPivotItem != null && currentPivotItem != (int)selectedPivotItem)
+                return (int)selectedPivotItem;
+            else
+                return currentPivotItem;
         }
 
         #endregion

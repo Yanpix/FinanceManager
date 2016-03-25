@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -10,11 +11,19 @@ namespace FinanceManager.Infrastructure
     /// </summary>
     public class NavigationService : INavigationService
     {
-        private static object[] _navigationData = null;
+        private static Dictionary<string, object> _navigationData = new Dictionary<string, object>();
 
-        public bool Navigate(Type type, object[] parameter)
+        public bool Navigate(Type type, Dictionary<string, object> data)
         {
-            _navigationData = parameter;
+            foreach (var dataItem in data)
+            {
+                if (_navigationData.ContainsKey(dataItem.Key))
+                {
+                    _navigationData[dataItem.Key] = dataItem.Value;
+                }
+                else
+                    _navigationData.Add(dataItem.Key, dataItem.Value);
+            }
             return ((Frame)Window.Current.Content).Navigate(type);
         }
 
@@ -29,14 +38,23 @@ namespace FinanceManager.Infrastructure
                 ((Frame)Window.Current.Content).GoBack();
         }
 
-        public object[] GetNavigationData()
+        public Dictionary<string, object> GetNavigationData()
         {
-            return _navigationData;
+            Dictionary<string, object> data = _navigationData;
+
+            return data;
         }
 
-        public object GetNavigationData(int i)
+        public object GetNavigationData(string key)
         {
-            return _navigationData[i];
+            object data;
+
+            if (_navigationData.ContainsKey(key))
+            {
+                data = _navigationData[key];
+                return data;
+            }
+            return null;
         }
     }
 }

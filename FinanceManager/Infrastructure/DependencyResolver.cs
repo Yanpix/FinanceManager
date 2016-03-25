@@ -64,6 +64,10 @@ namespace FinanceManager.Infrastructure
 
             container.RegisterType<CalculatorViewModel>(
                 new InjectionProperty("NavigationService", typeof(INavigationService)));
+
+            container.RegisterType<CategoryViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)),
+                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
         }
     }
 }

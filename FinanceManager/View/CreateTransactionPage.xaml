@@ -57,9 +57,9 @@
                     <TextBox Grid.Column="0" Text="{Binding Transaction.Value, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" InputScope="Number" PlaceholderText="type transaction value" Header="transaction value"/>
                     <AppBarButton Grid.Column="1" Icon="Calculator" Command="{Binding CalculatorCommand, Mode=TwoWay}" IsCompact="True" VerticalAlignment="Bottom" Margin="10,0,0,7"/>
                 </Grid>
-                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding Transaction.Currency, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction currancy" PlaceholderText="choose transaction currancy"/>
-                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Transaction.Category, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction category" PlaceholderText="choose transaction category"/>
-                <ComboBox ItemsSource="{Binding Users}" SelectedItem="{Binding Transaction.User, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction user" PlaceholderText="choose transaction user"/>
+                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction currancy" PlaceholderText="choose transaction currancy"/>
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" DisplayMemberPath="Title" Header="transaction category" PlaceholderText="choose transaction category"/>
+                <ComboBox ItemsSource="{Binding Users}" DisplayMemberPath="Title" SelectedItem="{Binding SelectedUser, Mode=TwoWay}"  Header="transaction user" PlaceholderText="choose transaction user"/>
                 <TextBox Text="{Binding Transaction.Note, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="100" Height="100" PlaceholderText="type your notes" Header="transaction notes"/>
             </StackPanel>
         </Grid>

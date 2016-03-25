@@ -90,6 +90,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\DependencyResolver.cs" />
     <Compile Include="Model\DataAccess\Providers\DataServicesProvider.cs" />
     <Compile Include="Model\DataAccess\Providers\IDataServicesProvider.cs" />
@@ -113,13 +114,20 @@
     <Compile Include="Dependencies\SQLiteAsync.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\CalculatorViewModel.cs" />
+    <Compile Include="ViewModel\CategoryViewModel.cs" />
     <Compile Include="ViewModel\CreateCategoryViewModel.cs" />
     <Compile Include="ViewModel\CreateUserViewModel.cs" />
     <Compile Include="ViewModel\CreateCurrencyViewModel.cs" />
+    <Compile Include="View\Actions\OpenMenuFlyoutAction.cs" />
     <Compile Include="View\CalculatorPage.xaml.cs">
       <DependentUpon>CalculatorPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CategoryPage.xaml.cs">
+      <DependentUpon>CategoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\Converters\SelectedToForegroundConverter.cs" />
+    <Compile Include="View\Converters\SelectedToStringConverter.cs" />
     <Compile Include="View\Converters\StringBuilderToStringConverter.cs" />
     <Compile Include="View\CreateCategoryPage.xaml.cs">
       <DependentUpon>CreateCategoryPage.xaml</DependentUpon>
@@ -172,6 +180,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\CategoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CreateCategoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -202,6 +214,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
     </SDKReference>

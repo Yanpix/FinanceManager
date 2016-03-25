@@ -16,6 +16,7 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public CalculatorViewModel()
         {
+            navigationData = new Dictionary<string, object>();
             Expression = Expression.Clear();
 
             // Initialize commands
@@ -40,6 +41,8 @@ namespace FinanceManager.ViewModel
             DotCommand = new RelayCommand(Dot);
             EquelCommand = new RelayCommand(Equel);
         }
+
+        Dictionary<string, object> navigationData;
 
         #region Services
 
@@ -95,7 +98,9 @@ namespace FinanceManager.ViewModel
 
         public void Accept()
         {
-            NavigationService.Navigate(typeof(CreateTransactionPage));
+            navigationData.Add("CalculatorResult", Result);
+
+            NavigationService.Navigate(typeof(CreateTransactionPage), navigationData);
         }
 
         public void Cancel()

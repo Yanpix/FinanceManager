@@ -25,10 +25,14 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public CreateMoneyBoxViewModel()
         {
+            navigationData = new Dictionary<string, object>();
+
             // Initialize commands
             SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBox);
             CancelMoneyBoxCommand = new RelayCommand(CancelMoneyBox);
         }
+
+        Dictionary<string, object> navigationData;
 
         #region Services
 
@@ -56,7 +60,9 @@ namespace FinanceManager.ViewModel
 
             DataService.Get<MoneyBox>().Save(MoneyBox);
 
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
+            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+
+            NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
         }       
 
         public void CancelMoneyBox()

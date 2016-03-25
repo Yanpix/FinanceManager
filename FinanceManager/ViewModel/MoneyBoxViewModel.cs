@@ -19,14 +19,16 @@ namespace FinanceManager.ViewModel
     {
         public MoneyBoxViewModel()
         {
-            CommandBarVisible = true;
-            MoneyBoxCommandBarVisible = true;
+            navigationData = new Dictionary<string, object>();
+            _selectedPivotItemInit = false;
 
             EditMoneyBoxCommand = new RelayCommand(EditMoneyBox);
             AddIncomeCommand = new RelayCommand(AddIncome);
             AddExpenceCommand = new RelayCommand(AddExpence);
             DeleteAllTransactionsCommand = new RelayCommand(DeleteAllTransactions);
         }
+
+        Dictionary<string, object> navigationData;
 
         #region Services
 
@@ -57,14 +59,20 @@ namespace FinanceManager.ViewModel
 
         private void AddIncome()
         {
-            NavigationService.Navigate(typeof(CreateTransactionPage), 
-                new object[] { MoneyBox.Id, TransactionType.Income });
+            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            navigationData.Add("TransactionType", TransactionType.Income);
+            navigationData.Add("SelectedPivotItemOnMoneyBoxPage", SelectedPivotItem);
+
+            NavigationService.Navigate(typeof(CreateTransactionPage), navigationData);
         }
 
         private void AddExpence()
         {
-            NavigationService.Navigate(typeof(CreateTransactionPage), 
-                new object[] { MoneyBox.Id, TransactionType.Expence });
+            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            navigationData.Add("TransactionType", TransactionType.Expence);
+            navigationData.Add("SelectedPivotItemOnMoneyBoxPage", SelectedPivotItem);
+
+            NavigationService.Navigate(typeof(CreateTransactionPage), navigationData);
         }
 
         private void DeleteAllTransactions()
@@ -209,11 +217,22 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private bool _selectedPivotItemInit;
+
         private int _selectedPivotItem;
 
         public int SelectedPivotItem
         {
-            get { return _selectedPivotItem; }
+            get
+            {
+                if (!_selectedPivotItemInit)
+                {
+                    _selectedPivotItem = LoadSelectedPivotItem(_selectedPivotItem);
+                    _selectedPivotItemInit = true;
+                    SwitchCommandBarsVisibility();
+                }
+                return _selectedPivotItem;
+            }
             set
             {
                 _selectedPivotItem = value;
@@ -355,7 +374,12 @@ namespace FinanceManager.ViewModel
 
         private MoneyBox LoadMoneyBox()
         {
-            return DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
+            object data = NavigationService.GetNavigationData("MoneyBoxId");
+
+            if (data != null)
+                return DataService.Get<MoneyBox>().Get((int)data);
+            else
+                return null;
         }
 
         private decimal CalculateTotalIncome()
@@ -413,7 +437,7 @@ namespace FinanceManager.ViewModel
 
         private void SwitchCommandBarsVisibility()
         {
-            switch (SelectedPivotItem)
+            switch (_selectedPivotItem)
             {
                 case 0:
                     CommandBarVisible = true;
@@ -437,18 +461,28 @@ namespace FinanceManager.ViewModel
 
         private string GetMostProfitableCategory()
         {
-            return IncomesByCategory
+            if (IncomesByCategory.Count > 0)
+            {
+                return IncomesByCategory
                 .OrderBy(o => o.TransactionValue)
                 .LastOrDefault()
                 .CategoryTitle;
+            }
+            else
+                return "";
         }
 
         private string GetMostUnprofitableCategory()
         {
-            return ExpencesByCategory
+            if (ExpencesByCategory.Count > 0)
+            {
+                return ExpencesByCategory
                 .OrderBy(o => o.TransactionValue)
                 .LastOrDefault()
                 .CategoryTitle;
+            }
+            else
+                return "";
         }
 
         private double CalculateAverageIncomePerDay()
@@ -481,6 +515,16 @@ namespace FinanceManager.ViewModel
             }
             else
                 return 0;
+        }
+
+        private int LoadSelectedPivotItem(int currentPivotItem)
+        {
+            object selectedPivotItem = NavigationService.GetNavigationData("SelectedPivotItemOnMoneyBoxPage");
+
+            if (selectedPivotItem != null && currentPivotItem != (int)selectedPivotItem)
+                return (int)selectedPivotItem;
+            else
+                return currentPivotItem;
         }
 
         #endregion

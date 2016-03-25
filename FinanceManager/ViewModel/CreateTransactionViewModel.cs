@@ -18,11 +18,15 @@ namespace FinanceManager.ViewModel
     {
         public CreateTransactionViewModel()
         {
+            navigationData = new Dictionary<string, object>();
+
             // Initialize commands
             SaveTransactionCommand = new RelayCommand(SaveTransaction);
             CancelTransactionCommand = new RelayCommand(CancelTransaction);
             CalculatorCommand = new RelayCommand(Calculator);
         }
+
+        Dictionary<string, object> navigationData;
 
         #region Services
 
@@ -48,6 +52,9 @@ namespace FinanceManager.ViewModel
         {
             Transaction.CreationDate = DateTime.Now;
             Transaction.Type = Type;
+            Transaction.Currency = SelectedCurrency;
+            Transaction.Category = SelectedCategory;
+            Transaction.User = SelectedUser;
 
             DataService.Get<Transaction>().Save(Transaction);
 
@@ -66,17 +73,25 @@ namespace FinanceManager.ViewModel
             Transaction.MoneyBox = MoneyBox;
             DataService.Get<Transaction>().Update(Transaction);
 
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
+            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+
+            NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
         }
 
         public void CancelTransaction()
         {
-            NavigationService.Navigate(typeof(MoneyBoxPage), new object[] { MoneyBox.Id });
+            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+
+            NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
         }
 
         public void Calculator()
         {
-            NavigationService.Navigate(typeof(CalculatorPage));
+            navigationData.Add("SelectedCurrencyId", SelectedCurrency.Id);
+            navigationData.Add("SelectedCategoryId", SelectedCategory.Id);
+            navigationData.Add("SelectedUserId", SelectedUser.Id);
+
+            NavigationService.Navigate(typeof(CalculatorPage), navigationData);
         }
 
         #endregion
@@ -106,7 +121,7 @@ namespace FinanceManager.ViewModel
             get
             {
                 if (_transaction == null)
-                    _transaction = new Transaction();
+                    _transaction = LoadTransaction();
                 return _transaction;
             }
             set
@@ -184,6 +199,57 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private Currency _selectedCurrency;
+
+        public Currency SelectedCurrency
+        {
+            get
+            {
+                if (_selectedCurrency == null)
+                    _selectedCurrency = LoadSelectedCurrency();
+                return _selectedCurrency;
+            }
+            set
+            {
+                _selectedCurrency = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Category _selectedCategory;
+
+        public Category SelectedCategory
+        {
+            get
+            {
+                if (_selectedCategory == null)
+                    _selectedCategory = LoadSelectedCategory();
+                return _selectedCategory;
+            }
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private User _selectedUser;
+
+        public User SelectedUser
+        {
+            get
+            {
+                if (_selectedUser == null)
+                    _selectedUser = LoadSelectedUser();
+                return _selectedUser;
+            }
+            set
+            {
+                _selectedUser = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
@@ -203,17 +269,71 @@ namespace FinanceManager.ViewModel
 
         private MoneyBox LoadMoneyBox()
         {
-            return DataService.Get<MoneyBox>().Get((int)NavigationService.GetNavigationData(0));
+            object data = NavigationService.GetNavigationData("MoneyBoxId");
+
+            if (data != null)
+                return DataService.Get<MoneyBox>().Get((int)data);
+            else
+                return null;
         }
 
         private TransactionType LoadType()
         {
-            return (TransactionType)NavigationService.GetNavigationData(1);
+            object data = NavigationService.GetNavigationData("TransactionType");
+
+            if (data != null)
+                return (TransactionType)Enum.Parse(typeof(TransactionType), data.ToString());
+            else
+                return TransactionType.Income;
         }
 
         private List<User> LoadUsers()
         {
             return DataService.Get<User>().GetAll();
+        }
+
+        private Transaction LoadTransaction()
+        {
+            object data = NavigationService.GetNavigationData("CalculatorResult");
+
+            if (data != null)
+            {
+                Transaction transaction = new Transaction();
+                transaction.Value = (decimal)data;
+                return transaction;
+            }
+            else
+                return new Transaction();
+        }
+
+        private User LoadSelectedUser()
+        {
+            object userId = NavigationService.GetNavigationData("SelectedUserId");
+
+            if (userId != null)
+                return Users.Where(x => x.Id == (int)userId).SingleOrDefault();
+            else
+                return new User();
+        }
+
+        private Category LoadSelectedCategory()
+        {
+            object categoryId = NavigationService.GetNavigationData("SelectedCategoryId");
+
+            if (categoryId != null)
+                return Categories.Where(x => x.Id == (int)categoryId).SingleOrDefault();
+            else
+                return new Category();
+        }
+
+        private Currency LoadSelectedCurrency()
+        {
+            object currencyId = NavigationService.GetNavigationData("SelectedCurrencyId");
+
+            if (currencyId != null)
+                return Currencies.Where(x => x.Id == (int)currencyId).SingleOrDefault();
+            else
+                return new Currency();
         }
 
         #endregion

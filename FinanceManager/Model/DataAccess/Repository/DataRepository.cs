@@ -156,7 +156,7 @@ namespace FinanceManager.Model.DataAccess.Repository
 
                 if (i != null)
                 {
-                    db.Delete(id);
+                    db.Delete(i);
                 }
             }
         }

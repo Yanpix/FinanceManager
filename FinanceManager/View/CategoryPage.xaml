@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="FinanceManager.View.CategoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FinanceManager.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="finance manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="category" FontSize="48" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="title" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding Category.Title}" FontSize="32"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="type" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding Category.Type}" FontSize="32"/>
+                </StackPanel>
+                <TextBlock Text="transactions" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+            </StackPanel>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Transactions}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}" Margin="0,10,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,5">
+                            <TextBlock Text="{Binding CreationDate}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding MoneyBox.Title}" FontSize="32"/>
+                                <TextBlock Text="&#160;" FontSize="32"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Value}" FontSize="32"/>
+                                <TextBlock Text="&#160;" FontSize="32"/>
+                                <TextBlock Text="{Binding Currency.Symbol}" FontSize="32"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding User.Title}" FontSize="32"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Page>
