@@ -3,6 +3,7 @@ using FinanceManager.Infrastructure;
 using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.Entities;
 using FinanceManager.View;
+using FinanceManager.ViewModel.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,14 @@ using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class CreateUserViewModel : BaseViewModel
+    public class CreateUserViewModel : BindableBase
     {
         public CreateUserViewModel()
         {
             SaveUserCommand = new RelayCommand(SaveUser);
             CancelUserCommand = new RelayCommand(CancelUser);
+
+            ValidationErrors = new ValidationErrors();
         }
 
         #region Services
@@ -40,9 +43,16 @@ namespace FinanceManager.ViewModel
 
         public void SaveUser()
         {
-            DataService.Get<User>().Save(User);
+            Validate();
 
-            NavigationService.Navigate(typeof(MainPage));
+            if (IsValid)
+            {
+                DataService.Get<User>().Save(User);
+
+                NavigationService.Navigate(typeof(MainPage));
+            }
+            else
+                return;
         }
 
         public void CancelUser()
@@ -53,6 +63,10 @@ namespace FinanceManager.ViewModel
         #endregion
 
         #region Properties
+
+        public ValidationErrors ValidationErrors { get; set; }
+
+        public bool IsValid { get; private set; }
 
         private User _user;
 
@@ -69,6 +83,31 @@ namespace FinanceManager.ViewModel
                 _user = value;
                 OnPropertyChanged();
             }
+        }
+
+        private void Validate()
+        {
+            ValidationErrors.Clear();
+
+            User user = DataService.Get<User>().GetAll().Where(x => x.Title.Equals(User.Title)).SingleOrDefault();
+
+            if (string.IsNullOrEmpty(User.Title))
+            {
+                ValidationErrors["Title"] = "title is required";
+            }
+            else if (User.Title.Length > 20)
+            {
+                ValidationErrors["Title"] = "title's length should not exceed 20 characters";
+            }
+            else if (user != null)
+            {
+                ValidationErrors["Title"] = "specified title already exists";
+            }
+
+            IsValid = ValidationErrors.IsValid;
+
+            OnPropertyChanged("IsValid");
+            OnPropertyChanged("ValidationErrors");
         }
 
         #endregion

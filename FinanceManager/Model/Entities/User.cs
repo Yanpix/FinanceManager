@@ -16,11 +16,8 @@ namespace FinanceManager.Model.Entities
         // The title of the user
         public string Title { get; set; }
 
-        // The first name of the user
-        public string FirstName { get; set; }
-
-        // The last name of the user
-        public string LastName { get; set; }
+        // The password of the user
+        public string Password { get; set; }
 
         // Money boxes of the user
         [ManyToMany(typeof(MoneyBoxToUser))]

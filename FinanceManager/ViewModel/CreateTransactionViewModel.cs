@@ -5,6 +5,7 @@ using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.Model.Entities.Enums;
 using FinanceManager.View;
+using FinanceManager.ViewModel.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class CreateTransactionViewModel : BaseViewModel
+    public class CreateTransactionViewModel : BindableBase
     {
         public CreateTransactionViewModel()
         {
             navigationData = new Dictionary<string, object>();
+
+            ValidationErrors = new ValidationErrors();
 
             // Initialize commands
             SaveTransactionCommand = new RelayCommand(SaveTransaction);
@@ -50,32 +53,39 @@ namespace FinanceManager.ViewModel
 
         public void SaveTransaction()
         {
-            Transaction.CreationDate = DateTime.Now;
-            Transaction.Type = Type;
-            Transaction.Currency = SelectedCurrency;
-            Transaction.Category = SelectedCategory;
-            Transaction.User = SelectedUser;
+            Validate();
 
-            DataService.Get<Transaction>().Save(Transaction);
-
-            if (Type == TransactionType.Income)
+            if (IsValid)
             {
-                MoneyBox.Balance += Transaction.Value;
+                Transaction.CreationDate = DateTime.Now;
+                Transaction.Type = Type;
+                Transaction.Currency = SelectedCurrency;
+                Transaction.Category = SelectedCategory;
+                Transaction.User = SelectedUser;
+
+                DataService.Get<Transaction>().Save(Transaction);
+
+                if (Type == TransactionType.Income)
+                {
+                    MoneyBox.Balance += Transaction.Value;
+                }
+                else
+                {
+                    MoneyBox.Balance -= Transaction.Value;
+                }
+
+                MoneyBox.LastModifiedDate = DateTime.Now;
+                DataService.Get<MoneyBox>().Save(MoneyBox);
+
+                Transaction.MoneyBox = MoneyBox;
+                DataService.Get<Transaction>().Update(Transaction);
+
+                navigationData.Add("MoneyBoxId", MoneyBox.Id);
+
+                NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
             }
             else
-            {
-                MoneyBox.Balance -= Transaction.Value;
-            }
-
-            MoneyBox.LastModifiedDate = DateTime.Now;
-            DataService.Get<MoneyBox>().Save(MoneyBox);
-
-            Transaction.MoneyBox = MoneyBox;
-            DataService.Get<Transaction>().Update(Transaction);
-
-            navigationData.Add("MoneyBoxId", MoneyBox.Id);
-
-            NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
+                return;
         }
 
         public void CancelTransaction()
@@ -97,6 +107,10 @@ namespace FinanceManager.ViewModel
         #endregion
 
         #region Properties
+
+        public ValidationErrors ValidationErrors { get; set; }
+
+        public bool IsValid { get; private set; }
 
         private TransactionType _type;
 
@@ -334,6 +348,36 @@ namespace FinanceManager.ViewModel
                 return Currencies.Where(x => x.Id == (int)currencyId).SingleOrDefault();
             else
                 return new Currency();
+        }
+
+        private void Validate()
+        {
+            ValidationErrors.Clear();
+
+            if (Transaction.Value <= 0)
+            {
+                ValidationErrors["Value"] = "value must be positive";
+            }
+
+            if (string.IsNullOrEmpty(SelectedCurrency.Title))
+            {
+                ValidationErrors["Currency"] = "currency is required";
+            }
+
+            if (string.IsNullOrEmpty(SelectedCategory.Title))
+            {
+                ValidationErrors["Category"] = "category is required";
+            }
+
+            if (string.IsNullOrEmpty(SelectedUser.Title))
+            {
+                ValidationErrors["User"] = "user is required";
+            }
+
+            IsValid = ValidationErrors.IsValid;
+
+            OnPropertyChanged("IsValid");
+            OnPropertyChanged("ValidationErrors");
         }
 
         #endregion

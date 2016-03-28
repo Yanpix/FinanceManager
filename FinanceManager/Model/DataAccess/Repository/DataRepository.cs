@@ -68,16 +68,14 @@ namespace FinanceManager.Model.DataAccess.Repository
                     Title = "test money box"
                 };
 
-                List<User> initialUsers = new List<User>
+                User initialUser = new User
                 {
-                    new User { Title = "me" },
-                    new User { Title = "my wife" },
-                    new User { Title = "my son" }
+                    Title = "me", Password = "me"
                 };
 
                 MoneyBoxToUser initialMoneyBoxToUser = new MoneyBoxToUser
                 {
-                    MoneyBoxId = 1, UserId = 1
+                    MoneyBoxId = 1, UserId = 1, IsOwner = true
                 };
 
                 // Creating tables if not exist
@@ -101,21 +99,11 @@ namespace FinanceManager.Model.DataAccess.Repository
                     }
                 }
 
-                if (db.GetTableInfo("MoneyBoxToUser").Count == 0)
-                {
-                    db.CreateTable<MoneyBoxToUser>();
-
-                    db.Insert(initialMoneyBoxToUser);
-                }
-
                 if (db.GetTableInfo("User").Count == 0)
                 {
                     db.CreateTable<User>();
 
-                    foreach (User user in initialUsers)
-                    {
-                        db.Insert(user);
-                    }
+                    db.Insert(initialUser);
                 }
 
                 if (db.GetTableInfo("MoneyBox").Count == 0)
@@ -123,10 +111,23 @@ namespace FinanceManager.Model.DataAccess.Repository
                     db.CreateTable<MoneyBox>();
 
                     db.Insert(initialMoneyBox);
+                }
+
+                if (db.GetTableInfo("MoneyBoxToUser").Count == 0)
+                {
+                    db.CreateTable<MoneyBoxToUser>();
+
+                    db.Insert(initialMoneyBoxToUser);
+
+                    initialUser.MoneyBoxes = new List<MoneyBox>();
+
+                    initialUser.MoneyBoxes.Add(db.Get<MoneyBox>(1));
 
                     initialMoneyBox.PrimaryCurrency = db.Get<Currency>(4);
 
-                    //initialMoneyBox.Users.Add(db.Get<User>(1));
+                    initialMoneyBox.Users = new List<User>();
+
+                    initialMoneyBox.Users.Add(db.Get<User>(1));
 
                     db.UpdateWithChildren(initialMoneyBox);
                 }

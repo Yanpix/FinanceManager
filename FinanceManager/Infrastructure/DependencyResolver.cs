@@ -22,7 +22,8 @@ namespace FinanceManager.Infrastructure
                 new InjectionProperty("CategoriesRepository", typeof(IDataRepository<Category>)),
                 new InjectionProperty("CurrenciesRepository", typeof(IDataRepository<Currency>)),
                 new InjectionProperty("UsersRepository", typeof(IDataRepository<User>)),
-                new InjectionProperty("TransactionsRepository", typeof(IDataRepository<Transaction>)));
+                new InjectionProperty("TransactionsRepository", typeof(IDataRepository<Transaction>)),
+                new InjectionProperty("MoneyBoxesToUsersRepository", typeof(IDataRepository<MoneyBoxToUser>)));
 
             container.RegisterType(typeof(IDataService<>), typeof(DataService<>), 
                 new InjectionProperty("UnitOfWork", typeof(IUnitOfWork)));
@@ -32,7 +33,8 @@ namespace FinanceManager.Infrastructure
                 new InjectionProperty("TransactionsDataService", typeof(IDataService<Transaction>)),
                 new InjectionProperty("CategoriesDataService", typeof(IDataService<Category>)),
                 new InjectionProperty("CurrenciesDataService", typeof(IDataService<Currency>)),
-                new InjectionProperty("UsersDataService", typeof(IDataService<User>)));
+                new InjectionProperty("UsersDataService", typeof(IDataService<User>)),
+                new InjectionProperty("MoneyBoxesToUsersDataService", typeof(IDataService<MoneyBoxToUser>)));
 
             container.RegisterType<MainViewModel>(
                 new InjectionProperty("NavigationService", typeof(INavigationService)),
@@ -66,6 +68,10 @@ namespace FinanceManager.Infrastructure
                 new InjectionProperty("NavigationService", typeof(INavigationService)));
 
             container.RegisterType<CategoryViewModel>(
+                new InjectionProperty("NavigationService", typeof(INavigationService)),
+                new InjectionProperty("DataService", typeof(IDataServicesProvider)));
+
+            container.RegisterType<LoginViewModel>(
                 new InjectionProperty("NavigationService", typeof(INavigationService)),
                 new InjectionProperty("DataService", typeof(IDataServicesProvider)));
         }

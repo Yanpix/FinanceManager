@@ -3,48 +3,78 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FinanceManager.View"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:act="using:FinanceManager.View.Actions"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:conv="using:FinanceManager.View.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="CreateMoneyBoxView">
 
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+    
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveMoneyBoxCommand}"/>
-                <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelMoneyBoxCommand}"/>
+                <AppBarButton Icon="Save" Label="save" Command="{Binding SaveMoneyBoxCommand}" Visibility="{Binding MoneyBoxCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Cancel" Label="cancel" Command="{Binding CancelMoneyBoxCommand}" Visibility="{Binding MoneyBoxCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="add" Command="{Binding AddUserCommand}" Visibility="{Binding UsersCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllUsersCommand}" Visibility="{Binding UsersCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 
     <Grid x:Name="LayoutRoot">
 
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Title Panel -->
-        <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="finance manager" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="new money box" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" FontSize="48"/>
-        </StackPanel>
-
-        <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <StackPanel>
-                <TextBox Text="{Binding MoneyBox.Title, Mode=TwoWay}" PlaceholderText="type money box title" Header="money box title"/>
-                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding MoneyBox.PrimaryCurrency, Mode=TwoWay}" DisplayMemberPath="Title" Header="money box primary currancy" PlaceholderText="choose money box primary currancy"/>
-            </StackPanel>
-        </Grid>
+        <Pivot SelectedIndex="{Binding SelectedPivotItem, Mode=TwoWay}">
+            <Pivot.Title>
+                <Grid Width="{Binding ElementName=moneyBoxPivotItem, Path=ActualWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="finance manager"/>
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentUser.Title}"/>
+                </Grid>
+            </Pivot.Title>
+            <PivotItem Header="money box" x:Name="moneyBoxPivotItem">
+                <StackPanel>
+                    <TextBox Text="{Binding MoneyBox.Title, Mode=TwoWay}" PlaceholderText="type money box title" Header="money box title"/>
+                    <TextBlock Text="{Binding ValidationErrors[Title]}" Foreground="Red" FontSize="16"/>
+                    <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding MoneyBox.PrimaryCurrency, Mode=TwoWay}" DisplayMemberPath="Title" Header="money box primary currancy" PlaceholderText="choose money box primary currancy" Margin="0,10,0,0"/>
+                    <TextBlock Text="{Binding ValidationErrors[Currency]}" Foreground="Red" FontSize="16"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="users">
+                <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,5">
+                                <i:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Holding">
+                                        <act:OpenMenuFlyoutAction/>
+                                    </core:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem 
+                                            Text="delete" 
+                                            Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
+                                            CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                                <TextBlock Text="{Binding Title}" FontSize="18" Foreground="{ThemeResource ListBoxItemDisabledForegroundThemeBrush}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

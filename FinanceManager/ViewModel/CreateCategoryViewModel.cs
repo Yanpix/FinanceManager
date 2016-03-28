@@ -4,6 +4,7 @@ using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.Entities;
 using FinanceManager.Model.Entities.Enums;
 using FinanceManager.View;
+using FinanceManager.ViewModel.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,14 @@ using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class CreateCategoryViewModel : BaseViewModel
+    public class CreateCategoryViewModel : BindableBase
     {
         public CreateCategoryViewModel()
         {
             SaveCategoryCommand = new RelayCommand(SaveCategory);
             CancelCategoryCommand = new RelayCommand(CancelCategory);
+
+            ValidationErrors = new ValidationErrors();
         }
 
         #region Services
@@ -41,10 +44,17 @@ namespace FinanceManager.ViewModel
 
         public void SaveCategory()
         {
-            Category.Type = (TransactionType)Enum.Parse(typeof(TransactionType), SelectedType);
-            DataService.Get<Category>().Save(Category);
+            Validate();
 
-            NavigationService.Navigate(typeof(MainPage));
+            if (IsValid)
+            {
+                Category.Type = (TransactionType)Enum.Parse(typeof(TransactionType), SelectedType);
+                DataService.Get<Category>().Save(Category);
+
+                NavigationService.Navigate(typeof(MainPage));
+            }
+            else
+                return;
         }
 
         public void CancelCategory()
@@ -55,6 +65,10 @@ namespace FinanceManager.ViewModel
         #endregion
 
         #region Properties
+
+        public ValidationErrors ValidationErrors { get; set; }
+
+        public bool IsValid { get; private set; }
 
         private List<string> _types;
 
@@ -101,6 +115,36 @@ namespace FinanceManager.ViewModel
                 _category = value;
                 OnPropertyChanged();
             }
+        }
+
+        private void Validate()
+        {
+            ValidationErrors.Clear();
+
+            Category category = DataService.Get<Category>().GetAll().Where(x => x.Title.Equals(Category.Title)).SingleOrDefault();
+
+            if (string.IsNullOrEmpty(Category.Title))
+            {
+                ValidationErrors["Title"] = "title is required";
+            }
+            else if (Category.Title.Length > 20)
+            {
+                ValidationErrors["Title"] = "title's length should not exceed 20 characters";
+            }
+            else if (category != null)
+            {
+                ValidationErrors["Title"] = "specified title already exists";
+            }
+
+            if (string.IsNullOrEmpty(SelectedType))
+            {
+                ValidationErrors["Type"] = "primary currency is required";
+            }
+
+            IsValid = ValidationErrors.IsValid;
+
+            OnPropertyChanged("IsValid");
+            OnPropertyChanged("ValidationErrors");
         }
 
         #endregion

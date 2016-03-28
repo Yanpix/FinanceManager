@@ -13,34 +13,31 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainView">
 
-    <Page.Resources>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <conv:SelectedToForegroundConverter x:Key="SelectedToForegroundConverter"/>
-        <conv:SelectedToStringConverter x:Key="SelectedToStringConverter"/>
-    </Page.Resources>
-
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateMoneyBoxCommand}" Visibility="{Binding MoneyBoxesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateUserCommand}" Visibility="{Binding UsersCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCurrencyCommand}" Visibility="{Binding CurrenciesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCategoryCommand}" Visibility="{Binding CategoriesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Add" Label="create new" Command="{Binding CreateCommand}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="delete selected" Command="{Binding DeleteSelectedMoneyBoxesCommand}" Visibility="{Binding MoneyBoxesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Label="delete all" Command="{Binding DeleteAllMoneyBoxesCommand}" Visibility="{Binding MoneyBoxesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Label="delete all" Command="{Binding DeleteAllUsersCommand}" Visibility="{Binding UsersCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Label="delete all" Command="{Binding DeleteAllCurrenciesCommand}" Visibility="{Binding CurrenciesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <AppBarButton Label="delete all" Command="{Binding DeleteAllCategoriesCommand}" Visibility="{Binding CategoriesCommandBarVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="delete all" Command="{Binding DeleteAllCommand}"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
     
     <Grid x:Name="LayoutRoot">
-        <Pivot Title="finance manager" SelectedIndex="{Binding SelectedPivotItem, Mode=TwoWay}">
-            <PivotItem Header="money boxes">
-                <ListBox x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectionMode="Extended" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" IsHoldingEnabled="True" IsRightTapEnabled="True" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
+        <Pivot x:Name="pivot" SelectedIndex="{Binding SelectedPivotItem, Mode=TwoWay}">
+            <Pivot.Title>
+                <Grid Width="{Binding ElementName=moneyBoxesPivotItem, Path=ActualWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="finance manager"/>
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentUser.Title}"/>
+                </Grid>
+            </Pivot.Title>
+            <PivotItem x:Name="moneyBoxesPivotItem" Header="money boxes">
+                <ListBox x:Name="listMoneyBoxes" ItemsSource="{Binding MoneyBoxes}" SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
@@ -51,30 +48,13 @@
                                 </i:Interaction.Behaviors>
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout>
-                                        <ToggleMenuFlyoutItem 
-                                            x:Name="selectCommand" 
-                                            Text="{Binding ElementName=selectCommand, Path=IsChecked, Converter={StaticResource SelectedToStringConverter}}"
-                                            Command="{Binding DataContext.SelectMoneyBoxCommand, ElementName=MainView}" 
-                                            CommandParameter="{Binding}"/>
                                         <MenuFlyoutItem 
                                             Text="delete" 
-                                            Command="{Binding DataContext.DeleteMoneyBoxCommand, ElementName=MainView}" 
+                                            Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
                                             CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </FlyoutBase.AttachedFlyout>
-                                <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="32" Foreground="{Binding ElementName=selectCommand, Path=IsChecked, Converter={StaticResource SelectedToForegroundConverter}}"/>
-                                <TextBlock Foreground="{ThemeResource PhoneAccentBrush}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </PivotItem>
-            <PivotItem Header="users">
-                <ListBox x:Name="listUsers" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="32" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -86,7 +66,22 @@
                         <ListBox ItemsSource="{Binding IncomeCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <i:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="Holding">
+                                                <act:OpenMenuFlyoutAction/>
+                                            </core:EventTriggerBehavior>
+                                        </i:Interaction.Behaviors>
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem 
+                                                    Text="delete" 
+                                                    Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
+                                                    CommandParameter="{Binding}"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
+                                        <TextBlock Text="{Binding Title}" FontSize="32" />
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -95,7 +90,22 @@
                         <ListBox ItemsSource="{Binding ExpenceCategories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Title}" FontSize="32"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <i:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="Holding">
+                                                <act:OpenMenuFlyoutAction/>
+                                            </core:EventTriggerBehavior>
+                                        </i:Interaction.Behaviors>
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem 
+                                                    Text="delete" 
+                                                    Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
+                                                    CommandParameter="{Binding}"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
+                                        <TextBlock Text="{Binding Title}" FontSize="32" />
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -106,10 +116,25 @@
                 <ListBox x:Name="listCurrencies" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Title}" FontSize="32"/>
-                                <TextBlock Text="&#160;" FontSize="32"/>
-                                <TextBlock Text="{Binding Symbol}" FontSize="32"/>
+                            <StackPanel Orientation="Vertical">
+                                <i:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Holding">
+                                        <act:OpenMenuFlyoutAction/>
+                                    </core:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem 
+                                                    Text="delete" 
+                                                    Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
+                                                    CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}" FontSize="32" />
+                                    <TextBlock Text="&#160;" FontSize="32"/>
+                                    <TextBlock Text="{Binding Symbol}" FontSize="32" />
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

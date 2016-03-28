@@ -12,7 +12,7 @@ using Windows.UI.Xaml;
 
 namespace FinanceManager.ViewModel
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

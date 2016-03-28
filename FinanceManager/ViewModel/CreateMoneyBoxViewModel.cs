@@ -4,6 +4,7 @@ using FinanceManager.Model.DataAccess.Providers;
 using FinanceManager.Model.DataAccess.Services;
 using FinanceManager.Model.Entities;
 using FinanceManager.View;
+using FinanceManager.ViewModel.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,12 +21,14 @@ namespace FinanceManager.ViewModel
     /// <summary>
     /// View model for CreateMoneyBoxPage, implements BaseViewModel
     /// </summary>
-    public class CreateMoneyBoxViewModel : BaseViewModel
+    public class CreateMoneyBoxViewModel : BindableBase
     {
         // View model constructor
         public CreateMoneyBoxViewModel()
         {
             navigationData = new Dictionary<string, object>();
+
+            ValidationErrors = new ValidationErrors();
 
             // Initialize commands
             SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBox);
@@ -54,15 +57,22 @@ namespace FinanceManager.ViewModel
 
         public void SaveMoneyBox()
         {
-            MoneyBox.CreationDate = DateTime.Now;
-            MoneyBox.LastModifiedDate = DateTime.Now;
-            MoneyBox.Balance = 0.0M;
+            Validate();
 
-            DataService.Get<MoneyBox>().Save(MoneyBox);
+            if (ValidationErrors.IsValid)
+            {
+                MoneyBox.CreationDate = DateTime.Now;
+                MoneyBox.LastModifiedDate = DateTime.Now;
+                MoneyBox.Balance = 0.0M;
 
-            navigationData.Add("MoneyBoxId", MoneyBox.Id);
+                DataService.Get<MoneyBox>().Save(MoneyBox);
 
-            NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
+                navigationData.Add("MoneyBoxId", MoneyBox.Id);
+
+                NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
+            }
+            else
+                return;
         }       
 
         public void CancelMoneyBox()
@@ -73,6 +83,10 @@ namespace FinanceManager.ViewModel
         #endregion
 
         #region Properties
+
+        public ValidationErrors ValidationErrors { get; set; }
+
+        public bool IsValid { get; private set; }
 
         private MoneyBox _moneyBox;
 
@@ -115,6 +129,36 @@ namespace FinanceManager.ViewModel
         private List<Currency> LoadCurrencies()
         {
             return DataService.Get<Currency>().GetAll();
+        }
+
+        private void Validate()
+        {
+            ValidationErrors.Clear();
+
+            MoneyBox moneyBox = DataService.Get<MoneyBox>().GetAll().Where(x => x.Title.Equals(MoneyBox.Title)).SingleOrDefault();
+
+            if (string.IsNullOrEmpty(MoneyBox.Title))
+            {
+                ValidationErrors["Title"] = "title is required";
+            }
+            else if (MoneyBox.Title.Length > 50)
+            {
+                ValidationErrors["Title"] = "title's length should not exceed 50 characters";
+            }
+            else if(moneyBox != null)
+            {
+                ValidationErrors["Title"] = "specified title already exists";
+            }
+
+            if (MoneyBox.PrimaryCurrency == null)
+            {
+                ValidationErrors["Currency"] = "primary currency is required";
+            }
+
+            IsValid = ValidationErrors.IsValid;
+
+            OnPropertyChanged("IsValid");
+            OnPropertyChanged("ValidationErrors");
         }
 
         #endregion

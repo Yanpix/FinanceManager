@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 
 namespace FinanceManager.ViewModel
 {
-    public class MoneyBoxViewModel : BaseViewModel
+    public class MoneyBoxViewModel : BindableBase
     {
         public MoneyBoxViewModel()
         {

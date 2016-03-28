@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinanceManager.ViewModel
 {
-    public class CategoryViewModel : BaseViewModel
+    public class CategoryViewModel : BindableBase
     {
         public CategoryViewModel()
         {

@@ -22,6 +22,8 @@ namespace FinanceManager.Model.DataAccess.Providers
 
         public IDataService<User> UsersDataService { get; set; }
 
+        public IDataService<MoneyBoxToUser> MoneyBoxesToUsersDataService { get; set; }
+
         #endregion
 
         public IDataService<T> Get<T>() where T : class, new()
@@ -40,6 +42,8 @@ namespace FinanceManager.Model.DataAccess.Providers
                     return TransactionsDataService as IDataService<T>;
                 case "User":
                     return UsersDataService as IDataService<T>;
+                case "MoneyBoxToUser":
+                    return MoneyBoxesToUsersDataService as IDataService<T>;
                 default:
                     return null;
             }

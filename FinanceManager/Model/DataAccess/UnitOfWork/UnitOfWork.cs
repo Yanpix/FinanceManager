@@ -1,5 +1,4 @@
 ﻿using FinanceManager.Model.DataAccess.Repository;
-using FinanceManager.Dependencies;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,6 +24,8 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
 
         public IDataRepository<User> UsersRepository { get; set; }
 
+        public IDataRepository<MoneyBoxToUser> MoneyBoxesToUsersRepository { get; set; }
+
         // Get repository of items of type T
         public IDataRepository<T> Repository<T>() where T : class, new()
         {
@@ -42,6 +43,8 @@ namespace FinanceManager.Model.DataAccess.UnitOfWork
                     return TransactionsRepository as IDataRepository<T>;
                 case "User":
                     return UsersRepository as IDataRepository<T>;
+                case "MoneyBoxToUser":
+                    return MoneyBoxesToUsersRepository as IDataRepository<T>;
                 default:
                     return null;
             }

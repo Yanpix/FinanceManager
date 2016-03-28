@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace FinanceManager.ViewModel
 {
-    public class CalculatorViewModel : BaseViewModel
+    public class CalculatorViewModel : BindableBase
     {
         // View model constructor
         public CalculatorViewModel()
