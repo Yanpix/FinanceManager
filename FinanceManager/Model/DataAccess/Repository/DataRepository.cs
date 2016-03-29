@@ -75,7 +75,7 @@ namespace FinanceManager.Model.DataAccess.Repository
 
                 MoneyBoxToUser initialMoneyBoxToUser = new MoneyBoxToUser
                 {
-                    MoneyBoxId = 1, UserId = 1, IsOwner = true
+                    MoneyBoxId = 1, UserId = 1, IsOwner = true, CanModify = true, CanRealize = true
                 };
 
                 // Creating tables if not exist

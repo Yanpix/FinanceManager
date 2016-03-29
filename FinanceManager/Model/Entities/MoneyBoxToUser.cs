@@ -27,5 +27,11 @@ namespace FinanceManager.Model.Entities
 
         // Specifies whether the user is owner or not
         public bool IsOwner { get; set; }
+
+        // Specifies whether user can modify money box or not
+        public bool CanModify { get; set; }
+
+        // Specifies whether user can realize transactions or not
+        public bool CanRealize { get; set; }
     }
 }

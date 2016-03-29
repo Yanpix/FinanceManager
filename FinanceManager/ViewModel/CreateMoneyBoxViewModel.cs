@@ -26,16 +26,15 @@ namespace FinanceManager.ViewModel
         // View model constructor
         public CreateMoneyBoxViewModel()
         {
-            navigationData = new Dictionary<string, object>();
-
             ValidationErrors = new ValidationErrors();
 
             // Initialize commands
-            SaveMoneyBoxCommand = new RelayCommand(SaveMoneyBox);
-            CancelMoneyBoxCommand = new RelayCommand(CancelMoneyBox);
+            SaveMoneyBoxCommand = new DelegateCommand((e) => SaveMoneyBoxAction(e));
+            CancelMoneyBoxCommand = new DelegateCommand((e) => CancelMoneyBoxAction(e));
+            AddUserCommand = new DelegateCommand((e) => AddUserAction(e));
+            DeleteAllUsersCommand = new DelegateCommand((e) => DeleteAllUsersAction(e));
+            DeleteUserCommand = new DelegateCommand((item) => DeleteUserAction(item));
         }
-
-        Dictionary<string, object> navigationData;
 
         #region Services
 
@@ -51,11 +50,17 @@ namespace FinanceManager.ViewModel
 
         public ICommand CancelMoneyBoxCommand { get; private set; }
 
+        public ICommand AddUserCommand { get; private set; }
+
+        public ICommand DeleteAllUsersCommand { get; private set; }
+
+        public ICommand DeleteUserCommand { get; private set; }
+
         #endregion
 
         #region Commands implementation
 
-        public void SaveMoneyBox()
+        public void SaveMoneyBoxAction(object e)
         {
             Validate();
 
@@ -67,22 +72,41 @@ namespace FinanceManager.ViewModel
 
                 DataService.Get<MoneyBox>().Save(MoneyBox);
 
-                navigationData.Add("MoneyBoxId", MoneyBox.Id);
+                _navigationData.Add("MoneyBoxId", MoneyBox.Id);
 
-                NavigationService.Navigate(typeof(MoneyBoxPage), navigationData);
+                NavigationService.Navigate(typeof(MoneyBoxPage), _navigationData);
             }
             else
                 return;
         }       
 
-        public void CancelMoneyBox()
+        public void CancelMoneyBoxAction(object e)
         {
             NavigationService.Navigate(typeof(MainPage));
+        }
+
+        public void AddUserAction(object e)
+        {
+            _navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            _navigationData.Add("SelectedPivotItemOnCreateMoneyBoxPage", SelectedPivotItem);
+            NavigationService.Navigate(typeof(AddUserPage), _navigationData);
+        }
+
+        public void DeleteAllUsersAction(object e)
+        {
+
+        }
+
+        public void DeleteUserAction(object e)
+        {
+
         }
 
         #endregion
 
         #region Properties
+
+        private Dictionary<string, object> _navigationData = new Dictionary<string, object>();
 
         public ValidationErrors ValidationErrors { get; set; }
 
@@ -95,7 +119,7 @@ namespace FinanceManager.ViewModel
             get
             {
                 if (_moneyBox == null)
-                    _moneyBox = new MoneyBox();
+                    _moneyBox = CreateMoneyBox();
                 return _moneyBox;
             }
             set
@@ -122,13 +146,173 @@ namespace FinanceManager.ViewModel
             }
         }
 
+        private List<User> _users;
+
+        public List<User> Users
+        {
+            get
+            {
+                if (_users == null)
+                    _users = LoadUsers();
+                return _users;
+            }
+            set
+            {
+                _users = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private User _selectedUser;
+
+        public User SelectedUser
+        {
+            get
+            {
+                return _selectedUser;
+            }
+            set
+            {
+                _selectedUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private User _currentUser;
+
+        public User CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                    _currentUser = LoadCurrentUser();
+                return _currentUser;
+            }
+            set
+            {
+                _currentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _selectedPivotItemInit = false;
+
+        private int _selectedPivotItem;
+
+        public int SelectedPivotItem
+        {
+            get
+            {
+                if (!_selectedPivotItemInit)
+                {
+                    _selectedPivotItem = LoadSelectedPivotItem(_selectedPivotItem);
+                    _selectedPivotItemInit = true;
+                    SwitchCommandBarsVisibility();
+                }
+                return _selectedPivotItem;
+            }
+            set
+            {
+                _selectedPivotItem = value;
+                OnPropertyChanged();
+                SwitchCommandBarsVisibility();
+            }
+        }
+
+        private bool _moneyBoxCommandsVisible;
+
+        public bool MoneyBoxCommandsVisible
+        {
+            get
+            {
+                return _moneyBoxCommandsVisible;
+            }
+            set
+            {
+                _moneyBoxCommandsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _usersCommandsVisible;
+
+        public bool UsersCommandsVisible
+        {
+            get
+            {
+                return _usersCommandsVisible;
+            }
+            set
+            {
+                _usersCommandsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Helping methods
 
+        private MoneyBox CreateMoneyBox()
+        {
+            object moneyBoxId = NavigationService.GetNavigationData("MoneyBoxId");
+
+            if (moneyBoxId != null)
+            {
+                return DataService.Get<MoneyBox>().Get((int)moneyBoxId);
+            }
+            else
+            {
+                MoneyBox newMoneyBox = new MoneyBox();
+
+                DataService.Get<MoneyBox>().Save(newMoneyBox);
+
+                return newMoneyBox;
+            }
+        }
+
         private List<Currency> LoadCurrencies()
         {
             return DataService.Get<Currency>().GetAll();
+        }
+
+        private List<User> LoadUsers()
+        {
+            return DataService.Get<User>().GetAll().Where(x => x.MoneyBoxes.Any(s => s.Id == MoneyBox.Id)).ToList();
+        }
+
+        private User LoadCurrentUser()
+        {
+            object currentUserId = NavigationService.GetNavigationData("UserId");
+
+            User currentUser = DataService.Get<User>().Get((int)currentUserId);
+
+            return currentUser;
+        }
+
+        private int LoadSelectedPivotItem(int currentPivotItem)
+        {
+            object selectedPivotItem = NavigationService.GetNavigationData("SelectedPivotItemOnCreateMoneyBoxPage");
+
+            if (selectedPivotItem != null && currentPivotItem != (int)selectedPivotItem)
+                return (int)selectedPivotItem;
+            else
+                return currentPivotItem;
+        }
+
+        private void SwitchCommandBarsVisibility()
+        {
+            switch (_selectedPivotItem)
+            {
+                case 0:
+                    MoneyBoxCommandsVisible = true;
+                    UsersCommandsVisible = false;
+                    break;
+                case 1:
+                    MoneyBoxCommandsVisible = false;
+                    UsersCommandsVisible = true;
+                    break;
+            }
         }
 
         private void Validate()

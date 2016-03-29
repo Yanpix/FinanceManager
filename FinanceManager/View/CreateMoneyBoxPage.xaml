@@ -65,7 +65,7 @@
                                     <MenuFlyout>
                                         <MenuFlyoutItem 
                                             Text="delete" 
-                                            Command="{Binding DataContext.DeleteCommand, ElementName=MainView}" 
+                                            Command="{Binding DataContext.DeleteUserCommand, ElementName=MainView}" 
                                             CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </FlyoutBase.AttachedFlyout>
