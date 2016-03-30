@@ -79,10 +79,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -162,13 +158,35 @@
     <Compile Include="View\MoneyBoxPage.xaml.cs">
       <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Temporary\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Temporary\MoneyBoxesPage.xaml.cs">
+      <DependentUpon>MoneyBoxesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Temporary\MoneyBoxPage.xaml.cs">
+      <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Assets\Icons\appbar.cabinet.files.variant.png" />
+    <Content Include="Assets\Icons\appbar.calendar.month.png" />
+    <Content Include="Assets\Icons\appbar.clothes.shirt.png" />
+    <Content Include="Assets\Icons\appbar.currency.dollar.png" />
+    <Content Include="Assets\Icons\appbar.drinks.beer.png" />
+    <Content Include="Assets\Icons\appbar.film.png" />
+    <Content Include="Assets\Icons\appbar.food.silverware.cross.png" />
+    <Content Include="Assets\Icons\appbar.gas.png" />
+    <Content Include="Assets\Icons\appbar.gift.png" />
+    <Content Include="Assets\Icons\appbar.graph.line.up.png" />
+    <Content Include="Assets\Icons\appbar.iphone.png" />
+    <Content Include="Assets\Icons\appbar.list.png" />
+    <Content Include="Assets\Icons\appbar.man.suitcase.png" />
+    <Content Include="Assets\Icons\appbar.medical.pill.png" />
+    <Content Include="Assets\Icons\appbar.money.png" />
+    <Content Include="Assets\Icons\appbar.page.text.png" />
+    <Content Include="Assets\Icons\appbar.settings.png" />
+    <Content Include="Assets\Icons\appbar.transit.depart.png" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />
@@ -227,6 +245,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Temporary\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\MoneyBoxesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\MoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
@@ -280,6 +310,14 @@
       <HintPath>..\packages\WinRTXamlToolkit.Controls.DataVisualization.WindowsPhone.1.8.1.0\lib\wpa\WinRTXamlToolkit.Controls.DataVisualization.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
