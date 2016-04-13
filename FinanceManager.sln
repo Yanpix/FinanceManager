@@ -9,6 +9,8 @@ Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "FinanceManager.Diagrams", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.DBModel", "FinanceManager.DBModel\FinanceManager.DBModel.csproj", "{2916D704-88A7-4C5B-A531-4274F6D3A00E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YanpixFinanceManager", "YanpixFinanceManager\YanpixFinanceManager.csproj", "{8126CFDF-623B-49B9-B4AD-33023DC6B95C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,30 @@ Global
 		{2916D704-88A7-4C5B-A531-4274F6D3A00E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2916D704-88A7-4C5B-A531-4274F6D3A00E}.Release|x86.ActiveCfg = Release|Any CPU
 		{2916D704-88A7-4C5B-A531-4274F6D3A00E}.Release|x86.Build.0 = Release|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|ARM.Build.0 = Debug|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|ARM.Deploy.0 = Debug|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|x86.ActiveCfg = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|x86.Build.0 = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Debug|x86.Deploy.0 = Debug|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|ARM.ActiveCfg = Release|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|ARM.Build.0 = Release|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|ARM.Deploy.0 = Release|ARM
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|x86.ActiveCfg = Release|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|x86.Build.0 = Release|x86
+		{8126CFDF-623B-49B9-B4AD-33023DC6B95C}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,16 +1,8 @@
-﻿using FinanceManager.Infrastructure;
-using FinanceManager.Model.DataAccess.Repository;
-using FinanceManager.Model.DataAccess.Services;
-using FinanceManager.Model.DataAccess.UnitOfWork;
-using FinanceManager.Model.Entities;
-using FinanceManager.View;
-using Microsoft.Practices.Unity;
-using SQLite.Net.Platform.WinRT;
+﻿using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -25,24 +17,34 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.Unity;
+using YanpixFinanceManager.Common;
+using YanpixFinanceManager.View;
+using YanpixFinanceManager.Model.DataAccess.Services;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Globalization;
+using System.Net.Http;
+using System.Text;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
-namespace FinanceManager
+namespace YanpixFinanceManager
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public sealed partial class App : Application
     {
-        public static string databaseName = "FinanceManager.sqlite";
-        public static string databasePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, databaseName);
-
-        public static SQLitePlatformWinRT platform;
-
-        public static IUnityContainer iocContainer;
-
         private TransitionCollection transitions;
+
+        public static string databaseName;
+        public static string databasePath;
+        public static SQLitePlatformWinRT platform;
+        public static IUnityContainer container;
+
+        private IDataInitService _dataInitService;
+        private ICurrencyRatesService _currencyRateService;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -51,14 +53,22 @@ namespace FinanceManager
         public App()
         {
             this.InitializeComponent();
-
-            platform = new SQLitePlatformWinRT();
-
-            iocContainer = new UnityContainer();
-
-            DependencyResolver.RegisterTypes(iocContainer);
-
             this.Suspending += this.OnSuspending;
+
+            databaseName = "FinanceManager.sqlite";
+            databasePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, databaseName);
+            platform = new SQLitePlatformWinRT();
+            container = UnityConfig.Container;
+
+            if (!DatabaseExists(databaseName).Result)
+            {
+                _dataInitService = container.Resolve<IDataInitService>();
+                _dataInitService.Initialize();
+            }
+
+            _currencyRateService = container.Resolve<ICurrencyRatesService>();
+
+            _currencyRateService.UpdateExchangeRates();
         }
 
         /// <summary>
@@ -119,7 +129,6 @@ namespace FinanceManager
                 // configuring the new page by passing required information as a navigation
                 // parameter
                 if (!rootFrame.Navigate(typeof(LoginPage), e.Arguments))
-                //if (!rootFrame.Navigate(typeof(FinanceManager.View.Temporary.MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -154,6 +163,21 @@ namespace FinanceManager
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private async Task<bool> DatabaseExists(string databaseName)
+        {
+            try
+            {
+                var folder = ApplicationData.Current.LocalFolder;
+                var file = await folder.GetFileAsync(databaseName) as IStorageFile;
+
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
     }
 }

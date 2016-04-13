@@ -158,6 +158,15 @@
     <Compile Include="View\MoneyBoxPage.xaml.cs">
       <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Temporary\CategoriesPage.xaml.cs">
+      <DependentUpon>CategoriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Temporary\CurrenciesPage.xaml.cs">
+      <DependentUpon>CurrenciesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Temporary\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Temporary\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -167,11 +176,19 @@
     <Compile Include="View\Temporary\MoneyBoxPage.xaml.cs">
       <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Temporary\RegisterPage.xaml.cs">
+      <DependentUpon>RegisterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Temporary\StartupPage.xaml.cs">
+      <DependentUpon>StartupPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\appbar.cabinet.files.light.png" />
     <Content Include="Assets\Icons\appbar.cabinet.files.variant.png" />
     <Content Include="Assets\Icons\appbar.calendar.month.png" />
     <Content Include="Assets\Icons\appbar.clothes.shirt.png" />
+    <Content Include="Assets\Icons\appbar.currency.dollar.light.png" />
     <Content Include="Assets\Icons\appbar.currency.dollar.png" />
     <Content Include="Assets\Icons\appbar.drinks.beer.png" />
     <Content Include="Assets\Icons\appbar.film.png" />
@@ -180,11 +197,15 @@
     <Content Include="Assets\Icons\appbar.gift.png" />
     <Content Include="Assets\Icons\appbar.graph.line.up.png" />
     <Content Include="Assets\Icons\appbar.iphone.png" />
+    <Content Include="Assets\Icons\appbar.journal.light.png" />
+    <Content Include="Assets\Icons\appbar.list.hidden.light.png" />
     <Content Include="Assets\Icons\appbar.list.png" />
     <Content Include="Assets\Icons\appbar.man.suitcase.png" />
     <Content Include="Assets\Icons\appbar.medical.pill.png" />
+    <Content Include="Assets\Icons\appbar.money.light.png" />
     <Content Include="Assets\Icons\appbar.money.png" />
     <Content Include="Assets\Icons\appbar.page.text.png" />
+    <Content Include="Assets\Icons\appbar.settings.light.png" />
     <Content Include="Assets\Icons\appbar.settings.png" />
     <Content Include="Assets\Icons\appbar.transit.depart.png" />
     <Content Include="Assets\Logo.scale-240.png" />
@@ -193,6 +214,7 @@
     <Content Include="Assets\Square71x71Logo.scale-240.png" />
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\WideLogo.scale-240.png" />
+    <Content Include="Assets\yanpix-logo.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -245,6 +267,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Temporary\CategoriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\CurrenciesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Temporary\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -254,6 +288,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Temporary\MoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\RegisterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Temporary\StartupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

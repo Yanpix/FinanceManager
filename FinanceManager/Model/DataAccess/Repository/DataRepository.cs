@@ -28,7 +28,7 @@ namespace FinanceManager.Model.DataAccess.Repository
         {
             _path = App.databasePath;
 
-            _platform = new SQLitePlatformWinRT();
+            _platform = App.platform;
 
             InitializeDatabase();
         }

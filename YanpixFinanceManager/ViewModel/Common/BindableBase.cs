@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FinanceManager.ViewModel
+namespace YanpixFinanceManager.ViewModel.Common
 {
     public class BindableBase : INotifyPropertyChanged
     {

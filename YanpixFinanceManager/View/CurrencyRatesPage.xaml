@@ -1,0 +1,87 @@
+﻿<Page
+    x:Class="YanpixFinanceManager.View.CurrencyRatesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:YanpixFinanceManager.View"
+    xmlns:conv="using:YanpixFinanceManager.View.Common.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <conv:DecimalConverter x:Key="DecimalConverter"/>
+    </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Sync" Label="Update" Command="{Binding UpdateCommand, Mode=TwoWay}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <Image Source="/Assets/yanpix-logo.png" Width="40" Height="40"/>
+                <TextBlock Text="Finance Manager" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </StackPanel>
+            <TextBlock Text="Exchange Rates" Margin="0,20,0,20" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="19,0,19,0">
+            <ComboBox 
+                ItemsSource="{Binding FromCurrencies}" 
+                SelectedItem="{Binding SelectedFromCurrency, Mode=TwoWay}"
+                DisplayMemberPath="Title"
+                Header="Currency to exchange" 
+                PlaceholderText="Select Currency"/>
+            <TextBox 
+                Text="{Binding Amount, Mode=TwoWay, Converter={StaticResource DecimalConverter}}"
+                Header="Amount" 
+                InputScope="Number"
+                PlaceholderText="Amount"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="2" x:Name="ContentRoot" Margin="19,0,0,0">
+            <ListBox Margin="19,0,19,0" Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
+                        ItemsSource="{Binding ToCurrencies}"
+                        SelectedItem="{Binding SelectedToCurrency, Mode=TwoWay}"
+                        SelectionMode="Single">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="{Binding Currency.Image}" Width="50"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Value}" VerticalAlignment="Center" FontSize="25"/>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <TextBlock Text="&#160;" VerticalAlignment="Center" FontSize="25"/>
+                                <TextBlock Text="{Binding Currency.Abbreviation}" VerticalAlignment="Center" FontSize="25"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Page>

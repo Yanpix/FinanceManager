@@ -1,0 +1,124 @@
+﻿<Page
+    x:Class="YanpixFinanceManager.View.MoneyBoxesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:YanpixFinanceManager.View"
+    xmlns:conv="using:YanpixFinanceManager.View.Common.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <conv:BoolToRedGreenConverter x:Name="BoolToPositiveConverter"/>
+    </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="Create New" Command="{Binding CreateNewCommand, Mode=TwoWay}"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <Image Source="/Assets/yanpix-logo.png" Width="40" Height="40"/>
+                <TextBlock Text="Finance Manager" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </StackPanel>
+            <TextBlock Text="Money Boxes" Margin="0,20,0,20" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,0,19,0">
+            <ListBox 
+                x:Name="listMoneyBoxes" 
+                HorizontalAlignment="Stretch" 
+                Background="{x:Null}"
+                ItemsSource="{Binding MoneyBoxes}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                        <Setter Property="Margin" Value="0,0,0,10"></Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.Resources>
+                                <conv:WidthScaleConverter x:Name="IncomeWidthScaleConverter"
+                                  ScaleFactor="{Binding IncomeScaleFactor}"/>
+                                <conv:WidthScaleConverter x:Name="ExpenceWidthScaleConverter"
+                                  ScaleFactor="{Binding ExpenceScaleFactor}"/>
+                                <conv:WidthScaleConverter x:Name="BalanceWidthScaleConverter"
+                                  ScaleFactor="{Binding BalanceScaleFactor}"/>
+                                <conv:WidthScaleConverter x:Name="BudgetWidthScaleConverter"
+                                  ScaleFactor="{Binding BudgetScaleFactor}"/>
+                                <conv:WidthScaleConverter x:Name="AvailableWidthScaleConverter"
+                                  ScaleFactor="{Binding AvailableScaleFactor}"/>
+                                <conv:RightMarginConverter x:Name="BalanceMarginConverter"
+                                   ScaleFactor="{Binding BalanceMarginScaleFactor}"/>
+                                <conv:RightMarginConverter x:Name="AvailableMarginConverter"
+                                   ScaleFactor="{Binding AvailableMarginScaleFactor}"/>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Margin="0,0,5,0" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6" Background="{ThemeResource PhoneAccentBrush}" />
+
+                            <Rectangle Grid.Column="2" x:Name="MeasureSize" HorizontalAlignment="Stretch">
+                                <Rectangle.Resources>
+                                    <conv:ActualSizePropertyProxy Element="{Binding ElementName=MeasureSize}" x:Name="SizeProxy"/>
+                                </Rectangle.Resources>
+                            </Rectangle>
+
+                            <Image Grid.Column="0" Source="{Binding Image}" Width="50" Margin="-5"/>
+                            <TextBlock Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Title}" VerticalAlignment="Center" FontSize="25" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Text="Income" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,0,5,0" Text="Expence" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" Text="Balance" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,5,0" Text="Budget" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Margin="0,0,5,0" Text="Available" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Income}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Expence}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Balance}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Budget}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Available}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+
+                            <Rectangle Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource IncomeWidthScaleConverter}}"/>
+                            <Rectangle Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource ExpenceWidthScaleConverter}}"/>
+                            <Rectangle Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsBalancePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceMarginConverter}}" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceWidthScaleConverter}}"/>
+
+                            <Rectangle Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BudgetWidthScaleConverter}}"/>
+                            <Rectangle Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsAvailablePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableMarginConverter}}" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableWidthScaleConverter}}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Page>
