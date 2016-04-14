@@ -94,6 +94,7 @@
     <Compile Include="Model\DataAccess\Services\IDataInitService.cs" />
     <Compile Include="Model\Entities\CurrencyExchange.cs" />
     <Compile Include="Model\Entities\Enums\CurrencyType.cs" />
+    <Compile Include="Model\Entities\Setting.cs" />
     <Compile Include="ViewModel\AddNewCategoryViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\Common\BindableBase.cs" />
@@ -112,7 +113,9 @@
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MoneyBoxesViewModel.cs" />
+    <Compile Include="ViewModel\MoneyBoxViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="View\AddNewCategoryPage.xaml.cs">
       <DependentUpon>AddNewCategoryPage.xaml</DependentUpon>
     </Compile>
@@ -167,8 +170,14 @@
     <Compile Include="View\MoneyBoxesPage.xaml.cs">
       <DependentUpon>MoneyBoxesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\MoneyBoxPage.xaml.cs">
+      <DependentUpon>MoneyBoxPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -269,7 +278,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\RegisterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

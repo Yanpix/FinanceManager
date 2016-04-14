@@ -43,7 +43,8 @@
                 x:Name="listMoneyBoxes" 
                 HorizontalAlignment="Stretch" 
                 Background="{x:Null}"
-                ItemsSource="{Binding MoneyBoxes}">
+                ItemsSource="{Binding MoneyBoxes}"
+                SelectedItem="{Binding SelectedMoneyBox, Mode=TwoWay}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="0"/>

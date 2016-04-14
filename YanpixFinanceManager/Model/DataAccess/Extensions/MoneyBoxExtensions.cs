@@ -18,7 +18,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
                             r.Type == ReportingPeriodType.Month)
                         .OrderBy(o => o.Period)
                         .Select(s => s.Income)
-                        .FirstOrDefault();
+                        .LastOrDefault();
         }
 
         public static decimal GetExpenceForLastMonth(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
@@ -28,7 +28,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
                             r.Type == ReportingPeriodType.Month)
                         .OrderBy(o => o.Period)
                         .Select(s => s.Expence)
-                        .FirstOrDefault();
+                        .LastOrDefault();
         }
 
         public static decimal GetBalanceForLastMonth(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
@@ -38,7 +38,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
                             r.Type == ReportingPeriodType.Month)
                         .OrderBy(o => o.Period)
                         .Select(s => s.Balance)
-                        .FirstOrDefault();
+                        .LastOrDefault();
         }
 
         public static decimal GetBudgetForLastMonth(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
@@ -48,7 +48,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
                             r.Type == ReportingPeriodType.Month)
                         .OrderBy(o => o.Period)
                         .Select(s => s.Budget)
-                        .FirstOrDefault();
+                        .LastOrDefault();
         }
 
         public static decimal GetBudgetBalanceForLastMonth(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
@@ -58,7 +58,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
                             r.Type == ReportingPeriodType.Month)
                         .OrderBy(o => o.Period)
                         .Select(s => s.BudgetBalance)
-                        .FirstOrDefault();
+                        .LastOrDefault();
         }
 
         public static MoneyBox ExistingMoneyBox(this IEntityBaseService<MoneyBox> moneyBoxService, string title, int primaryCurrencyId)
@@ -66,6 +66,22 @@ namespace YanpixFinanceManager.Model.DataAccess.Extensions
             return moneyBoxService.GetAll()
                 .Where(m => m.Title == title && m.PrimaryCurrencyId == primaryCurrencyId)
                 .FirstOrDefault();
+        }
+
+        public static ReportingPeriod GetLastYearPeriod(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
+        {
+            return reportingPeriodService.GetAll()
+                    .Where(x => x.MoneyBoxId == moneyBoxId && x.Type == ReportingPeriodType.Year)
+                    .OrderBy(o => o.Period)
+                    .Last();
+        }
+
+        public static ReportingPeriod GetLastMonthPeriod(this IEntityBaseService<ReportingPeriod> reportingPeriodService, int moneyBoxId)
+        {
+            return reportingPeriodService.GetAll()
+                    .Where(x => x.MoneyBoxId == moneyBoxId && x.Type == ReportingPeriodType.Month)
+                    .OrderBy(o => o.Period)
+                    .Last();
         }
     }
 }

@@ -135,7 +135,7 @@ namespace YanpixFinanceManager.ViewModel
 
         private void SettingsAction(object e)
         {
-            _navigationService.Navigate(typeof(MainPage));
+            _navigationService.Navigate(typeof(SettingsPage));
         }
 
         #endregion

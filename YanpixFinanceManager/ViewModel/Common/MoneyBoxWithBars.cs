@@ -11,6 +11,21 @@ namespace YanpixFinanceManager.ViewModel.Common
     {
         private decimal _maxValue;
 
+        private int _id { get; set; }
+
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _image;
 
         public string Image
@@ -268,14 +283,14 @@ namespace YanpixFinanceManager.ViewModel.Common
         {
             if (!Income.Equals(0.0M) || !Expence.Equals(0.0M) || !Budget.Equals(0.0M))
             {
-                _incomeScaleFactor = Income.Equals(_maxValue) ? 1.0 : (double)(Income / _maxValue);
-                _expenceScaleFactor = Expence.Equals(_maxValue) ? 1.0 : (double)(Expence / _maxValue);
-                _budgetScaleFactor = Budget.Equals(_maxValue) ? 1.0 : (double)(Budget / _maxValue);
-                _balanceScaleFactor = (double)(Math.Abs(Income - Expence) / _maxValue);
-                _availableScaleFactor = (double)(Math.Abs(Budget - Expence) / _maxValue);
+                _incomeScaleFactor = Math.Round(Income.Equals(_maxValue) ? 1.0 : (double)(Income / _maxValue), 2);
+                _expenceScaleFactor = Math.Round(Expence.Equals(_maxValue) ? 1.0 : (double)(Expence / _maxValue), 2);
+                _budgetScaleFactor = Math.Round(Budget.Equals(_maxValue) ? 1.0 : (double)(Budget / _maxValue), 2);
+                _balanceScaleFactor = Math.Round((double)(Math.Abs(Income - Expence) / _maxValue), 2);
+                _availableScaleFactor = Math.Round((double)(Math.Abs(Budget - Expence) / _maxValue), 2);
 
-                _balanceMarginScaleFactor = !Budget.Equals(_maxValue) ? 0.0 : (double)(Math.Abs(Budget - Math.Max(Income, Expence)) / _maxValue);
-                _availableMarginScaleFactor = Budget > Expence ? (double)(Math.Abs(_maxValue - Budget) / _maxValue) : (double)(Math.Abs(_maxValue - Expence) / _maxValue);
+                _balanceMarginScaleFactor = Math.Round(!Budget.Equals(_maxValue) ? 0.0 : (double)(Math.Abs(Budget - Math.Max(Income, Expence)) / _maxValue), 2);
+                _availableMarginScaleFactor = Math.Round(Budget > Expence ? (double)(Math.Abs(_maxValue - Budget) / _maxValue) : (double)(Math.Abs(_maxValue - Expence) / _maxValue), 2);
 
                 _isBalancePositive = Income > Expence;
                 _isAvailablePositive = Budget > Expence;

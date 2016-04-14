@@ -68,6 +68,9 @@ namespace YanpixFinanceManager
 
             _currencyRateService = container.Resolve<ICurrencyRatesService>();
 
+            _dataInitService = container.Resolve<IDataInitService>();
+            _dataInitService.CheckReportingPeriods();
+
             _currencyRateService.UpdateExchangeRates();
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YanpixFinanceManager.Model.Entities;
 using YanpixFinanceManager.Model.Entities.Enums;
+using YanpixFinanceManager.Model.DataAccess.Extensions;
 
 namespace YanpixFinanceManager.Model.DataAccess.Services
 {
@@ -22,12 +23,15 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
 
         private IEntityBaseService<ReportingPeriod> _reportingPeriodsService;
 
+        private IEntityBaseService<Setting> _settingsService;
+
         public DataInitService(IEntityBaseService<Category> categoryService,
             IEntityBaseService<Currency> currencyService,
             IEntityBaseService<CurrencyExchange> currencyExchangeService,
             IEntityBaseService<Account> accountService,
             IEntityBaseService<MoneyBox> moneyBoxesService,
-            IEntityBaseService<ReportingPeriod> reportingPeriodsService)
+            IEntityBaseService<ReportingPeriod> reportingPeriodsService,
+            IEntityBaseService<Setting> settingsService)
         {
             _categoryService = categoryService;
             _currencyService = currencyService;
@@ -35,6 +39,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
             _accountService = accountService;
             _moneyBoxesService = moneyBoxesService;
             _reportingPeriodsService = reportingPeriodsService;
+            _settingsService = settingsService;
         }
 
         public void Initialize()
@@ -193,7 +198,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
             ReportingPeriod euroMoneyBoxMarch2016Period = new ReportingPeriod()
             {
                 Type = ReportingPeriodType.Month,
-                Period = DateTime.Now,
+                Period = DateTime.Now.AddMonths(-1),
                 Income = 10000M,
                 Expence = 5000M,
                 Budget = 7000M,
@@ -227,7 +232,7 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
             ReportingPeriod dollarMoneyBoxMarch2016Period = new ReportingPeriod()
             {
                 Type = ReportingPeriodType.Month,
-                Period = DateTime.Now,
+                Period = DateTime.Now.AddMonths(-1),
                 Income = 7000M,
                 Expence = 8000M,
                 Budget = 5000M,
@@ -240,6 +245,77 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
             dollarMoneyBoxMarch2016Period.ParentPeriod = _reportingPeriodsService.Get(3);
 
             _reportingPeriodsService.Update(dollarMoneyBoxMarch2016Period, true);
+
+            Setting setting = new Setting()
+            {
+                TransferBalance = true,
+                PeriodStartDay = 15
+            };
+
+            _settingsService.Insert(setting, false, false);
+        }
+
+        public void CheckReportingPeriods()
+        {
+            int nowYear = DateTime.Now.Year;
+            int nowDay = DateTime.Now.Day;
+            int nowMonth = DateTime.Now.Month;
+
+            Setting settings = _settingsService.GetAll().First();
+
+            bool transferBalance = settings.TransferBalance;
+            int startingDay = settings.PeriodStartDay;
+
+            List<MoneyBox> moneyBoxes = _moneyBoxesService.GetAll().ToList();
+
+
+            foreach (MoneyBox moneyBox in moneyBoxes)
+            {
+                ReportingPeriod lastYearPeriod = _reportingPeriodsService.GetLastYearPeriod(moneyBox.Id);
+                ReportingPeriod lastMonthPeriod = _reportingPeriodsService.GetLastMonthPeriod(moneyBox.Id);
+
+                if (nowYear > lastYearPeriod.Period.Year)
+                {
+                    ReportingPeriod newYearPeriod = new ReportingPeriod()
+                    {
+                        Type = ReportingPeriodType.Year,
+                        Period = DateTime.Now,
+                        Income = transferBalance && (lastYearPeriod.Balance >= 0M) ? lastYearPeriod.Balance : 0M,
+                        Expence = transferBalance && (lastYearPeriod.Balance < 0M) ? Math.Abs(lastYearPeriod.Balance) : 0M,
+                        Budget = moneyBox.YearBudget,
+                    };
+
+                    _reportingPeriodsService.Insert(newYearPeriod, false, false);
+
+                    newYearPeriod.MoneyBox = _moneyBoxesService.Get(moneyBox.Id);
+
+                    newYearPeriod.ParentPeriod = null;
+
+                    _reportingPeriodsService.Update(newYearPeriod, true);
+
+                    lastYearPeriod = newYearPeriod;
+                }
+
+                if (nowDay >= startingDay && nowMonth > lastMonthPeriod.Period.Month)
+                {
+                    ReportingPeriod newMonthPeriod = new ReportingPeriod()
+                    {
+                        Type = ReportingPeriodType.Month,
+                        Period = DateTime.Now,
+                        Income = transferBalance && (lastMonthPeriod.Balance >= 0M) ? lastMonthPeriod.Balance : 0M,
+                        Expence = transferBalance && (lastMonthPeriod.Balance < 0M) ? Math.Abs(lastMonthPeriod.Balance) : 0M,
+                        Budget = moneyBox.MonthBudget,
+                    };
+
+                    _reportingPeriodsService.Insert(newMonthPeriod, false, false);
+
+                    newMonthPeriod.MoneyBox = _moneyBoxesService.Get(moneyBox.Id);
+
+                    newMonthPeriod.ParentPeriod = lastYearPeriod;
+
+                    _reportingPeriodsService.Update(newMonthPeriod, true);
+                }
+            }
         }
     }
 }

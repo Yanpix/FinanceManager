@@ -24,6 +24,8 @@ namespace YanpixFinanceManager.ViewModel
 
         private IEntityBaseService<MoneyBox> _moneyBoxesService;
 
+        private IDataInitService _dataInitService;
+
         private IPlatformEvents _platformEvents;
 
         private Dictionary<string, object> _navigationData;
@@ -31,15 +33,19 @@ namespace YanpixFinanceManager.ViewModel
         public MoneyBoxesViewModel(INavigationService navigationService,
             IEntityBaseService<MoneyBox> moneyBoxesService,
             IEntityBaseService<ReportingPeriod> reportingPeriodService,
-            IPlatformEvents platformEvents)
+            IPlatformEvents platformEvents,
+            IDataInitService dataInitService)
         {
             _navigationService = navigationService;
             _moneyBoxesService = moneyBoxesService;
             _reportingPeriodService = reportingPeriodService;
             _platformEvents = platformEvents;
+            _dataInitService = dataInitService;
             _navigationData = new Dictionary<string, object>();
 
             _platformEvents.BackButtonPressed += BackButtonPressed;
+
+            _dataInitService.CheckReportingPeriods();
         }
 
         #endregion
@@ -93,6 +99,26 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private MoneyBoxWithBars _selectedMoneyBox;
+
+        public MoneyBoxWithBars SelectedMoneyBox
+        {
+            get
+            {
+                if (_selectedMoneyBox == null)
+                    _selectedMoneyBox = new MoneyBoxWithBars();
+
+                return _selectedMoneyBox;
+            }
+            set
+            {
+                _selectedMoneyBox = value;
+                OnPropertyChanged();
+                _navigationData.Add("MoneyBoxId", _selectedMoneyBox.Id);
+                _navigationService.Navigate(typeof(MoneyBoxPage), _navigationData);
+            }
+        }
+
         #endregion
 
         #region Helping Methods
@@ -103,11 +129,12 @@ namespace YanpixFinanceManager.ViewModel
                 _moneyBoxesService.GetAll()
                 .Select(x => new MoneyBoxWithBars()
                 {
+                    Id = x.Id,
                     Income = _reportingPeriodService.GetIncomeForLastMonth(x.Id),
                     Expence = _reportingPeriodService.GetExpenceForLastMonth(x.Id),
-                    Balance = Math.Abs(_reportingPeriodService.GetBalanceForLastMonth(x.Id)),
+                    Balance = _reportingPeriodService.GetBalanceForLastMonth(x.Id),
                     Budget = _reportingPeriodService.GetBudgetForLastMonth(x.Id),
-                    Available = Math.Abs(_reportingPeriodService.GetBudgetBalanceForLastMonth(x.Id)),
+                    Available = _reportingPeriodService.GetBudgetBalanceForLastMonth(x.Id),
                     Image = x.PrimaryCurrency.Image,
                     Title = x.Title
                 }));

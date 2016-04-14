@@ -3,5 +3,7 @@
     public interface IDataInitService
     {
         void Initialize();
+
+        void CheckReportingPeriods();
     }
 }
