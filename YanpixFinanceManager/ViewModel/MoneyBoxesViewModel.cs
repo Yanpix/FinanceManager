@@ -136,7 +136,8 @@ namespace YanpixFinanceManager.ViewModel
                     Budget = _reportingPeriodService.GetBudgetForLastMonth(x.Id),
                     Available = _reportingPeriodService.GetBudgetBalanceForLastMonth(x.Id),
                     Image = x.PrimaryCurrency.Image,
-                    Title = x.Title
+                    Title = x.Title,
+                    CurrencySymbol = x.PrimaryCurrency.Symbol
                 }));
         }
 

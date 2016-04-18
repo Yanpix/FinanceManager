@@ -55,7 +55,7 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid x:Name="DataTemplateGrid">
                             <Grid.Resources>
                                 <conv:WidthScaleConverter x:Name="IncomeWidthScaleConverter"
                                   ScaleFactor="{Binding IncomeScaleFactor}"/>
@@ -71,6 +71,48 @@
                                    ScaleFactor="{Binding BalanceMarginScaleFactor}"/>
                                 <conv:RightMarginConverter x:Name="AvailableMarginConverter"
                                    ScaleFactor="{Binding AvailableMarginScaleFactor}"/>
+                                
+                                <EventTrigger x:Name="AnimationTrigger">
+                                    <BeginStoryboard>
+                                        <Storyboard x:Name="BarAnimation">
+                                            <DoubleAnimation 
+                                                Storyboard.TargetName="IncomeBar"
+                                                Storyboard.TargetProperty="Width"
+                                                EnableDependentAnimation="True"
+                                                From="0"
+                                                To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource IncomeWidthScaleConverter}}"
+                                                Duration="0:0:1"/>
+                                            <DoubleAnimation 
+                                                Storyboard.TargetName="ExpenceBar"
+                                                Storyboard.TargetProperty="Width"
+                                                EnableDependentAnimation="True"
+                                                From="0"
+                                                To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource ExpenceWidthScaleConverter}}"
+                                                Duration="0:0:1"/>
+                                            <DoubleAnimation 
+                                                Storyboard.TargetName="BalanceBar"
+                                                Storyboard.TargetProperty="Width"
+                                                EnableDependentAnimation="True"
+                                                From="0"
+                                                To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceWidthScaleConverter}}"
+                                                Duration="0:0:1"/>
+                                            <DoubleAnimation 
+                                                Storyboard.TargetName="BudgetBar"
+                                                Storyboard.TargetProperty="Width"
+                                                EnableDependentAnimation="True"
+                                                From="0"
+                                                To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BudgetWidthScaleConverter}}"
+                                                Duration="0:0:1"/>
+                                            <DoubleAnimation 
+                                                Storyboard.TargetName="AvailableBar"
+                                                Storyboard.TargetProperty="Width"
+                                                EnableDependentAnimation="True"
+                                                From="0"
+                                                To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableWidthScaleConverter}}"
+                                                Duration="0:0:1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
                             </Grid.Resources>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -110,12 +152,12 @@
                             <TextBlock Grid.Row="4" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Budget}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                             <TextBlock Grid.Row="5" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Available}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
 
-                            <Rectangle Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource IncomeWidthScaleConverter}}"/>
-                            <Rectangle Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource ExpenceWidthScaleConverter}}"/>
-                            <Rectangle Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsBalancePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceMarginConverter}}" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceWidthScaleConverter}}"/>
+                            <Rectangle x:Name="IncomeBar" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="0"/>
+                            <Rectangle x:Name="ExpenceBar" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="0"/>
+                            <Rectangle x:Name="BalanceBar" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsBalancePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BalanceMarginConverter}}" Width="0"/>
 
-                            <Rectangle Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource BudgetWidthScaleConverter}}"/>
-                            <Rectangle Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsAvailablePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableMarginConverter}}" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableWidthScaleConverter}}"/>
+                            <Rectangle x:Name="BudgetBar" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="0"/>
+                            <Rectangle x:Name="AvailableBar" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Fill="{Binding IsAvailablePositive, Converter={StaticResource BoolToPositiveConverter}}" Margin="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource AvailableMarginConverter}}" Width="0"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

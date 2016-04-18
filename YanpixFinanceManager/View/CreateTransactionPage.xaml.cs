@@ -14,7 +14,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using YanpixFinanceManager.ViewModel;
 using Microsoft.Practices.Unity;
-using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -23,13 +22,13 @@ namespace YanpixFinanceManager.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MoneyBoxesPage : Page
+    public sealed partial class CreateTransactionPage : Page
     {
-        public MoneyBoxesPage()
+        public CreateTransactionPage()
         {
             this.InitializeComponent();
 
-            this.DataContext = App.container.Resolve<MoneyBoxesViewModel>();
+            this.DataContext = App.container.Resolve<CreateTransactionViewModel>();
         }
 
         /// <summary>

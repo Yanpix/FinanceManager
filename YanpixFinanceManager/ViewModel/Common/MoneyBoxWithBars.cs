@@ -41,6 +41,21 @@ namespace YanpixFinanceManager.ViewModel.Common
             }
         }
 
+        private string _currencySymbol;
+
+        public string CurrencySymbol
+        {
+            get
+            {
+                return _currencySymbol;
+            }
+            set
+            {
+                _currencySymbol = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _title;
 
         public string Title

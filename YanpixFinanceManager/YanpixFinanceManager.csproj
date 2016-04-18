@@ -108,6 +108,7 @@
     <Compile Include="ViewModel\Common\PlatformEvents.cs" />
     <Compile Include="ViewModel\Common\ValidationErrors.cs" />
     <Compile Include="ViewModel\CreateMoneyBoxViewModel.cs" />
+    <Compile Include="ViewModel\CreateTransactionViewModel.cs" />
     <Compile Include="ViewModel\CurrenciesViewModel.cs" />
     <Compile Include="ViewModel\CurrencyRatesViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
@@ -124,6 +125,9 @@
     </Compile>
     <Compile Include="View\Common\Converters\ActualSizePropertyProxy.cs" />
     <Compile Include="View\Common\Converters\BoolToRedGreenConverter.cs" />
+    <Compile Include="View\Common\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\Common\Converters\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="View\Common\Converters\DateTimeToStringConverter.cs" />
     <Compile Include="View\Common\Converters\DecimalConverter.cs" />
     <Compile Include="View\Common\Converters\RightMarginConverter.cs" />
     <Compile Include="View\Common\Converters\WidthScaleConverter.cs" />
@@ -154,6 +158,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\CreateMoneyBoxPage.xaml.cs">
       <DependentUpon>CreateMoneyBoxPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateTransactionPage.xaml.cs">
+      <DependentUpon>CreateTransactionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CurrenciesPage.xaml.cs">
       <DependentUpon>CurrenciesPage.xaml</DependentUpon>
@@ -216,6 +223,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Jace, Version=0.8.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jace.0.8.7\lib\wpa81\Jace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -255,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CreateMoneyBoxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CreateTransactionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
