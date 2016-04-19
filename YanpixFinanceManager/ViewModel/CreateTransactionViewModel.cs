@@ -1,10 +1,15 @@
 ﻿using Jace;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using YanpixFinanceManager.Model.DataAccess.Extensions;
+using YanpixFinanceManager.Model.DataAccess.Services;
+using YanpixFinanceManager.Model.Entities;
+using YanpixFinanceManager.Model.Entities.Enums;
 using YanpixFinanceManager.View;
 using YanpixFinanceManager.ViewModel.Common;
 
@@ -16,15 +21,41 @@ namespace YanpixFinanceManager.ViewModel
 
         private INavigationService _navigationService;
 
+        private IEntityBaseService<Category> _categoriesService;
+
+        private IEntityBaseService<Transaction> _transactionService;
+
+        private IEntityBaseService<ReportingPeriod> _reportingPeriodsService;
+
+        private IEntityBaseService<Currency> _currenciesService;
+
+        private IEntityBaseService<MoneyBox> _moneyBoxesService;
+
+        private ICurrencyRatesService _currencyRatesService;
+
         private IPlatformEvents _platformEvents;
 
         public CreateTransactionViewModel(INavigationService navigationService, 
-            IPlatformEvents platformEvents)
+            IPlatformEvents platformEvents,
+            IEntityBaseService<Category> categoriesService,
+            IEntityBaseService<Transaction> transactionService,
+            IEntityBaseService<ReportingPeriod> reportingPeriodsService,
+            IEntityBaseService<Currency> currenciesService,
+            ICurrencyRatesService currencyRatesService,
+            IEntityBaseService<MoneyBox> moneyBoxesService)
         {
             _navigationService = navigationService;
             _platformEvents = platformEvents;
+            _categoriesService = categoriesService;
+            _transactionService = transactionService;
+            _reportingPeriodsService = reportingPeriodsService;
+            _currenciesService = currenciesService;
+            _currencyRatesService = currencyRatesService;
+            _moneyBoxesService = moneyBoxesService;
 
             _platformEvents.BackButtonPressed += BackButtonPressed;
+
+            _transactionType = InitCategoryType();
         }
 
         #endregion
@@ -361,12 +392,92 @@ namespace YanpixFinanceManager.ViewModel
 
         private void AcceptAction(object e)
         {
-            ;
+            if (IsCalculatorOpened)
+            {
+                IsCalculatorOpened = false;
+                IsCalculatorClosed = true;
+
+                Amount = Result;
+            }
+            else
+            {
+                Validate();
+
+                if (IsValid)
+                {
+                    object moneyBoxId = _navigationService.GetNavigationData("MoneyBoxId");
+
+                    MoneyBox moneyBox = new MoneyBox();
+
+                    if (moneyBoxId != null)
+                        moneyBox = _moneyBoxesService.Get((int)moneyBoxId, true);
+
+                    Transaction transaction = new Transaction()
+                    {
+                        Value = moneyBox.PrimaryCurrency.Equals(SelectedCurrency) ? 
+                            Amount : 
+                            _currencyRatesService.Exchange(
+                                SelectedCurrency.Abbreviation.ToString(), 
+                                moneyBox.PrimaryCurrency.Abbreviation.ToString(), 
+                                Amount),
+                        ToPrimaryCoeff = _currencyRatesService.GetExchangeCoeff(
+                            SelectedCurrency.Abbreviation.ToString(),
+                            moneyBox.PrimaryCurrency.Abbreviation.ToString()),
+                        Note = Notes,
+                        Created = CreationDate,
+                        Type = (TransactionType)Enum.Parse(typeof(TransactionType), TransactionType.ToString()),
+                    };
+
+                    _transactionService.Insert(transaction, false, false);
+
+                    transaction.Category = _categoriesService.Get(SelectedCategory.Id);
+
+                    transaction.Currency = _currenciesService.Get(SelectedCurrency.Id);
+
+                    ReportingPeriod period = _reportingPeriodsService.GetAll()
+                        .Where(x => x.Period.Month == CreationDate.Month &&
+                            x.Period.Year == CreationDate.Year &&
+                            x.Type == ReportingPeriodType.Month &&
+                            x.MoneyBoxId == moneyBox.Id)
+                            .SingleOrDefault();
+
+                    ReportingPeriod parentPeriod = period.ParentPeriod;
+
+                    if (TransactionType == 0)
+                    {
+                        period.Income = period.Income + transaction.Value;
+                        parentPeriod.Income = parentPeriod.Income + transaction.Value;
+                    }
+                    else
+                    {
+                        period.Expence = period.Expence - transaction.Value;
+                        parentPeriod.Expence = parentPeriod.Expence - transaction.Value;
+                    }
+
+                    _reportingPeriodsService.Insert(period, true, false);
+
+                    _reportingPeriodsService.Insert(parentPeriod, true, false);
+
+                    transaction.ReportingPeriod = period;
+
+                    _transactionService.Update(transaction, true);
+
+                    _navigationService.Navigate(typeof(MoneyBoxPage));
+                }
+            }
         }
 
         private void CancelAction(object e)
         {
-            ;
+            if (IsCalculatorOpened)
+            {
+                IsCalculatorOpened = false;
+                IsCalculatorClosed = true;
+            }
+            else
+            {
+                _navigationService.Navigate(typeof(MoneyBoxPage));
+            }
         }
 
         #region Calculator Command Actions
@@ -492,6 +603,184 @@ namespace YanpixFinanceManager.ViewModel
 
         #region Properties
 
+        private decimal _amount = 0M;
+
+        public decimal Amount
+        {
+            get
+            {
+                return _amount;
+            }
+            set
+            {
+                _amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _transactionType;
+
+        public int TransactionType
+        {
+            get
+            {
+                return _transactionType;
+            }
+            set
+            {
+                _transactionType = value;
+                OnPropertyChanged();
+                OnPropertyChanged("IncomeType");
+                OnPropertyChanged("ExpenceType");
+                Categories = InitCategories();
+            }
+        }
+
+        public bool IncomeType
+        {
+            get { return TransactionType.Equals(0); }
+            set { TransactionType = 0; }
+        }
+
+        public bool ExpenceType
+        {
+            get { return TransactionType.Equals(1); }
+            set { TransactionType = 1; }
+        }
+
+        private DateTime _creationDate = DateTime.Now;
+
+        public DateTime CreationDate
+        {
+            get
+            {
+                return _creationDate;
+            }
+            set
+            {
+                _creationDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _notes = "";
+
+        public string Notes
+        {
+            get
+            {
+                return _notes;
+            }
+            set
+            {
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Category> _categories;
+
+        public ObservableCollection<Category> Categories
+        {
+            get
+            {
+                if (_categories == null)
+                    _categories = InitCategories();
+                return _categories;
+            }
+            set
+            {
+                _categories = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Category _selectedCategory;
+
+        public Category SelectedCategory
+        {
+            get
+            {
+                if (_selectedCategory == null)
+                    _selectedCategory = new Category();
+                return _selectedCategory;
+            }
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Currency> _currencies;
+
+        public ObservableCollection<Currency> Currencies
+        {
+            get
+            {
+                if (_currencies == null)
+                    _currencies = InitCurrencies();
+                return _currencies;
+            }
+            set
+            {
+                _currencies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Currency _selectedCurrency;
+
+        public Currency SelectedCurrency
+        {
+            get
+            {
+                if (_selectedCurrency == null)
+                    _selectedCurrency = new Currency();
+                return _selectedCurrency;
+            }
+            set
+            {
+                _selectedCurrency = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isCalculatorClosed = true;
+
+        public bool IsCalculatorClosed
+        {
+            get
+            {
+                return _isCalculatorClosed;
+            }
+            set
+            {
+                _isCalculatorClosed = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isCalculatorOpened = false;
+
+        public bool IsCalculatorOpened
+        {
+            get
+            {
+                return _isCalculatorOpened;
+            }
+            set
+            {
+                _isCalculatorOpened = value;
+                OnPropertyChanged();
+                if (_isCalculatorOpened)
+                {
+                    Result = 0M;
+                    Expression = "";
+                }
+            }
+        }
+
         #region Calculator Properties
 
         private decimal _result;
@@ -528,6 +817,62 @@ namespace YanpixFinanceManager.ViewModel
 
         #endregion
 
+        #region Validation
+
+        private ValidationErrors _validationErrors;
+
+        public ValidationErrors ValidationErrors
+        {
+            get
+            {
+                if (_validationErrors == null)
+                    _validationErrors = new ValidationErrors();
+                return _validationErrors;
+            }
+            set
+            {
+                _validationErrors = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isValid = false;
+
+        public bool IsValid
+        {
+            get
+            {
+                return _isValid;
+            }
+            private set
+            {
+                _isValid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void Validate()
+        {
+            ValidationErrors.Clear();
+
+            if (Amount.CompareTo(0M) == 0)
+                ValidationErrors["Amount"] = "Amount is required";
+            else if (Amount.CompareTo(0M) < 0)
+                ValidationErrors["Amount"] = "Must be positive";
+
+            if (SelectedCategory.Id == 0)
+                ValidationErrors["Category"] = "Category is required";
+
+            if (SelectedCurrency.Id == 0)
+                ValidationErrors["Currency"] = "Currency is required";
+
+            IsValid = ValidationErrors.IsValid;
+
+            OnPropertyChanged("ValidationErrors");
+        }
+
+        #endregion
+
         #region Helping methods
 
         private void Calculate()
@@ -535,6 +880,29 @@ namespace YanpixFinanceManager.ViewModel
             CalculationEngine engine = new CalculationEngine();
 
             Result = (decimal)engine.Calculate(Expression.Replace('÷', '/').Replace('×', '*'));
+        }
+
+        private int InitCategoryType()
+        {
+            object transactionType = _navigationService.GetNavigationData("TransactionType");
+
+            if (transactionType != null)
+                return (int)transactionType;
+            else
+                return 0;
+        }
+
+        private ObservableCollection<Category> InitCategories()
+        {
+            if (TransactionType == 0)
+                return new ObservableCollection<Category>(_categoriesService.GetIncomeCategories());
+            else
+                return new ObservableCollection<Category>(_categoriesService.GetExpenceCategories());
+        }
+
+        private ObservableCollection<Currency> InitCurrencies()
+        {
+            return new ObservableCollection<Currency>(_currenciesService.GetAll());
         }
 
         #endregion

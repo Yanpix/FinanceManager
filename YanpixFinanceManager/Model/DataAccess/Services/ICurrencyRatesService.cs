@@ -9,5 +9,9 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
     public interface ICurrencyRatesService
     {
         Task UpdateExchangeRates();
+
+        decimal Exchange(string from, string to, decimal amount);
+
+        decimal GetExchangeCoeff(string from, string to);
     }
 }

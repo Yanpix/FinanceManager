@@ -106,12 +106,16 @@ namespace YanpixFinanceManager.ViewModel
 
         private void IncomeAction(object e)
         {
-            _navigationService.Navigate(typeof(CreateTransactionPage));
+            _navigationData.Add("TransactionType", 0);
+            _navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            _navigationService.Navigate(typeof(CreateTransactionPage), _navigationData);
         }
 
         private void ExpenceAction(object e)
         {
-            _navigationService.Navigate(typeof(CreateTransactionPage));
+            _navigationData.Add("TransactionType", 1);
+            _navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            _navigationService.Navigate(typeof(CreateTransactionPage), _navigationData);
         }
 
         #endregion

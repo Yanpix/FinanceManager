@@ -39,5 +39,21 @@ namespace YanpixFinanceManager.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
+        private void Flyout_Opened(object sender, object e)
+        {
+            var vm = (CreateTransactionViewModel)DataContext;
+
+            vm.IsCalculatorOpened = true;
+            vm.IsCalculatorClosed = false;
+        }
+
+        private void Flyout_Closed(object sender, object e)
+        {
+            var vm = (CreateTransactionViewModel)DataContext;
+
+            vm.IsCalculatorOpened = false;
+            vm.IsCalculatorClosed = true;
+        }
     }
 }

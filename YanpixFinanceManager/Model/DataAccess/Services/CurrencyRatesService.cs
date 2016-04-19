@@ -23,6 +23,24 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
             _currencyExchangeService = currencyExchangeService;
         }
 
+        public decimal Exchange(string from, string to, decimal amount)
+        {
+            decimal coeff = _currencyExchangeService.GetAll()
+                .Where(x => x.From.Equals(from) && x.To.Equals(to))
+                .Select(s => s.Value)
+                .SingleOrDefault();
+
+            return amount * coeff;
+        }
+
+        public decimal GetExchangeCoeff(string from, string to)
+        {
+            return _currencyExchangeService.GetAll()
+                .Where(x => x.From.Equals(from) && x.To.Equals(to))
+                .Select(s => s.Value)
+                .SingleOrDefault();
+        }
+
         public async Task UpdateExchangeRates()
         {
             _dollarExchangeRates = await GetExchangeRatesFromWeb();
