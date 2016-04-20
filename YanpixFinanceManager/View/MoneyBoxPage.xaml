@@ -16,6 +16,9 @@
         <conv:BoolToVisibilityConverter x:Name="BoolToVisibilityConverter"/>
         <conv:DateTimeToStringConverter x:Name="DateTimeToStringConverter" IsMonthPeriod="{Binding MonthVisible}"/>
         <conv:DateTimeToDateTimeOffsetConverter x:Name="DateTimeToDateTimeOffsetConverter"/>
+        <conv:DecimalConverter x:Name="DecimalConverter"/>
+        <conv:DateTimeToFullStringConverter x:Name="DateTimeToFullStringConverter"/>
+        <conv:TransactionTypeToSymbolConverter x:Name="TypeToSymbolConverter"/>
 
         <Style x:Key="CustomPivotStyle" TargetType="Pivot">
             <Setter Property="Margin" Value="0"/>
@@ -78,15 +81,36 @@
     </Page.Resources>
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar x:Name="CommandBar">
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="Income" Command="{Binding IncomeCommand, Mode=TwoWay}"/>
-                <AppBarButton Icon="Remove" Label="Expence" Command="{Binding ExpenceCommand, Mode=TwoWay}"/>
+                <AppBarButton Icon="Add" Label="Income" Command="{Binding IncomeCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Icon="Filter" Label="Filter" Click="FilterAppBarButton_Click" Visibility="{Binding FilterCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout x:Name="FilterFlyout" Placement="Top">
+                            <MenuFlyoutItem Text="All" Command="{Binding FilterAllCommand, Mode=TwoWay}"/>
+                            <MenuFlyoutItem Text="Incomes" Command="{Binding FilterIncomesCommand, Mode=TwoWay}"/>
+                            <MenuFlyoutItem Text="Expences" Command="{Binding FilterExpencesCommand, Mode=TwoWay}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+                <AppBarButton Icon="Sort" Label="Sort" Click="SortAppBarButton_Click" Visibility="{Binding SortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout x:Name="SortFlyout" Placement="Top">
+                            <MenuFlyoutItem Text="By Date" Command="{Binding SortByDateCommand, Mode=TwoWay}" Visibility="{Binding TransactionsSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <MenuFlyoutItem Text="By Amount" Command="{Binding SortByAmountCommand, Mode=TwoWay}" Visibility="{Binding TransactionsSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <MenuFlyoutItem Text="By Category" Command="{Binding SortByCategoryCommand, Mode=TwoWay}" Visibility="{Binding TransactionsSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <MenuFlyoutItem Text="By Currency" Command="{Binding SortByCurrencyCommand, Mode=TwoWay}" Visibility="{Binding TransactionsSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <MenuFlyoutItem Text="Ascending" Command="{Binding AscendingCommand, Mode=TwoWay}" Visibility="{Binding CategoriesSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <MenuFlyoutItem Text="Descending" Command="{Binding DescendingCommand, Mode=TwoWay}" Visibility="{Binding CategoriesSortCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+                <AppBarButton Icon="Remove" Label="Expence" Command="{Binding ExpenceCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton Label="{Binding ShowYearCommandContent}" Command="{Binding ShowYearCommand, Mode=TwoWay}"/>
-                <AppBarButton Label="Edit money box" Command="{Binding EditCommand, Mode=TwoWay}"/>
-                <AppBarButton Label="Delete money box" Command="{Binding DeleteCommand, Mode=TwoWay}"/>
+                <AppBarButton Label="Edit money box" Command="{Binding EditCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="Delete money box" Command="{Binding DeleteCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -120,7 +144,7 @@
                 <PivotItem Margin="19,0,19,0">
                     <PivotItem.Header>
                         <StackPanel>
-                            <TextBlock Text="Dashboard" FontSize="40"/>
+                            <TextBlock Text="Summary" FontSize="40"/>
                         </StackPanel>
                     </PivotItem.Header>
                     <Grid Margin="0,10,0,0">
@@ -179,7 +203,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0" Text="Income:" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding MoneyBox.Income}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding MoneyBox.Income, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="&#160;" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding MoneyBox.CurrencySymbol}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
@@ -212,7 +236,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0" Text="Expence:" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding MoneyBox.Expence}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding MoneyBox.Expence, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="&#160;" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding MoneyBox.CurrencySymbol}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
@@ -245,7 +269,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" >
                                     <TextBlock Margin="0,0,10,0" Text="Balance:" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding MoneyBox.Balance}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding MoneyBox.Balance, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="&#160;" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding MoneyBox.CurrencySymbol}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
@@ -275,7 +299,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0" Text="Budget:" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding MoneyBox.Budget}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding MoneyBox.Budget, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="&#160;" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding MoneyBox.CurrencySymbol}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
@@ -308,7 +332,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0">
                                     <TextBlock Margin="0,0,10,0" Text="Available:" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                                    <TextBlock Text="{Binding MoneyBox.Available}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                                    <TextBlock Text="{Binding MoneyBox.Available, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="&#160;" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                     <TextBlock Text="{Binding MoneyBox.CurrencySymbol}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                                 </StackPanel>
@@ -340,24 +364,73 @@
                             <TextBlock Text="Transactions" FontSize="40"/>
                         </StackPanel>
                     </PivotItem.Header>
-                    <ListBox Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
-                        ItemsSource="{Binding ExpenceCategories}" 
-                        SelectionMode="Multiple">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="help:ListBoxSelectionHelper.IsSelectedContinerBinding" 
-                            Value="IsSelected"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Entity.Image}" Width="50"/>
-                                    <TextBlock Text="{Binding Entity.Title}" VerticalAlignment="Center" FontSize="25"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                            <Image Grid.Column="0" Source="{Binding MoneyBox.Image}" Width="50" Margin="-5"/>
+                            <TextBlock Text="{Binding MoneyBox.Title}" VerticalAlignment="Center" FontSize="30" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                        </StackPanel>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2.5*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding FilterOption}" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" />
+                                <TextBlock Text="{Binding SortOption}" FontSize="20" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding Period, Converter={StaticResource DateTimeToStringConverter}}" FontSize="20" VerticalAlignment="Center" Margin="0"/>
+                                <AppBarButton Icon="Calendar" IsCompact="True" VerticalAlignment="Center" Margin="5,-8,0,0">
+                                    <AppBarButton.Flyout>
+                                        <DatePickerFlyout x:Name="DatePicker2" DayVisible="False" MonthVisible="{Binding MonthVisible}" Date="{Binding Period, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"/>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>
+                            </StackPanel>
+                        </Grid>
+                        <ListBox Margin="0,10,0,0"
+                                 x:Name="ListTransactions"
+                            Grid.Row="2" 
+                            Background="{x:Null}" 
+                            Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
+                            ItemsSource="{Binding Transactions}">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="Margin" Value="0,0,0,5"></Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.3*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,20,0" VerticalAlignment="Center">
+                                            <SymbolIcon Symbol="{Binding Type, Converter={StaticResource TypeToSymbolConverter}}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Value}" FontSize="30" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding Currency.Symbol}" FontSize="30" Margin="0,0,5,0"/>
+                                        </StackPanel>
+                                        <Rectangle Grid.Column="1" Fill="{ThemeResource PhoneLowBrush}"/>
+                                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5,0,0,0">
+                                            <TextBlock Text="{Binding Created, Converter={StaticResource DateTimeToFullStringConverter}}" FontSize="20"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <Image Source="{Binding Category.Image}" Margin="-10" Width="60"/>
+                                                <TextBlock Text="{Binding Category.Title}" FontSize="20" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
                 </PivotItem>
                 <PivotItem Margin="19,0,19,0">
                     <PivotItem.Header>
@@ -365,50 +438,112 @@
                             <TextBlock Text="Categories" FontSize="40"/>
                         </StackPanel>
                     </PivotItem.Header>
-                    <ListBox Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
-                        ItemsSource="{Binding ExpenceCategories}" 
-                        SelectionMode="Multiple">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="help:ListBoxSelectionHelper.IsSelectedContinerBinding" 
-                            Value="IsSelected"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Entity.Image}" Width="50"/>
-                                    <TextBlock Text="{Binding Entity.Title}" VerticalAlignment="Center" FontSize="25"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </PivotItem>
-                <PivotItem Margin="19,0,19,0">
-                    <PivotItem.Header>
-                        <StackPanel>
-                            <TextBlock Text="Analitycs" FontSize="40"/>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                            <Image Grid.Column="0" Source="{Binding MoneyBox.Image}" Width="50" Margin="-5"/>
+                            <TextBlock Text="{Binding MoneyBox.Title}" VerticalAlignment="Center" FontSize="30" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                         </StackPanel>
-                    </PivotItem.Header>
-                    <ListBox Background="{x:Null}" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
-                        ItemsSource="{Binding ExpenceCategories}" 
-                        SelectionMode="Multiple">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="help:ListBoxSelectionHelper.IsSelectedContinerBinding" 
-                            Value="IsSelected"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Entity.Image}" Width="50"/>
-                                    <TextBlock Text="{Binding Entity.Title}" VerticalAlignment="Center" FontSize="25"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2.5*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding FilterOption}" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" />
+                                <TextBlock Text="{Binding SortOption}" FontSize="20" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding Period, Converter={StaticResource DateTimeToStringConverter}}" FontSize="20" VerticalAlignment="Center" Margin="0"/>
+                                <AppBarButton Icon="Calendar" IsCompact="True" VerticalAlignment="Center" Margin="5,-8,0,0">
+                                    <AppBarButton.Flyout>
+                                        <DatePickerFlyout x:Name="DatePicker3" DayVisible="False" MonthVisible="{Binding MonthVisible}" Date="{Binding Period, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"/>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>
+                            </StackPanel>
+                        </Grid>
+                        <ListBox Margin="0,10,0,0"
+                                 x:Name="ListCategories"
+                            Grid.Row="2" 
+                            Background="{x:Null}" 
+                            Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
+                                 ItemsSource="{Binding Categories}">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="Margin" Value="0,0,0,5"></Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.Resources>
+                                            <conv:WidthScaleConverter x:Name="ValueWidthScaleConverter"
+                                                ScaleFactor="{Binding ValueScaleFactor}"/>
+                                            <conv:WidthScaleConverter x:Name="PersentWidthScaleConverter"
+                                                ScaleFactor="{Binding PersentScaleFactor}"/>
+                                            <EventTrigger x:Name="AnimationTrigger">
+                                                <BeginStoryboard>
+                                                    <Storyboard x:Name="BarAnimation">
+                                                        <DoubleAnimation 
+                                                            Storyboard.TargetName="ValueBar"
+                                                            Storyboard.TargetProperty="Width"
+                                                            EnableDependentAnimation="True"
+                                                            From="0"
+                                                            To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource ValueWidthScaleConverter}}"
+                                                            Duration="0:0:1"/>
+                                                        <DoubleAnimation 
+                                                            Storyboard.TargetName="PersentBar"
+                                                            Storyboard.TargetProperty="Width"
+                                                            EnableDependentAnimation="True"
+                                                            From="{Binding ElementName=SizeProxy, Path=ActualWidthValue}"
+                                                            To="{Binding ElementName=SizeProxy, Path=ActualWidthValue, Converter={StaticResource PersentWidthScaleConverter}}"
+                                                            Duration="0:0:1"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Rectangle Grid.Column="2" x:Name="MeasureSize" HorizontalAlignment="Stretch">
+                                            <Rectangle.Resources>
+                                                <conv:ActualSizePropertyProxy Element="{Binding ElementName=MeasureSize}" x:Name="SizeProxy"/>
+                                            </Rectangle.Resources>
+                                        </Rectangle>
+
+                                        <Image Grid.Column="0" Grid.Row="1" Source="{Binding Image}" Margin="-10" Width="50"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Title}" FontSize="20" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <TextBlock  Text="{Binding Value, Converter={StaticResource DecimalConverter}}" FontSize="15" Margin="0,0,5,0"/>
+                                            <TextBlock  Text="{Binding CurrencySymbol}" FontSize="15"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock  Text="{Binding Persent, Converter={StaticResource DecimalConverter}}"  FontSize="15" Margin="0,0,5,0"/>
+                                            <TextBlock  Text="%"  FontSize="15"/>
+                                        </StackPanel>
+                                        <Rectangle x:Name="ValueBar" Grid.Column="2" Grid.Row="1" Fill="{Binding IsPositive, Converter={StaticResource BoolToPositiveConverter}}" Height="15" VerticalAlignment="Center" Width="0" HorizontalAlignment="Left"/>
+                                        <Rectangle x:Name="PersentBar" Grid.Column="2" Grid.Row="1" Fill="{ThemeResource PhoneMidBrush}" Height="15" Width="{Binding ElementName=SizeProxy, Path=ActualWidthValue}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
                 </PivotItem>
+                
 
             </Pivot>
         </Grid>

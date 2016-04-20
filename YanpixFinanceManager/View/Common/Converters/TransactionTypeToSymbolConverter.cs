@@ -3,31 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using YanpixFinanceManager.Model.Entities.Enums;
 
 namespace YanpixFinanceManager.View.Common.Converters
 {
-    public class DecimalConverter : IValueConverter
+    public class TransactionTypeToSymbolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal dec = (decimal)value;
+            TransactionType type = (TransactionType)value;
 
-            return Math.Round(dec, 2);
+            if (type == 0)
+                return "Add";
+            else
+                return "Remove";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            decimal number;
-
-            if (decimal.TryParse(value.ToString(), out number))
-            {
-                return number;
-            }
-            else
-            {
-                return null;
-            }
+            throw new NotImplementedException();
         }
     }
 }

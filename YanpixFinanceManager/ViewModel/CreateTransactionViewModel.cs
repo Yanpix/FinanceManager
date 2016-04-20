@@ -414,12 +414,7 @@ namespace YanpixFinanceManager.ViewModel
 
                     Transaction transaction = new Transaction()
                     {
-                        Value = moneyBox.PrimaryCurrency.Equals(SelectedCurrency) ? 
-                            Amount : 
-                            _currencyRatesService.Exchange(
-                                SelectedCurrency.Abbreviation.ToString(), 
-                                moneyBox.PrimaryCurrency.Abbreviation.ToString(), 
-                                Amount),
+                        Value = Amount,
                         ToPrimaryCoeff = _currencyRatesService.GetExchangeCoeff(
                             SelectedCurrency.Abbreviation.ToString(),
                             moneyBox.PrimaryCurrency.Abbreviation.ToString()),
@@ -443,15 +438,21 @@ namespace YanpixFinanceManager.ViewModel
 
                     ReportingPeriod parentPeriod = period.ParentPeriod;
 
+                    decimal ratedAmount = moneyBox.PrimaryCurrency.Id.Equals(SelectedCurrency.Id) ? Amount :
+                            _currencyRatesService.Exchange(
+                                SelectedCurrency.Abbreviation.ToString(),
+                                moneyBox.PrimaryCurrency.Abbreviation.ToString(),
+                                Amount);
+
                     if (TransactionType == 0)
                     {
-                        period.Income = period.Income + transaction.Value;
-                        parentPeriod.Income = parentPeriod.Income + transaction.Value;
+                        period.Income = period.Income + ratedAmount;
+                        parentPeriod.Income = parentPeriod.Income + ratedAmount;
                     }
                     else
                     {
-                        period.Expence = period.Expence - transaction.Value;
-                        parentPeriod.Expence = parentPeriod.Expence - transaction.Value;
+                        period.Expence = period.Expence + ratedAmount;
+                        parentPeriod.Expence = parentPeriod.Expence + ratedAmount;
                     }
 
                     _reportingPeriodsService.Insert(period, true, false);

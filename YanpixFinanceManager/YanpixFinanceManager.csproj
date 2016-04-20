@@ -98,6 +98,7 @@
     <Compile Include="ViewModel\AddNewCategoryViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\Common\BindableBase.cs" />
+    <Compile Include="ViewModel\Common\CategoryWithBar.cs" />
     <Compile Include="ViewModel\Common\CurrencyRate.cs" />
     <Compile Include="ViewModel\Common\DelegateCommand.cs" />
     <Compile Include="ViewModel\Common\EntitySelection.cs" />
@@ -128,10 +129,12 @@
     <Compile Include="View\Common\Converters\BoolToRedGreenConverter.cs" />
     <Compile Include="View\Common\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Common\Converters\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="View\Common\Converters\DateTimeToFullStringConverter.cs" />
     <Compile Include="View\Common\Converters\DateTimeToStringConverter.cs" />
     <Compile Include="View\Common\Converters\DecimalConverter.cs" />
     <Compile Include="View\Common\Converters\IntToTransactionTypeConverter.cs" />
     <Compile Include="View\Common\Converters\RightMarginConverter.cs" />
+    <Compile Include="View\Common\Converters\TransactionTypeToSymbolConverter.cs" />
     <Compile Include="View\Common\Converters\WidthScaleConverter.cs" />
     <Compile Include="View\Common\ListBoxSelectionHelper.cs" />
     <Compile Include="View\Common\NavigationHelper.cs" />

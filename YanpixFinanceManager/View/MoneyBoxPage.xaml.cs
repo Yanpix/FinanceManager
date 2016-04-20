@@ -39,5 +39,15 @@ namespace YanpixFinanceManager.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
+        private void FilterAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterFlyout.ShowAt(CommandBar);
+        }
+
+        private void SortAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            SortFlyout.ShowAt(CommandBar);
+        }
     }
 }

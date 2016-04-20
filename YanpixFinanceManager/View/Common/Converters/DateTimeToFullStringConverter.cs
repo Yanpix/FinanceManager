@@ -1,33 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace YanpixFinanceManager.View.Common.Converters
 {
-    public class DecimalConverter : IValueConverter
+    public class DateTimeToFullStringConverter : DependencyObject, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal dec = (decimal)value;
+            DateTime period = (DateTime)value;
 
-            return Math.Round(dec, 2);
+            return period.ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            decimal number;
-
-            if (decimal.TryParse(value.ToString(), out number))
-            {
-                return number;
-            }
-            else
-            {
-                return null;
-            }
+            throw new NotImplementedException();
         }
     }
 }

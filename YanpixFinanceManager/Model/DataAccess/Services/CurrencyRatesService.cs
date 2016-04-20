@@ -35,7 +35,10 @@ namespace YanpixFinanceManager.Model.DataAccess.Services
 
         public decimal GetExchangeCoeff(string from, string to)
         {
-            return _currencyExchangeService.GetAll()
+            if (from.Equals(to))
+                return 1M;
+            else
+                return _currencyExchangeService.GetAll()
                 .Where(x => x.From.Equals(from) && x.To.Equals(to))
                 .Select(s => s.Value)
                 .SingleOrDefault();

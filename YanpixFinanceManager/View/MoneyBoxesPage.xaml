@@ -11,6 +11,7 @@
 
     <Page.Resources>
         <conv:BoolToRedGreenConverter x:Name="BoolToPositiveConverter"/>
+        <conv:DecimalConverter x:Name="DecimalConverter"/>
     </Page.Resources>
     
     <Page.BottomAppBar>
@@ -146,11 +147,11 @@
                             <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,5,0" Text="Budget" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
                             <TextBlock Grid.Row="5" Grid.Column="1" Margin="0,0,5,0" Text="Available" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Income}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                            <TextBlock Grid.Row="2" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Expence}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Balance}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                            <TextBlock Grid.Row="4" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Budget}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
-                            <TextBlock Grid.Row="5" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Available}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Income, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Expence, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Balance, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Budget, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Available, Converter={StaticResource DecimalConverter}}" FontSize="19" Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"/>
 
                             <Rectangle x:Name="IncomeBar" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="0"/>
                             <Rectangle x:Name="ExpenceBar" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Fill="{ThemeResource PhoneMidBrush}" Margin="0,5,0,5" Width="0"/>
