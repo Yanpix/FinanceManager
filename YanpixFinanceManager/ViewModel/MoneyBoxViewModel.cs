@@ -104,6 +104,22 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private ICommand _deleteMoneyBoxCommand;
+
+        public ICommand DeleteMoneyBoxCommand
+        {
+            get
+            {
+                if (_deleteMoneyBoxCommand == null)
+                    _deleteMoneyBoxCommand = new DelegateCommand((e) => DeleteMoneyBoxAction(e));
+                return _deleteMoneyBoxCommand;
+            }
+            private set
+            {
+                _deleteMoneyBoxCommand = value;
+            }
+        }
+
         private ICommand _filterAllCommand;
 
         public ICommand FilterAllCommand
@@ -272,6 +288,12 @@ namespace YanpixFinanceManager.ViewModel
             _navigationData.Add("TransactionType", 1);
             _navigationData.Add("MoneyBoxId", MoneyBox.Id);
             _navigationService.Navigate(typeof(CreateTransactionPage), _navigationData);
+        }
+
+        private void DeleteMoneyBoxAction(object e)
+        {
+            _moneyBoxService.Delete(MoneyBox.Id);
+            _navigationService.Navigate(typeof(MainPage), _navigationData);
         }
 
         private void FilterAllAction(object e)

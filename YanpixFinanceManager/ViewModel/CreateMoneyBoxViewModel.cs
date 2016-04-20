@@ -211,7 +211,10 @@ namespace YanpixFinanceManager.ViewModel
         {
             ValidationErrors.Clear();
 
-            MoneyBox existingMoneyBox = _moneyBoxService.ExistingMoneyBox(MoneyBox.Title, SelectedPrimaryCurrency.Id);
+            MoneyBox existingMoneyBox = null;
+
+            if (SelectedPrimaryCurrency != null)
+                existingMoneyBox = _moneyBoxService.ExistingMoneyBox(MoneyBox.Title, SelectedPrimaryCurrency.Id);
 
             if (string.IsNullOrEmpty(MoneyBox.Title))
                 ValidationErrors["Title"] = "Title is required";
