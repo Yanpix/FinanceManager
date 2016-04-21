@@ -120,6 +120,16 @@
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>
                 </AppBarButton>
+                <AppBarButton Label="View notes" Visibility="{Binding TransactionsSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}" Click="ViewNotesFlyoutButton_Click">
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout x:Name="ViewNotesFlyout" Placement="Bottom">
+                            <StackPanel Orientation="Vertical" Margin="10" Height="100">
+                                <TextBlock Text="{Binding Notes}" TextWrapping="Wrap" FontSize="20"/>
+                                <Button Content="Ok" HorizontalAlignment="Center" Click="NotesOkFlyoutButton_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -406,7 +416,8 @@
                             Grid.Row="2" 
                             Background="{x:Null}" 
                             Foreground="{ThemeResource ListBoxItemSelectedForegroundThemeBrush}"
-                            ItemsSource="{Binding Transactions}">
+                            ItemsSource="{Binding Transactions}"
+                                 SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Padding" Value="5"/>

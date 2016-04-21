@@ -38,7 +38,6 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button 
                 Grid.Row="0" 
@@ -97,27 +96,9 @@
                     </Grid>
                 </Button.Content>
             </Button>
+
             <Button 
                 Grid.Row="3" 
-                BorderThickness="4" 
-                VerticalAlignment="Stretch" 
-                HorizontalAlignment="Stretch"  
-                HorizontalContentAlignment="Left" 
-                Background="{ThemeResource PhoneLowBrush}"
-                Command="{Binding ActivitiesCommand, Mode=TwoWay}">
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Icons/Light/appbar.journal.light.png"/>
-                        <TextBlock Grid.Column="1" Text="Activities" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="35"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button 
-                Grid.Row="4" 
                 BorderThickness="4" 
                 VerticalAlignment="Stretch" 
                 HorizontalAlignment="Stretch"  

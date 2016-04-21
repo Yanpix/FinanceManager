@@ -129,14 +129,14 @@ namespace YanpixFinanceManager.ViewModel
             if (SelectedPivot == 0)
             {
                 foreach (Category category in IncomeCategories.Where(x => x.IsSelected == true).Select(x => x.Entity))
-                {
+                {                    
                     _categoryService.Delete(category.Id);
                 }
             }
             else if (SelectedPivot == 1)
             {
                 foreach (Category category in ExpenceCategories.Where(x => x.IsSelected == true).Select(x => x.Entity))
-                {
+                {           
                     _categoryService.Delete(category.Id);
                 }
             }
@@ -149,9 +149,13 @@ namespace YanpixFinanceManager.ViewModel
         private void DeleteAllAction(object e)
         {
             if (SelectedPivot == 0)
+            {
                 _categoryService.DeleteAllIncomeCategories();
+            }
             else if (SelectedPivot == 1)
+            {
                 _categoryService.DeleteAllExpenceCategories();
+            }
 
             ClearSelection();
 

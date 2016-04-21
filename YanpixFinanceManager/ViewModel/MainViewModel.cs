@@ -77,22 +77,6 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
-        private ICommand _activitiesCommand;
-
-        public ICommand ActivitiesCommand
-        {
-            get
-            {
-                if (_activitiesCommand == null)
-                    _activitiesCommand = new DelegateCommand((e) => ActivitiesAction(e));
-                return _activitiesCommand;
-            }
-            private set
-            {
-                _activitiesCommand = value;
-            }
-        }
-
         private ICommand _settingsCommand;
 
         public ICommand SettingsCommand
@@ -126,11 +110,6 @@ namespace YanpixFinanceManager.ViewModel
         private void CurrenciesAction(object e)
         {
             _navigationService.Navigate(typeof(CurrenciesPage));
-        }
-
-        private void ActivitiesAction(object e)
-        {
-            _navigationService.Navigate(typeof(MainPage));
         }
 
         private void SettingsAction(object e)

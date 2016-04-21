@@ -59,5 +59,15 @@ namespace YanpixFinanceManager.View
         {
             DeleteMoneyBoxFlyout.Hide();
         }
+
+        private void ViewNotesFlyoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewNotesFlyout.ShowAt(CommandBar);
+        }
+
+        private void NotesOkFlyoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewNotesFlyout.Hide();
+        }
     }
 }

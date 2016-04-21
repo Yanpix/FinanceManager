@@ -402,6 +402,45 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private Transaction _selectedTransaction;
+
+        public Transaction SelectedTransaction
+        {
+            get
+            {
+                return _selectedTransaction;
+            }
+            set
+            {
+                _selectedTransaction = value;
+                OnPropertyChanged();
+                if (_selectedTransaction == null)
+                    Notes = "Select transaction to view notes";
+                else
+                {
+                    if (!string.IsNullOrEmpty(_selectedTransaction.Note))
+                        Notes = _selectedTransaction.Note;
+                    else
+                        Notes = "Notes haven't been specified on selected transaction";
+                }
+            }
+        }
+
+        private string _notes;
+
+        public string Notes
+        {
+            get
+            {
+                return _notes;
+            }
+            set
+            {
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<CategoryWithBar> _categories;
 
         public ObservableCollection<CategoryWithBar> Categories
@@ -489,6 +528,7 @@ namespace YanpixFinanceManager.ViewModel
                         SortCommandsVisible = false;
                         MoneyBoxCommandsVisible = true;
                         MoneyBoxSecondaryCommandsVisible = true;
+                        TransactionsSecondaryCommandsVisible = false;
                         break;
                     case 1:
                         FilterCommandsVisible = true;
@@ -497,6 +537,7 @@ namespace YanpixFinanceManager.ViewModel
                         TransactionsSortCommandsVisible = true;
                         CategoriesSortCommandsVisible = false;
                         MoneyBoxSecondaryCommandsVisible = false;
+                        TransactionsSecondaryCommandsVisible = true;
                         FilterOption = "All";
                         SortOption = "By Date";
                         break;
@@ -507,6 +548,7 @@ namespace YanpixFinanceManager.ViewModel
                         CategoriesSortCommandsVisible = true;
                         MoneyBoxCommandsVisible = false;
                         MoneyBoxSecondaryCommandsVisible = false;
+                        TransactionsSecondaryCommandsVisible = false;
                         FilterOption = "All";
                         SortOption = "Descending";
                         break;
@@ -570,6 +612,21 @@ namespace YanpixFinanceManager.ViewModel
             set
             {
                 _moneyBoxSecondaryCommandsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _transactionsSecondaryCommandsVisible = false;
+
+        public bool TransactionsSecondaryCommandsVisible
+        {
+            get
+            {
+                return _transactionsSecondaryCommandsVisible;
+            }
+            set
+            {
+                _transactionsSecondaryCommandsVisible = value;
                 OnPropertyChanged();
             }
         }

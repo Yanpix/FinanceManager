@@ -20,14 +20,20 @@ namespace YanpixFinanceManager.ViewModel
 
         private IEntityBaseService<Account> _accountService;
 
+        private IPlatformEvents _platformEvents;
+
         private Dictionary<string, object> _navigationData;
 
         public LoginViewModel(INavigationService navigationService,
-            IEntityBaseService<Account> accountService)
+            IEntityBaseService<Account> accountService,
+            IPlatformEvents platformEvents)
         {
             _navigationService = navigationService;
             _accountService = accountService;
+            _platformEvents = platformEvents;
             _navigationData = new Dictionary<string, object>();
+
+            _platformEvents.BackButtonPressed += BackButtonPressed;
         }
 
         #endregion
@@ -168,6 +174,15 @@ namespace YanpixFinanceManager.ViewModel
                 Account = existingAccount;
 
             OnPropertyChanged("ValidationErrors");
+        }
+
+        #endregion
+
+        #region Platform Events
+
+        private void BackButtonPressed(object sender, EventArgs e)
+        {
+            _platformEvents.BackButtonPressed -= BackButtonPressed;
         }
 
         #endregion

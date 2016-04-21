@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using YanpixFinanceManager.View;
 
 namespace YanpixFinanceManager.ViewModel.Common
 {

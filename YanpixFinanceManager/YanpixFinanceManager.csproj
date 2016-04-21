@@ -137,10 +137,6 @@
     <Compile Include="View\Common\Converters\TransactionTypeToSymbolConverter.cs" />
     <Compile Include="View\Common\Converters\WidthScaleConverter.cs" />
     <Compile Include="View\Common\ListBoxSelectionHelper.cs" />
-    <Compile Include="View\Common\NavigationHelper.cs" />
-    <Compile Include="View\Common\ObservableDictionary.cs" />
-    <Compile Include="View\Common\RelayCommand.cs" />
-    <Compile Include="View\Common\SuspensionManager.cs" />
     <Compile Include="Common\UnityConfig.cs" />
     <Compile Include="Model\DataAccess\Extensions\AccountExtensions.cs" />
     <Compile Include="Model\DataAccess\Repositories\EntityBaseRepository.cs" />
@@ -150,10 +146,8 @@
     <Compile Include="Model\DataAccess\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Model\DataAccess\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Model\Entities\Account.cs" />
-    <Compile Include="Model\Entities\Activity.cs" />
     <Compile Include="Model\Entities\Common\IEntityBase.cs" />
     <Compile Include="Model\Entities\Currency.cs" />
-    <Compile Include="Model\Entities\Enums\ActivityType.cs" />
     <Compile Include="Model\Entities\Category.cs" />
     <Compile Include="Model\Entities\Enums\ReportingPeriodType.cs" />
     <Compile Include="Model\Entities\Enums\TransactionType.cs" />

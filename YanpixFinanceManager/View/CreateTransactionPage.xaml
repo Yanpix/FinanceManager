@@ -452,7 +452,7 @@
                 
 
                 <TextBox 
-                    Text="{Binding Notes}" 
+                    Text="{Binding Notes, Mode=TwoWay}" 
                     Header="Notes" 
                     PlaceholderText="Specify Notes" 
                     Margin="0,5,0,0"

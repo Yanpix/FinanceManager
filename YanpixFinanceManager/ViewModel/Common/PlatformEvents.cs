@@ -1,5 +1,7 @@
 ﻿using System;
 using Windows.Phone.UI.Input;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace YanpixFinanceManager.ViewModel.Common
 {
@@ -17,6 +19,7 @@ namespace YanpixFinanceManager.ViewModel.Common
             if (BackButtonPressed != null)
             {
                 BackButtonPressed(this, new EventArgs());
+
                 e.Handled = true;
             }
         }

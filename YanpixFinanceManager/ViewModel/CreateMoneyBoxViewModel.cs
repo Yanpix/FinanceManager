@@ -142,6 +142,7 @@ namespace YanpixFinanceManager.ViewModel
                     monthPeriod.ParentPeriod = _reportingPeriodsService.Get(yearPeriod.Id);
 
                     _reportingPeriodsService.Update(monthPeriod, true);
+
                 }
                 else
                 {
