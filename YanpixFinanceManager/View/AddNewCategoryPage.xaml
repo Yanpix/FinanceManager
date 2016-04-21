@@ -12,6 +12,7 @@
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand, Mode=TwoWay}"/>
+                <AppBarButton Icon="Cancel" Label="Cancel" Command="{Binding CancelCommand, Mode=TwoWay}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
             </CommandBar.SecondaryCommands>

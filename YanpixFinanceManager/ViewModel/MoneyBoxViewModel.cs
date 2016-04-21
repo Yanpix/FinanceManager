@@ -120,6 +120,22 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private ICommand _editMoneyBoxCommand;
+
+        public ICommand EditMoneyBoxCommand
+        {
+            get
+            {
+                if (_editMoneyBoxCommand == null)
+                    _editMoneyBoxCommand = new DelegateCommand((e) => EditMoneyBoxAction(e));
+                return _editMoneyBoxCommand;
+            }
+            private set
+            {
+                _editMoneyBoxCommand = value;
+            }
+        }
+
         private ICommand _filterAllCommand;
 
         public ICommand FilterAllCommand
@@ -294,6 +310,12 @@ namespace YanpixFinanceManager.ViewModel
         {
             _moneyBoxService.Delete(MoneyBox.Id);
             _navigationService.Navigate(typeof(MainPage), _navigationData);
+        }
+
+        private void EditMoneyBoxAction(object e)
+        {
+            _navigationData.Add("MoneyBoxId", MoneyBox.Id);
+            _navigationService.Navigate(typeof(CreateMoneyBoxPage), _navigationData);
         }
 
         private void FilterAllAction(object e)

@@ -60,6 +60,22 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private ICommand _cancelCommand;
+
+        public ICommand CancelCommand
+        {
+            get
+            {
+                if (_cancelCommand == null)
+                    _cancelCommand = new DelegateCommand((e) => CancelAction(e));
+                return _cancelCommand;
+            }
+            private set
+            {
+                _cancelCommand = value;
+            }
+        }
+
         #endregion
 
         #region Command Actions
@@ -78,6 +94,11 @@ namespace YanpixFinanceManager.ViewModel
 
                 _navigationService.Navigate(typeof(CategoriesPage), _navigationData);
             }
+        }
+
+        private void CancelAction(object e)
+        {
+            _navigationService.Navigate(typeof(CategoriesPage));
         }
 
         #endregion
@@ -102,7 +123,25 @@ namespace YanpixFinanceManager.ViewModel
                         "/Assets/Icons/Light/appbar.lightbulb.png",
                         "/Assets/Icons/Light/appbar.list.hidden.light.png",
                         "/Assets/Icons/Light/appbar.money.light.png",
-                        "/Assets/Icons/Light/appbar.settings.light.png"
+                        "/Assets/Icons/Light/appbar.settings.light.png",
+                        "/Assets/Icons/Light/appbar.baby.png",
+                        "/Assets/Icons/Light/appbar.book.hardcover.open.writing.png",
+                        "/Assets/Icons/Light/appbar.cart.png",
+                        "/Assets/Icons/Light/appbar.clean.png",
+                        "/Assets/Icons/Light/appbar.clothes.shirt.png",
+                        "/Assets/Icons/Light/appbar.creditcard.png",
+                        "/Assets/Icons/Light/appbar.cup.paper.png",
+                        "/Assets/Icons/Light/appbar.film.png",
+                        "/Assets/Icons/Light/appbar.food.apple.png",
+                        "/Assets/Icons/Light/appbar.food.png",
+                        "/Assets/Icons/Light/appbar.gas.png",
+                        "/Assets/Icons/Light/appbar.home.variant.png",
+                        "/Assets/Icons/Light/appbar.iphone.png",
+                        "/Assets/Icons/Light/appbar.man.suitcase.run.png",
+                        "/Assets/Icons/Light/appbar.medical.pill.png",
+                        "/Assets/Icons/Light/appbar.medical.pulse.png",
+                        "/Assets/Icons/Light/appbar.scissor.png",
+                        "/Assets/Icons/Light/appbar.transit.car.png"
                     };
 
                 return _images;

@@ -109,13 +109,13 @@
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton Label="{Binding ShowYearCommandContent}" Command="{Binding ShowYearCommand, Mode=TwoWay}"/>
-                <AppBarButton Label="Edit money box" Command="{Binding EditCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <AppBarButton Label="Edit money box" Command="{Binding EditMoneyBoxCommand, Mode=TwoWay}" Visibility="{Binding MoneyBoxSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <AppBarButton Label="Delete money box" Visibility="{Binding MoneyBoxSecondaryCommandsVisible, Converter={StaticResource BoolToVisibilityConverter}}" Click="DeleteMoneyBoxButton_Click">
                     <FlyoutBase.AttachedFlyout>
                         <Flyout x:Name="DeleteMoneyBoxFlyout" Placement="Bottom">
                             <StackPanel Orientation="Vertical" Margin="10" Height="100">
                                 <TextBlock Text="Are you sure you want to delete this money box?" TextWrapping="Wrap" FontSize="20"/>
-                                <Button Content="Delete" Command="{Binding DeleteMoneyBoxCommand, Mode=TwoWay}" HorizontalAlignment="Center"/>
+                                <Button Content="Delete" Command="{Binding DeleteMoneyBoxCommand, Mode=TwoWay}" HorizontalAlignment="Center" Click="DeleteMoneyBoxFlyoutButton_Click"/>
                             </StackPanel>
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>

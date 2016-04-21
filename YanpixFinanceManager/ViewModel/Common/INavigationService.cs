@@ -13,5 +13,6 @@ namespace YanpixFinanceManager.ViewModel.Common
         Dictionary<string, object> GetNavigationData();
         object GetNavigationData(string key);
         void GoBack();
+        void ClearNavigationData(string key);
     }
 }

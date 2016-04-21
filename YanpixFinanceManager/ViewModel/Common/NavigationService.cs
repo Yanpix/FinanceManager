@@ -55,5 +55,11 @@ namespace YanpixFinanceManager.ViewModel.Common
             }
             return null;
         }
+
+        public void ClearNavigationData(string key)
+        {
+            if (_navigationData.ContainsKey(key))
+                _navigationData.Remove(key);
+        }
     }
 }

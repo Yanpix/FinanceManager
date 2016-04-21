@@ -71,14 +71,32 @@
     </Page.Resources>
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar x:Name="CommandBar">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Add" Label="Add new" Command="{Binding AddNewCommand, Mode=TwoWay}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Clear selection" Command="{Binding ClearSelectionCommand, Mode=TwoWay}"/>
-                <AppBarButton Label="Delete selected" Command="{Binding DeleteSelectedCommand, Mode=TwoWay}"/>
-                <AppBarButton Label="Delete all" Command="{Binding DeleteAllCommand, Mode=TwoWay}"/>
+                <AppBarButton Label="Delete selected" Click="DeleteSelectedButton_Click">
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout x:Name="DeleteSelectedFlyout" Placement="Bottom">
+                            <StackPanel Orientation="Vertical" Margin="10" Height="100">
+                                <TextBlock Text="Are you sure you want to delete selected categories?" TextWrapping="Wrap" FontSize="20"/>
+                                <Button Content="Delete" Command="{Binding DeleteSelectedCommand, Mode=TwoWay}" HorizontalAlignment="Center" Click="DeleteSelectedFlyoutButton_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+                <AppBarButton Label="Delete all" Click="DeleteAllButton_Click">
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout x:Name="DeleteAllFlyout" Placement="Bottom">
+                            <StackPanel Orientation="Vertical" Margin="10" Height="100">
+                                <TextBlock Text="Are you sure you want to delete all categories?" TextWrapping="Wrap" FontSize="20"/>
+                                <Button Content="Delete" Command="{Binding DeleteAllCommand, Mode=TwoWay}" HorizontalAlignment="Center" Click="DeleteAllFlyoutButton_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

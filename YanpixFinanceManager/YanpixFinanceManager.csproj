@@ -198,7 +198,14 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\Light\appbar.baby.png" />
+    <Content Include="Assets\Icons\Light\appbar.book.hardcover.open.writing.png" />
     <Content Include="Assets\Icons\Light\appbar.cabinet.files.light.png" />
+    <Content Include="Assets\Icons\Light\appbar.cart.png" />
+    <Content Include="Assets\Icons\Light\appbar.clean.png" />
+    <Content Include="Assets\Icons\Light\appbar.clothes.shirt.png" />
+    <Content Include="Assets\Icons\Light\appbar.creditcard.png" />
+    <Content Include="Assets\Icons\Light\appbar.cup.paper.png" />
     <Content Include="Assets\Icons\Light\appbar.currency.cent.png" />
     <Content Include="Assets\Icons\Light\appbar.currency.dollar.light.png" />
     <Content Include="Assets\Icons\Light\appbar.currency.euro.png" />
@@ -206,13 +213,24 @@
     <Content Include="Assets\Icons\Light\appbar.currency.pound.png" />
     <Content Include="Assets\Icons\Light\appbar.currency.rubles.png" />
     <Content Include="Assets\Icons\Light\appbar.drinks.beer.png" />
+    <Content Include="Assets\Icons\Light\appbar.film.png" />
+    <Content Include="Assets\Icons\Light\appbar.food.apple.png" />
+    <Content Include="Assets\Icons\Light\appbar.food.png" />
     <Content Include="Assets\Icons\Light\appbar.food.silverware.png" />
+    <Content Include="Assets\Icons\Light\appbar.gas.png" />
     <Content Include="Assets\Icons\Light\appbar.gift.png" />
+    <Content Include="Assets\Icons\Light\appbar.home.variant.png" />
+    <Content Include="Assets\Icons\Light\appbar.iphone.png" />
     <Content Include="Assets\Icons\Light\appbar.journal.light.png" />
     <Content Include="Assets\Icons\Light\appbar.lightbulb.png" />
     <Content Include="Assets\Icons\Light\appbar.list.hidden.light.png" />
+    <Content Include="Assets\Icons\Light\appbar.man.suitcase.run.png" />
+    <Content Include="Assets\Icons\Light\appbar.medical.pill.png" />
+    <Content Include="Assets\Icons\Light\appbar.medical.pulse.png" />
     <Content Include="Assets\Icons\Light\appbar.money.light.png" />
+    <Content Include="Assets\Icons\Light\appbar.scissor.png" />
     <Content Include="Assets\Icons\Light\appbar.settings.light.png" />
+    <Content Include="Assets\Icons\Light\appbar.transit.car.png" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />

@@ -30,6 +30,10 @@ namespace YanpixFinanceManager.ViewModel
 
         private Dictionary<string, object> _navigationData;
 
+        private bool _isEdit = false;
+
+        private MoneyBox _moneyBox = null;
+
         public CreateMoneyBoxViewModel(INavigationService navigationService,
             IEntityBaseService<MoneyBox> moneyBoxService,
             IEntityBaseService<Currency> currenciesService,
@@ -44,6 +48,8 @@ namespace YanpixFinanceManager.ViewModel
             _navigationData = new Dictionary<string, object>();
 
             _platformEvents.BackButtonPressed += BackButtonPressed;
+
+            InitIfEdit();
         }
 
         #endregion
@@ -66,6 +72,22 @@ namespace YanpixFinanceManager.ViewModel
             }
         }
 
+        private ICommand _cancelCommand;
+
+        public ICommand CancelCommand
+        {
+            get
+            {
+                if (_cancelCommand == null)
+                    _cancelCommand = new DelegateCommand((e) => CancelAction(e));
+                return _cancelCommand;
+            }
+            private set
+            {
+                _cancelCommand = value;
+            }
+        }
+
         #endregion
 
         #region Command Actions
@@ -76,64 +98,135 @@ namespace YanpixFinanceManager.ViewModel
 
             if (IsValid)
             {
-                _moneyBoxService.Insert(MoneyBox, false, false);
-
-                MoneyBox.PrimaryCurrency = _currenciesService.Get(SelectedPrimaryCurrency.Id);
-
-                _moneyBoxService.Update(MoneyBox, true);
-
-                ReportingPeriod yearPeriod = new ReportingPeriod()
+                if (!_isEdit)
                 {
-                    Type = ReportingPeriodType.Year,
-                    Period = DateTime.Now,
-                    Budget = MoneyBox.YearBudget,
-                };
+                    MoneyBox newMoneyBox = new MoneyBox()
+                    {
+                        Title = Title,
+                        YearBudget = YearBudget,
+                        MonthBudget = MonthBudget
+                    };
 
-                _reportingPeriodsService.Insert(yearPeriod, false, false);
+                    _moneyBoxService.Insert(newMoneyBox, false, false);
 
-                yearPeriod.MoneyBox = _moneyBoxService.Get(MoneyBox.Id);
+                    newMoneyBox.PrimaryCurrency = _currenciesService.Get(SelectedPrimaryCurrency.Id);
 
-                yearPeriod.ParentPeriod = null;
+                    _moneyBoxService.Update(newMoneyBox, true);
 
-                _reportingPeriodsService.Update(yearPeriod, true);
+                    ReportingPeriod yearPeriod = new ReportingPeriod()
+                    {
+                        Type = ReportingPeriodType.Year,
+                        Period = DateTime.Now,
+                        Budget = newMoneyBox.YearBudget,
+                    };
 
-                ReportingPeriod monthPeriod = new ReportingPeriod()
+                    _reportingPeriodsService.Insert(yearPeriod, false, false);
+
+                    yearPeriod.MoneyBox = _moneyBoxService.Get(newMoneyBox.Id);
+
+                    yearPeriod.ParentPeriod = null;
+
+                    _reportingPeriodsService.Update(yearPeriod, true);
+
+                    ReportingPeriod monthPeriod = new ReportingPeriod()
+                    {
+                        Type = ReportingPeriodType.Month,
+                        Period = DateTime.Now,
+                        Budget = newMoneyBox.MonthBudget,
+                    };
+
+                    _reportingPeriodsService.Insert(monthPeriod, false, false);
+
+                    monthPeriod.MoneyBox = _moneyBoxService.Get(newMoneyBox.Id);
+
+                    monthPeriod.ParentPeriod = _reportingPeriodsService.Get(yearPeriod.Id);
+
+                    _reportingPeriodsService.Update(monthPeriod, true);
+                }
+                else
                 {
-                    Type = ReportingPeriodType.Month,
-                    Period = DateTime.Now,
-                    Budget = MoneyBox.MonthBudget,
-                };
+                    _moneyBox.Title = Title;
+                    _moneyBox.YearBudget = YearBudget;
+                    _moneyBox.MonthBudget = MonthBudget;
 
-                _reportingPeriodsService.Insert(monthPeriod, false, false);
+                    _moneyBoxService.Insert(_moneyBox, true, false);
 
-                monthPeriod.MoneyBox = _moneyBoxService.Get(MoneyBox.Id);
+                    _moneyBox.PrimaryCurrency = _currenciesService.Get(SelectedPrimaryCurrency.Id);
 
-                monthPeriod.ParentPeriod = _reportingPeriodsService.Get(yearPeriod.Id);
+                    _moneyBoxService.Update(_moneyBox, true);
+                }
 
-                _reportingPeriodsService.Update(monthPeriod, true);
-
+                _navigationService.ClearNavigationData("MoneyBoxId");
                 _navigationService.Navigate(typeof(MoneyBoxesPage));
             }
+        }
+
+        private void CancelAction(object e)
+        {
+            _navigationService.ClearNavigationData("MoneyBoxId");
+            _navigationService.Navigate(typeof(MoneyBoxesPage));
         }
 
         #endregion
 
         #region Properties
 
-        private MoneyBox _moneyBox;
+        private string _pageTitle;
 
-        public MoneyBox MoneyBox
+        public string PageTitle
         {
             get
             {
-                if (_moneyBox == null)
-                    _moneyBox = new MoneyBox();
-
-                return _moneyBox;
+                return _pageTitle;
             }
             set
             {
-                _moneyBox = value;
+                _pageTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _title;
+
+        public string Title
+        {
+            get
+            {
+                return _title;
+            }
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private decimal _yearBudget;
+
+        public decimal YearBudget
+        {
+            get
+            {
+                return _yearBudget;
+            }
+            set
+            {
+                _yearBudget = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private decimal _monthBudget;
+
+        public decimal MonthBudget
+        {
+            get
+            {
+                return _monthBudget;
+            }
+            set
+            {
+                _monthBudget = value;
                 OnPropertyChanged();
             }
         }
@@ -214,22 +307,22 @@ namespace YanpixFinanceManager.ViewModel
             MoneyBox existingMoneyBox = null;
 
             if (SelectedPrimaryCurrency != null)
-                existingMoneyBox = _moneyBoxService.ExistingMoneyBox(MoneyBox.Title, SelectedPrimaryCurrency.Id);
+                existingMoneyBox = _moneyBoxService.ExistingMoneyBox(Title, SelectedPrimaryCurrency.Id);
 
-            if (string.IsNullOrEmpty(MoneyBox.Title))
+            if (string.IsNullOrEmpty(Title))
                 ValidationErrors["Title"] = "Title is required";
-            else if (MoneyBox.Title.Length > 50)
+            else if (Title.Length > 50)
                 ValidationErrors["Title"] = "Title must contain up to 50 characters";
-            else if (existingMoneyBox != null)
+            else if (existingMoneyBox != null && !_isEdit)
                 ValidationErrors["Title"] = "Money Box already exists";
             
             if (SelectedPrimaryCurrency == null)
                 ValidationErrors["PrimaryCurrency"] = "Primary Currency is required";
 
-            if (MoneyBox.YearBudget.Equals(0.0M))
+            if (YearBudget.Equals(0.0M))
                 ValidationErrors["YearBudget"] = "Year Budget is required";
 
-            if (MoneyBox.MonthBudget.Equals(0.0M))
+            if (MonthBudget.Equals(0.0M))
                 ValidationErrors["MonthBudget"] = "Month Budget is required";
 
             IsValid = ValidationErrors.IsValid;
@@ -239,10 +332,41 @@ namespace YanpixFinanceManager.ViewModel
 
         #endregion
 
+        #region Helping Methods
+
+        private void InitIfEdit()
+        {
+            object moneyBoxId = _navigationService.GetNavigationData("MoneyBoxId");
+
+            if (moneyBoxId != null)
+            {
+                _isEdit = true;
+
+                _moneyBox = _moneyBoxService.Get((int)moneyBoxId);
+
+                PageTitle = "Edit Box";
+                Title = _moneyBox.Title;
+                YearBudget = _moneyBox.YearBudget;
+                MonthBudget = _moneyBox.MonthBudget;
+                SelectedPrimaryCurrency = Currencies.Where(x => x.Id == _moneyBox.PrimaryCurrency.Id).Single();
+            }
+            else
+            {
+                PageTitle = "New Box";
+                Title = "";
+                YearBudget = 0M;
+                MonthBudget = 0M;
+            }
+        }
+
+        #endregion
+
         #region Platform Events
 
         private void BackButtonPressed(object sender, EventArgs e)
         {
+            _navigationService.ClearNavigationData("MoneyBoxId");
+
             _navigationService.Navigate(typeof(MoneyBoxesPage));
 
             _platformEvents.BackButtonPressed -= BackButtonPressed;

@@ -39,5 +39,25 @@ namespace YanpixFinanceManager.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
+        private void DeleteSelectedButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelectedFlyout.ShowAt(CommandBar);
+        }
+
+        private void DeleteAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteAllFlyout.ShowAt(CommandBar);
+        }
+
+        private void DeleteAllFlyoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteAllFlyout.Hide();
+        }
+
+        private void DeleteSelectedFlyoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelectedFlyout.Hide();
+        }
     }
 }

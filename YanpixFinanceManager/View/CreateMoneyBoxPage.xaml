@@ -17,6 +17,7 @@
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand, Mode=TwoWay}"/>
+                <AppBarButton Icon="Cancel" Label="Cancel" Command="{Binding CancelCommand, Mode=TwoWay}"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
             </CommandBar.SecondaryCommands>
@@ -41,7 +42,7 @@
                 <Image Source="/Assets/yanpix-logo.png" Width="40" Height="40"/>
                 <TextBlock Text="Finance Manager" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center" Margin="10,0,0,0"/>
             </StackPanel>
-            <TextBlock Text="New Box" Margin="0,20,0,20" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock Text="{Binding PageTitle}" Margin="0,20,0,20" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,0,19,0">
@@ -51,7 +52,7 @@
                            FontSize="19" 
                            TextWrapping="WrapWholeWords"/>
                 <TextBox 
-                    Text="{Binding MoneyBox.Title, Mode=TwoWay}" 
+                    Text="{Binding Title, Mode=TwoWay}" 
                     Header="Title *" 
                     PlaceholderText="Title" 
                     Margin="0,20,0,0"/>
@@ -73,7 +74,7 @@
                     FontSize="16"/>
                 
                 <TextBox 
-                    Text="{Binding MoneyBox.YearBudget, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" 
+                    Text="{Binding YearBudget, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" 
                     Header="Year Budget *" 
                     PlaceholderText="Year Budget" 
                     Margin="0,5,0,0"
@@ -84,7 +85,7 @@
                     FontSize="16"/>
                 
                 <TextBox 
-                    Text="{Binding MoneyBox.MonthBudget, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" 
+                    Text="{Binding MonthBudget, Mode=TwoWay, Converter={StaticResource DecimalConverter}}" 
                     Header="Month Budget *" 
                     PlaceholderText="Month Budget" 
                     Margin="0,5,0,0"
